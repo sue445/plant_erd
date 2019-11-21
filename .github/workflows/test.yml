@@ -1,0 +1,62 @@
+name: test
+
+on:
+  - push
+
+env:
+  GO111MODULE: "on"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+
+      - name: Run test
+        run: |
+          set -xe
+          make test
+          make testrace
+        env:
+          TEST_ARGS: -coverprofile coverage.out -covermode atomic
+
+      - name: Run lint
+        run: |
+          set -xe
+          export GOPATH=`go env GOPATH`
+          export PATH=$GOPATH/bin:$PATH
+          go get -u golang.org/x/lint/golint
+
+          make fmtci
+          make lint
+          make vet
+
+      - name: Convert coverage to lcov
+        uses: jandelgado/gcov2lcov-action@v1.0.0
+        with:
+          infile: coverage.out
+          outfile: coverage.lcov
+
+#      - name: Coveralls
+#        uses: coverallsapp/github-action@master
+#        with:
+#          github-token: ${{ secrets.github_token }}
+#          path-to-lcov: coverage.lcov
+
+      - name: Slack Notification
+        uses: homoluctus/slatify@v2.0.0
+        if: always()
+        with:
+          job_name: '*go build*'
+          type: ${{ job.status }}
+          icon_emoji: ":octocat:"
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          token: ${{ secrets.GITHUB_TOKEN }}
