@@ -34,5 +34,4 @@ func TestProvider_GetAllTableNames(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"articles", "users"}, tables)
 	})
-
 }
