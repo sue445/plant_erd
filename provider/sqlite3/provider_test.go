@@ -18,19 +18,19 @@ func withDatabase(callback func(*Provider)) {
 }
 
 func TestProvider_GetAllTableNames(t *testing.T) {
-	withDatabase(func(provider *Provider) {
+	withDatabase(func(p *Provider) {
 		sql := `
 		PRAGMA foreign_keys = ON;
 		CREATE TABLE users (id integer not null primary key, name text);
 		CREATE TABLE articles (id integer not null primary key, user_id integer, FOREIGN KEY(user_id) REFERENCES users(id));
 		`
 
-		_, err := provider.db.Exec(sql)
+		_, err := p.db.Exec(sql)
 		if err != nil {
 			panic(err)
 		}
 
-		tables, err := provider.GetAllTableNames()
+		tables, err := p.GetAllTableNames()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"articles", "users"}, tables)
 	})
