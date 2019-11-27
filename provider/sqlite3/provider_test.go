@@ -98,6 +98,14 @@ func TestProvider_GetTable(t *testing.T) {
 							Type: "integer",
 						},
 					},
+					ForeignKeys: []provider.ForeignKey{
+						{
+							Sequence:   0,
+							FromColumn: "user_id",
+							ToTable:    "users",
+							ToColumn:   "id",
+						},
+					},
 				},
 			},
 		}

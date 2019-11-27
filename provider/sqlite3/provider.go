@@ -99,5 +99,61 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 		return nil, err
 	}
 
+	foreignKeys, err := p.getForeignKeys(tableName)
+	if err != nil {
+		return nil, err
+	}
+
+	table.ForeignKeys = foreignKeys
+
 	return &table, nil
+}
+
+type pragmaForeignKeyListRow struct {
+	ID       int
+	Seq      int
+	Table    string
+	From     string
+	To       string
+	OnUpdate string
+	OnDelete string
+	Match    string
+}
+
+func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, error) {
+	rows, err := p.db.Query(fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var foreignKeys []provider.ForeignKey
+
+	for rows.Next() {
+		var foreignKeyListRow pragmaForeignKeyListRow
+		err = rows.Scan(&foreignKeyListRow.ID, &foreignKeyListRow.Seq, &foreignKeyListRow.Table, &foreignKeyListRow.From, &foreignKeyListRow.To,
+			&foreignKeyListRow.OnUpdate, &foreignKeyListRow.OnDelete, &foreignKeyListRow.Match)
+
+		if err != nil {
+			return nil, err
+		}
+
+		foreignKey := provider.ForeignKey{
+			Sequence:   foreignKeyListRow.Seq,
+			FromColumn: foreignKeyListRow.From,
+			ToColumn:   foreignKeyListRow.To,
+			ToTable:    foreignKeyListRow.Table,
+		}
+
+		foreignKeys = append(foreignKeys, foreignKey)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return foreignKeys, nil
 }
