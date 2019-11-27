@@ -29,7 +29,7 @@ func (p *Provider) GetAllTableNames() ([]string, error) {
 	rows, err := p.db.Query("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
 
 	if err != nil {
-		return []string{}, nil
+		return []string{}, err
 	}
 
 	defer rows.Close()
