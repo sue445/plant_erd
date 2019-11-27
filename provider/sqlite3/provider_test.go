@@ -17,7 +17,7 @@ func withDatabase(callback func(*Provider)) {
 	callback(provider)
 }
 
-func TestProvider_GetTableNames(t *testing.T) {
+func TestProvider_GetAllTableNames(t *testing.T) {
 	withDatabase(func(provider *Provider) {
 		sql := `
 		PRAGMA foreign_keys = ON;
@@ -30,7 +30,7 @@ func TestProvider_GetTableNames(t *testing.T) {
 			panic(err)
 		}
 
-		tables, err := provider.GetTableNames()
+		tables, err := provider.GetAllTableNames()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"articles", "users"}, tables)
 	})
