@@ -24,8 +24,8 @@ func NewProvider(name string) (*Provider, Close, error) {
 	return &Provider{db: db}, db.Close, nil
 }
 
-// GetTableNames returns all table names in database
-func (p *Provider) GetTableNames() ([]string, error) {
+// GetAllTableNames returns all table names in database
+func (p *Provider) GetAllTableNames() ([]string, error) {
 	rows, err := p.db.Query("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
 
 	if err != nil {
