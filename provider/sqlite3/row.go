@@ -4,7 +4,7 @@ type sqliteMaster struct {
 	Name string `db:"name"`
 }
 
-type pragmaTableInfo struct {
+type tableInfo struct {
 	CID        int     `db:"cid"`
 	Name       string  `db:"name"`
 	Type       string  `db:"type"`
@@ -13,7 +13,7 @@ type pragmaTableInfo struct {
 	PrimaryKey bool    `db:"pk"`
 }
 
-type pragmaForeignKeyList struct {
+type foreignKeyList struct {
 	ID       int    `db:"id"`
 	Seq      int    `db:"seq"`
 	Table    string `db:"table"`

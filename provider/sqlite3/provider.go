@@ -49,19 +49,19 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 		Name: tableName,
 	}
 
-	var rows []pragmaTableInfo
+	var rows []tableInfo
 	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA table_info(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
-	for _, tableInfoRow := range rows {
+	for _, row := range rows {
 		column := provider.Column{
-			Name:       tableInfoRow.Name,
-			Type:       tableInfoRow.Type,
-			NotNull:    tableInfoRow.NotNull,
-			PrimaryKey: tableInfoRow.PrimaryKey,
+			Name:       row.Name,
+			Type:       row.Type,
+			NotNull:    row.NotNull,
+			PrimaryKey: row.PrimaryKey,
 		}
 
 		table.Columns = append(table.Columns, column)
@@ -78,7 +78,7 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 }
 
 func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, error) {
-	var rows []pragmaForeignKeyList
+	var rows []foreignKeyList
 	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
 	if err != nil {
@@ -86,12 +86,12 @@ func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, erro
 	}
 
 	var foreignKeys []provider.ForeignKey
-	for _, foreignKeyListRow := range rows {
+	for _, row := range rows {
 		foreignKey := provider.ForeignKey{
-			Sequence:   foreignKeyListRow.Seq,
-			FromColumn: foreignKeyListRow.From,
-			ToColumn:   foreignKeyListRow.To,
-			ToTable:    foreignKeyListRow.Table,
+			Sequence:   row.Seq,
+			FromColumn: row.From,
+			ToColumn:   row.To,
+			ToTable:    row.Table,
 		}
 
 		foreignKeys = append(foreignKeys, foreignKey)
