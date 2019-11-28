@@ -1,10 +1,10 @@
 package sqlite3
 
-type sqliteMasterRow struct {
+type sqliteMaster struct {
 	Name string `db:"name"`
 }
 
-type pragmaTableInfoRow struct {
+type pragmaTableInfo struct {
 	CID        int     `db:"cid"`
 	Name       string  `db:"name"`
 	Type       string  `db:"type"`
@@ -13,7 +13,7 @@ type pragmaTableInfoRow struct {
 	PrimaryKey bool    `db:"pk"`
 }
 
-type pragmaForeignKeyListRow struct {
+type pragmaForeignKeyList struct {
 	ID       int    `db:"id"`
 	Seq      int    `db:"seq"`
 	Table    string `db:"table"`

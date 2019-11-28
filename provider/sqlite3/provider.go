@@ -28,7 +28,7 @@ func NewProvider(name string) (*Provider, Close, error) {
 
 // GetAllTableNames returns all table names in database
 func (p *Provider) GetAllTableNames() ([]string, error) {
-	var rows []sqliteMasterRow
+	var rows []sqliteMaster
 	err := p.db.Select(&rows, "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
 
 	if err != nil {
@@ -49,7 +49,7 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 		Name: tableName,
 	}
 
-	var rows []pragmaTableInfoRow
+	var rows []pragmaTableInfo
 	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA table_info(%s)", tableName))
 
 	if err != nil {
@@ -78,7 +78,7 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 }
 
 func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, error) {
-	var rows []pragmaForeignKeyListRow
+	var rows []pragmaForeignKeyList
 	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
 	if err != nil {
