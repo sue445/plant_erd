@@ -1,15 +1,15 @@
 package sqlite3
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // for sql
 	"github.com/sue445/plant_erd/provider"
 )
 
 // Provider represents sqlite3 provider
 type Provider struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 // Close represents function for close database
@@ -17,7 +17,7 @@ type Close func() error
 
 // NewProvider returns a new Provider instance
 func NewProvider(name string) (*Provider, Close, error) {
-	db, err := sql.Open("sqlite3", name)
+	db, err := sqlx.Connect("sqlite3", name)
 
 	if err != nil {
 		return nil, nil, err
@@ -26,64 +26,50 @@ func NewProvider(name string) (*Provider, Close, error) {
 	return &Provider{db: db}, db.Close, nil
 }
 
+type sqliteMasterRow struct {
+	Name string `db:"name"`
+}
+
 // GetAllTableNames returns all table names in database
 func (p *Provider) GetAllTableNames() ([]string, error) {
-	rows, err := p.db.Query("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+	var rows []sqliteMasterRow
+	err := p.db.Select(&rows, "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
 
 	if err != nil {
 		return []string{}, err
 	}
-
-	defer rows.Close()
 
 	var tables []string
-	for rows.Next() {
-		var name string
-		err = rows.Scan(&name)
-		if err != nil {
-			return []string{}, err
-		}
-		tables = append(tables, name)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return []string{}, err
+	for _, row := range rows {
+		tables = append(tables, row.Name)
 	}
 
 	return tables, nil
 }
 
 type pragmaTableInfoRow struct {
-	CID        int
-	Name       string
-	Type       string
-	NotNull    bool
-	DfltValue  *string
-	PrimaryKey bool
+	CID        int     `db:"cid"`
+	Name       string  `db:"name"`
+	Type       string  `db:"type"`
+	NotNull    bool    `db:"notnull"`
+	DfltValue  *string `db:"dflt_value"`
+	PrimaryKey bool    `db:"pk"`
 }
 
 // GetTable returns table info
 func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
-	rows, err := p.db.Query(fmt.Sprintf("PRAGMA table_info(%s)", tableName))
+	table := provider.Table{
+		Name: tableName,
+	}
+
+	var rows []pragmaTableInfoRow
+	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA table_info(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer rows.Close()
-
-	table := provider.Table{
-		Name: tableName,
-	}
-
-	for rows.Next() {
-		var tableInfoRow pragmaTableInfoRow
-		err = rows.Scan(&tableInfoRow.CID, &tableInfoRow.Name, &tableInfoRow.Type, &tableInfoRow.NotNull, &tableInfoRow.DfltValue, &tableInfoRow.PrimaryKey)
-		if err != nil {
-			return nil, err
-		}
-
+	for _, tableInfoRow := range rows {
 		column := provider.Column{
 			Name:       tableInfoRow.Name,
 			Type:       tableInfoRow.Type,
@@ -92,11 +78,6 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 		}
 
 		table.Columns = append(table.Columns, column)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return nil, err
 	}
 
 	foreignKeys, err := p.getForeignKeys(tableName)
@@ -110,36 +91,26 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 }
 
 type pragmaForeignKeyListRow struct {
-	ID       int
-	Seq      int
-	Table    string
-	From     string
-	To       string
-	OnUpdate string
-	OnDelete string
-	Match    string
+	ID       int    `db:"id"`
+	Seq      int    `db:"seq"`
+	Table    string `db:"table"`
+	From     string `db:"from"`
+	To       string `db:"to"`
+	OnUpdate string `db:"on_update"`
+	OnDelete string `db:"on_delete"`
+	Match    string `db:"match"`
 }
 
 func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, error) {
-	rows, err := p.db.Query(fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
+	var rows []pragmaForeignKeyListRow
+	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer rows.Close()
-
 	var foreignKeys []provider.ForeignKey
-
-	for rows.Next() {
-		var foreignKeyListRow pragmaForeignKeyListRow
-		err = rows.Scan(&foreignKeyListRow.ID, &foreignKeyListRow.Seq, &foreignKeyListRow.Table, &foreignKeyListRow.From, &foreignKeyListRow.To,
-			&foreignKeyListRow.OnUpdate, &foreignKeyListRow.OnDelete, &foreignKeyListRow.Match)
-
-		if err != nil {
-			return nil, err
-		}
-
+	for _, foreignKeyListRow := range rows {
 		foreignKey := provider.ForeignKey{
 			Sequence:   foreignKeyListRow.Seq,
 			FromColumn: foreignKeyListRow.From,
@@ -148,11 +119,6 @@ func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, erro
 		}
 
 		foreignKeys = append(foreignKeys, foreignKey)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return nil, err
 	}
 
 	return foreignKeys, nil
