@@ -10,7 +10,7 @@ update_configs:
 
     automerged_updates:
       - match:
-          dependency_name: "testify"
+          dependency_name: "github.com/stretchr/testify"
           update_type: "all"
 
     default_assignees:
