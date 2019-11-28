@@ -1,0 +1,17 @@
+# c.f. https://dependabot.com/docs/config-file/
+version: 1
+
+update_configs:
+  - package_manager: "go:modules"
+
+    directory: "/"
+
+    update_schedule: "daily"
+
+    automerged_updates:
+      - match:
+          dependency_name: "testify"
+          update_type: "all"
+
+    default_assignees:
+      - sue445
