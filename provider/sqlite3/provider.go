@@ -26,10 +26,6 @@ func NewProvider(name string) (*Provider, Close, error) {
 	return &Provider{db: db}, db.Close, nil
 }
 
-type sqliteMasterRow struct {
-	Name string `db:"name"`
-}
-
 // GetAllTableNames returns all table names in database
 func (p *Provider) GetAllTableNames() ([]string, error) {
 	var rows []sqliteMasterRow
@@ -45,15 +41,6 @@ func (p *Provider) GetAllTableNames() ([]string, error) {
 	}
 
 	return tables, nil
-}
-
-type pragmaTableInfoRow struct {
-	CID        int     `db:"cid"`
-	Name       string  `db:"name"`
-	Type       string  `db:"type"`
-	NotNull    bool    `db:"notnull"`
-	DfltValue  *string `db:"dflt_value"`
-	PrimaryKey bool    `db:"pk"`
 }
 
 // GetTable returns table info
@@ -88,17 +75,6 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 	table.ForeignKeys = foreignKeys
 
 	return &table, nil
-}
-
-type pragmaForeignKeyListRow struct {
-	ID       int    `db:"id"`
-	Seq      int    `db:"seq"`
-	Table    string `db:"table"`
-	From     string `db:"from"`
-	To       string `db:"to"`
-	OnUpdate string `db:"on_update"`
-	OnDelete string `db:"on_delete"`
-	Match    string `db:"match"`
 }
 
 func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, error) {
