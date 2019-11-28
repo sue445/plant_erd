@@ -26,14 +26,14 @@ func TestProvider_GetAllTableNames(t *testing.T) {
 		CREATE TABLE articles (id integer not null primary key, user_id integer, FOREIGN KEY(user_id) REFERENCES users(id));
 		`
 
-		_, err := p.db.Exec(sql)
-		if err != nil {
-			panic(err)
-		}
+		p.db.MustExec(sql)
 
 		tables, err := p.GetAllTableNames()
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"articles", "users"}, tables)
+
+		if err == nil {
+			assert.Equal(t, []string{"articles", "users"}, tables)
+		}
 	})
 }
 
@@ -45,10 +45,7 @@ func TestProvider_GetTable(t *testing.T) {
 		CREATE TABLE articles (id integer not null primary key, user_id integer, FOREIGN KEY(user_id) REFERENCES users(id));
 		`
 
-		_, err := p.db.Exec(sql)
-		if err != nil {
-			panic(err)
-		}
+		p.db.MustExec(sql)
 
 		type args struct {
 			tableName string
@@ -115,7 +112,10 @@ func TestProvider_GetTable(t *testing.T) {
 				got, err := p.GetTable(tt.args.tableName)
 
 				assert.NoError(t, err)
-				assert.Equal(t, tt.want, got)
+
+				if err == nil {
+					assert.Equal(t, tt.want, got)
+				}
 			})
 		}
 	})
