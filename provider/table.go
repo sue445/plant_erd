@@ -23,13 +23,7 @@ func (t *Table) ToErd() string {
 
 	if len(pkColumns) > 0 {
 		for _, column := range pkColumns {
-			str := ""
-			if column.NotNull {
-				str = fmt.Sprintf("  * %s : %s", column.Name, column.Type)
-			} else {
-				str = fmt.Sprintf("  %s : %s", column.Name, column.Type)
-			}
-			lines = append(lines, str)
+			lines = append(lines, "  "+column.ToErd())
 		}
 	}
 
@@ -39,13 +33,7 @@ func (t *Table) ToErd() string {
 
 	if len(nonPkColumns) > 0 {
 		for _, column := range nonPkColumns {
-			str := ""
-			if column.NotNull {
-				str = fmt.Sprintf("  * %s : %s", column.Name, column.Type)
-			} else {
-				str = fmt.Sprintf("  %s : %s", column.Name, column.Type)
-			}
-			lines = append(lines, str)
+			lines = append(lines, "  "+column.ToErd())
 		}
 	}
 
