@@ -1,4 +1,4 @@
-package adapter
+package db
 
 // ForeignKey represents foreign key info
 type ForeignKey struct {

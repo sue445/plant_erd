@@ -2,7 +2,7 @@ package sqlite3
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/sue445/plant_erd/adapter"
+	"github.com/sue445/plant_erd/db"
 	"testing"
 )
 
@@ -53,16 +53,16 @@ func TestAdapter_GetTable(t *testing.T) {
 		tests := []struct {
 			name string
 			args args
-			want *adapter.Table
+			want *db.Table
 		}{
 			{
 				name: "users",
 				args: args{
 					tableName: "users",
 				},
-				want: &adapter.Table{
+				want: &db.Table{
 					Name: "users",
-					Columns: []*adapter.Column{
+					Columns: []*db.Column{
 						{
 							Name:       "id",
 							Type:       "integer",
@@ -81,9 +81,9 @@ func TestAdapter_GetTable(t *testing.T) {
 				args: args{
 					tableName: "articles",
 				},
-				want: &adapter.Table{
+				want: &db.Table{
 					Name: "articles",
-					Columns: []*adapter.Column{
+					Columns: []*db.Column{
 						{
 							Name:       "id",
 							Type:       "integer",
@@ -96,7 +96,7 @@ func TestAdapter_GetTable(t *testing.T) {
 							NotNull: true,
 						},
 					},
-					ForeignKeys: []*adapter.ForeignKey{
+					ForeignKeys: []*db.ForeignKey{
 						{
 							Sequence:   0,
 							FromColumn: "user_id",

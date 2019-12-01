@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // for sql
-	"github.com/sue445/plant_erd/adapter"
+	"github.com/sue445/plant_erd/db"
 )
 
 // Adapter represents sqlite3 adapter
@@ -44,8 +44,8 @@ func (a *Adapter) GetAllTableNames() ([]string, error) {
 }
 
 // GetTable returns table info
-func (a *Adapter) GetTable(tableName string) (*adapter.Table, error) {
-	table := adapter.Table{
+func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
+	table := db.Table{
 		Name: tableName,
 	}
 
@@ -57,7 +57,7 @@ func (a *Adapter) GetTable(tableName string) (*adapter.Table, error) {
 	}
 
 	for _, row := range rows {
-		column := &adapter.Column{
+		column := &db.Column{
 			Name:       row.Name,
 			Type:       row.Type,
 			NotNull:    row.NotNull,
@@ -77,7 +77,7 @@ func (a *Adapter) GetTable(tableName string) (*adapter.Table, error) {
 	return &table, nil
 }
 
-func (a *Adapter) getForeignKeys(tableName string) ([]*adapter.ForeignKey, error) {
+func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 	var rows []foreignKeyList
 	err := a.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
@@ -85,9 +85,9 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*adapter.ForeignKey, error
 		return nil, err
 	}
 
-	var foreignKeys []*adapter.ForeignKey
+	var foreignKeys []*db.ForeignKey
 	for _, row := range rows {
-		foreignKey := &adapter.ForeignKey{
+		foreignKey := &db.ForeignKey{
 			Sequence:   row.Seq,
 			FromColumn: row.From,
 			ToColumn:   row.To,
