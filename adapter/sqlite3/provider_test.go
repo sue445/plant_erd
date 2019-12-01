@@ -2,12 +2,12 @@ package sqlite3
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/sue445/plant_erd/provider"
+	"github.com/sue445/plant_erd/adapter"
 	"testing"
 )
 
-func withDatabase(callback func(*Provider)) {
-	provider, close, err := NewProvider("file::memory:?cache=shared")
+func withDatabase(callback func(*Adapter)) {
+	adapter, close, err := NewAdapter("file::memory:?cache=shared")
 
 	if err != nil {
 		panic(err)
@@ -15,20 +15,20 @@ func withDatabase(callback func(*Provider)) {
 
 	defer close()
 
-	callback(provider)
+	callback(adapter)
 }
 
-func TestProvider_GetAllTableNames(t *testing.T) {
-	withDatabase(func(p *Provider) {
+func TestAdapter_GetAllTableNames(t *testing.T) {
+	withDatabase(func(a *Adapter) {
 		sql := `
 		PRAGMA foreign_keys = ON;
 		CREATE TABLE users (id integer not null primary key, name text);
 		CREATE TABLE articles (id integer not null primary key, user_id integer not null, FOREIGN KEY(user_id) REFERENCES users(id));
 		`
 
-		p.db.MustExec(sql)
+		a.db.MustExec(sql)
 
-		tables, err := p.GetAllTableNames()
+		tables, err := a.GetAllTableNames()
 		assert.NoError(t, err)
 
 		if err == nil {
@@ -37,15 +37,15 @@ func TestProvider_GetAllTableNames(t *testing.T) {
 	})
 }
 
-func TestProvider_GetTable(t *testing.T) {
-	withDatabase(func(p *Provider) {
+func TestAdapter_GetTable(t *testing.T) {
+	withDatabase(func(a *Adapter) {
 		sql := `
 		PRAGMA foreign_keys = ON;
 		CREATE TABLE users (id integer not null primary key, name text);
 		CREATE TABLE articles (id integer not null primary key, user_id integer not null, FOREIGN KEY(user_id) REFERENCES users(id));
 		`
 
-		p.db.MustExec(sql)
+		a.db.MustExec(sql)
 
 		type args struct {
 			tableName string
@@ -53,16 +53,16 @@ func TestProvider_GetTable(t *testing.T) {
 		tests := []struct {
 			name string
 			args args
-			want *provider.Table
+			want *adapter.Table
 		}{
 			{
 				name: "users",
 				args: args{
 					tableName: "users",
 				},
-				want: &provider.Table{
+				want: &adapter.Table{
 					Name: "users",
-					Columns: []*provider.Column{
+					Columns: []*adapter.Column{
 						{
 							Name:       "id",
 							Type:       "integer",
@@ -81,9 +81,9 @@ func TestProvider_GetTable(t *testing.T) {
 				args: args{
 					tableName: "articles",
 				},
-				want: &provider.Table{
+				want: &adapter.Table{
 					Name: "articles",
-					Columns: []*provider.Column{
+					Columns: []*adapter.Column{
 						{
 							Name:       "id",
 							Type:       "integer",
@@ -96,7 +96,7 @@ func TestProvider_GetTable(t *testing.T) {
 							NotNull: true,
 						},
 					},
-					ForeignKeys: []*provider.ForeignKey{
+					ForeignKeys: []*adapter.ForeignKey{
 						{
 							Sequence:   0,
 							FromColumn: "user_id",
@@ -110,7 +110,7 @@ func TestProvider_GetTable(t *testing.T) {
 
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				got, err := p.GetTable(tt.args.tableName)
+				got, err := a.GetTable(tt.args.tableName)
 
 				assert.NoError(t, err)
 

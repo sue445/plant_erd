@@ -4,32 +4,32 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // for sql
-	"github.com/sue445/plant_erd/provider"
+	"github.com/sue445/plant_erd/adapter"
 )
 
-// Provider represents sqlite3 provider
-type Provider struct {
+// Adapter represents sqlite3 adapter
+type Adapter struct {
 	db *sqlx.DB
 }
 
 // Close represents function for close database
 type Close func() error
 
-// NewProvider returns a new Provider instance
-func NewProvider(name string) (*Provider, Close, error) {
+// NewAdapter returns a new Adapter instance
+func NewAdapter(name string) (*Adapter, Close, error) {
 	db, err := sqlx.Connect("sqlite3", name)
 
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return &Provider{db: db}, db.Close, nil
+	return &Adapter{db: db}, db.Close, nil
 }
 
 // GetAllTableNames returns all table names in database
-func (p *Provider) GetAllTableNames() ([]string, error) {
+func (a *Adapter) GetAllTableNames() ([]string, error) {
 	var rows []sqliteMaster
-	err := p.db.Select(&rows, "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+	err := a.db.Select(&rows, "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
 
 	if err != nil {
 		return []string{}, err
@@ -44,20 +44,20 @@ func (p *Provider) GetAllTableNames() ([]string, error) {
 }
 
 // GetTable returns table info
-func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
-	table := provider.Table{
+func (a *Adapter) GetTable(tableName string) (*adapter.Table, error) {
+	table := adapter.Table{
 		Name: tableName,
 	}
 
 	var rows []tableInfo
-	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA table_info(%s)", tableName))
+	err := a.db.Select(&rows, fmt.Sprintf("PRAGMA table_info(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
 	for _, row := range rows {
-		column := &provider.Column{
+		column := &adapter.Column{
 			Name:       row.Name,
 			Type:       row.Type,
 			NotNull:    row.NotNull,
@@ -67,7 +67,7 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 		table.Columns = append(table.Columns, column)
 	}
 
-	foreignKeys, err := p.getForeignKeys(tableName)
+	foreignKeys, err := a.getForeignKeys(tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -77,17 +77,17 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 	return &table, nil
 }
 
-func (p *Provider) getForeignKeys(tableName string) ([]*provider.ForeignKey, error) {
+func (a *Adapter) getForeignKeys(tableName string) ([]*adapter.ForeignKey, error) {
 	var rows []foreignKeyList
-	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
+	err := a.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
-	var foreignKeys []*provider.ForeignKey
+	var foreignKeys []*adapter.ForeignKey
 	for _, row := range rows {
-		foreignKey := &provider.ForeignKey{
+		foreignKey := &adapter.ForeignKey{
 			Sequence:   row.Seq,
 			FromColumn: row.From,
 			ToColumn:   row.To,
