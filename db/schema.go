@@ -31,3 +31,9 @@ func (s *Schema) ToErd() string {
 
 	return strings.Join(lines, "\n\n")
 }
+
+// SurroundingTablesWithin returns surrounding tables from table
+func (s *Schema) SurroundingTablesWithin(tableName string, distance int) []string {
+	explorer := NewSchemaExplorer(s)
+	return explorer.Explore(tableName, distance)
+}
