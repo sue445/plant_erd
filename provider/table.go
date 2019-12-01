@@ -12,22 +12,6 @@ type Table struct {
 	ForeignKeys []ForeignKey
 }
 
-// Column represents column info
-type Column struct {
-	Name       string
-	Type       string
-	NotNull    bool
-	PrimaryKey bool
-}
-
-// ForeignKey represents foreign key info
-type ForeignKey struct {
-	Sequence   int
-	FromColumn string
-	ToTable    string
-	ToColumn   string
-}
-
 // ToErd returns ERD formatted table
 func (t *Table) ToErd() string {
 	lines := []string{
