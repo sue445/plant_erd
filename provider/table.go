@@ -8,8 +8,8 @@ import (
 // Table represents table info
 type Table struct {
 	Name        string
-	Columns     []Column
-	ForeignKeys []ForeignKey
+	Columns     []*Column
+	ForeignKeys []*ForeignKey
 }
 
 // ToErd returns ERD formatted table
@@ -42,8 +42,8 @@ func (t *Table) ToErd() string {
 }
 
 // GetPrimaryKeyColumns returns Primary key columns
-func (t *Table) GetPrimaryKeyColumns() []Column {
-	var columns []Column
+func (t *Table) GetPrimaryKeyColumns() []*Column {
+	var columns []*Column
 	for _, column := range t.Columns {
 		if column.PrimaryKey {
 			columns = append(columns, column)
@@ -53,8 +53,8 @@ func (t *Table) GetPrimaryKeyColumns() []Column {
 }
 
 // GetNonPrimaryKeyColumns returns Non-Primary key columns
-func (t *Table) GetNonPrimaryKeyColumns() []Column {
-	var columns []Column
+func (t *Table) GetNonPrimaryKeyColumns() []*Column {
+	var columns []*Column
 	for _, column := range t.Columns {
 		if !column.PrimaryKey {
 			columns = append(columns, column)

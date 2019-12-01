@@ -8,8 +8,8 @@ import (
 func TestTable_ToErd(t *testing.T) {
 	type fields struct {
 		Name        string
-		Columns     []Column
-		ForeignKeys []ForeignKey
+		Columns     []*Column
+		ForeignKeys []*ForeignKey
 	}
 	tests := []struct {
 		name   string
@@ -20,7 +20,7 @@ func TestTable_ToErd(t *testing.T) {
 			name: "without primary key",
 			fields: fields{
 				Name: "articles",
-				Columns: []Column{
+				Columns: []*Column{
 					{
 						Name:    "id",
 						Type:    "integer",
@@ -47,7 +47,7 @@ func TestTable_ToErd(t *testing.T) {
 			name: "with primary key",
 			fields: fields{
 				Name: "articles",
-				Columns: []Column{
+				Columns: []*Column{
 					{
 						Name:       "id",
 						Type:       "integer",

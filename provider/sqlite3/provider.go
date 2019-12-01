@@ -57,7 +57,7 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 	}
 
 	for _, row := range rows {
-		column := provider.Column{
+		column := &provider.Column{
 			Name:       row.Name,
 			Type:       row.Type,
 			NotNull:    row.NotNull,
@@ -77,7 +77,7 @@ func (p *Provider) GetTable(tableName string) (*provider.Table, error) {
 	return &table, nil
 }
 
-func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, error) {
+func (p *Provider) getForeignKeys(tableName string) ([]*provider.ForeignKey, error) {
 	var rows []foreignKeyList
 	err := p.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
@@ -85,9 +85,9 @@ func (p *Provider) getForeignKeys(tableName string) ([]provider.ForeignKey, erro
 		return nil, err
 	}
 
-	var foreignKeys []provider.ForeignKey
+	var foreignKeys []*provider.ForeignKey
 	for _, row := range rows {
-		foreignKey := provider.ForeignKey{
+		foreignKey := &provider.ForeignKey{
 			Sequence:   row.Seq,
 			FromColumn: row.From,
 			ToColumn:   row.To,

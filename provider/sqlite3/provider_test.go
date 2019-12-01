@@ -62,7 +62,7 @@ func TestProvider_GetTable(t *testing.T) {
 				},
 				want: &provider.Table{
 					Name: "users",
-					Columns: []provider.Column{
+					Columns: []*provider.Column{
 						{
 							Name:       "id",
 							Type:       "integer",
@@ -83,7 +83,7 @@ func TestProvider_GetTable(t *testing.T) {
 				},
 				want: &provider.Table{
 					Name: "articles",
-					Columns: []provider.Column{
+					Columns: []*provider.Column{
 						{
 							Name:       "id",
 							Type:       "integer",
@@ -96,7 +96,7 @@ func TestProvider_GetTable(t *testing.T) {
 							NotNull: true,
 						},
 					},
-					ForeignKeys: []provider.ForeignKey{
+					ForeignKeys: []*provider.ForeignKey{
 						{
 							Sequence:   0,
 							FromColumn: "user_id",
