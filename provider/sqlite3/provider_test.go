@@ -23,7 +23,7 @@ func TestProvider_GetAllTableNames(t *testing.T) {
 		sql := `
 		PRAGMA foreign_keys = ON;
 		CREATE TABLE users (id integer not null primary key, name text);
-		CREATE TABLE articles (id integer not null primary key, user_id integer, FOREIGN KEY(user_id) REFERENCES users(id));
+		CREATE TABLE articles (id integer not null primary key, user_id integer not null, FOREIGN KEY(user_id) REFERENCES users(id));
 		`
 
 		p.db.MustExec(sql)
@@ -42,7 +42,7 @@ func TestProvider_GetTable(t *testing.T) {
 		sql := `
 		PRAGMA foreign_keys = ON;
 		CREATE TABLE users (id integer not null primary key, name text);
-		CREATE TABLE articles (id integer not null primary key, user_id integer, FOREIGN KEY(user_id) REFERENCES users(id));
+		CREATE TABLE articles (id integer not null primary key, user_id integer not null, FOREIGN KEY(user_id) REFERENCES users(id));
 		`
 
 		p.db.MustExec(sql)
@@ -91,8 +91,9 @@ func TestProvider_GetTable(t *testing.T) {
 							PrimaryKey: true,
 						},
 						{
-							Name: "user_id",
-							Type: "integer",
+							Name:    "user_id",
+							Type:    "integer",
+							NotNull: true,
 						},
 					},
 					ForeignKeys: []provider.ForeignKey{
