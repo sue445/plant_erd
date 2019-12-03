@@ -11,6 +11,11 @@ type Schema struct {
 	Tables []*Table
 }
 
+// NewSchema returns a new Schema instance
+func NewSchema(tables []*Table) *Schema {
+	return &Schema{Tables: tables}
+}
+
 // ToErd returns ERD formatted schema
 func (s *Schema) ToErd() string {
 	var lines []string
@@ -36,4 +41,29 @@ func (s *Schema) ToErd() string {
 func (s *Schema) SurroundingTablesWithin(tableName string, distance int) []string {
 	explorer := NewSchemaExplorer(s)
 	return explorer.Explore(tableName, distance)
+}
+
+// Subset returns subset of a schema
+func (s *Schema) Subset(tableName string, distance int) *Schema {
+	tableNames := s.SurroundingTablesWithin(tableName, distance)
+
+	var tables []*Table
+	for _, tableName := range tableNames {
+		table := s.findTable(tableName)
+
+		if table != nil {
+			tables = append(tables, table)
+		}
+	}
+
+	return NewSchema(tables)
+}
+
+func (s *Schema) findTable(tableName string) *Table {
+	for _, table := range s.Tables {
+		if table.Name == tableName {
+			return table
+		}
+	}
+	return nil
 }
