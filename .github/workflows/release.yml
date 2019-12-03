@@ -1,0 +1,56 @@
+name: Release
+on:
+  push:
+    branches:
+      - "!**/*"
+    tags:
+      - "v*"
+
+env:
+  GO111MODULE: "on"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+
+      - name: make package and release
+        run: |
+          set -xe
+          export GOPATH=`go env GOPATH`
+          export PATH=$GOPATH/bin:$PATH
+          export PUSH_EVENT_REF=$(jq --raw-output .ref "$GITHUB_EVENT_PATH")
+
+          if [ "$(echo $PUSH_EVENT_REF | grep refs/tags/ | wc -l)" = "0" ]; then
+            echo "ref is not a tag: ${PUSH_EVENT_REF}"
+            exit 1
+          fi
+
+          export TAGNAME=$(echo $PUSH_EVENT_REF | sed -e 's!refs/tags/!!g')
+
+          go get -u github.com/mitchellh/gox
+          make clean gox_with_zip
+
+          go get -u github.com/tcnksm/ghr
+          $GOPATH/bin/ghr -n ${TAGNAME} -b "Release ${TAGNAME}" ${TAGNAME} bin/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Slack Notification
+        uses: homoluctus/slatify@v2.0.0
+        if: always()
+        with:
+          job_name: '*release*'
+          type: ${{ job.status }}
+          icon_emoji: ":octocat:"
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          token: ${{ secrets.GITHUB_TOKEN }}
