@@ -25,6 +25,10 @@ func NewSchemaExplorer(schema *Schema) *SchemaExplorer {
 
 // Explore returns surrounding tables from table
 func (e *SchemaExplorer) Explore(tableName string, distance int) []string {
+	if distance < 0 {
+		distance = 0
+	}
+
 	foundTableNames := mapset.NewSet()
 
 	e.explore(tableName, distance, foundTableNames, 0)
