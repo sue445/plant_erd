@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+
+    command: sh -c "make test"
+
+    links:
+      - mysql
+
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: plant_erd_test
+
+    volumes:
+      - go-mod:/go/pkg/mod
+
+  mysql:
+    image: mysql:8
+
+    ports:
+      - 3306:3306
+
+    environment:
+      MYSQL_DATABASE: plant_erd_test
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+
+volumes:
+  go-mod:
+    driver: local
