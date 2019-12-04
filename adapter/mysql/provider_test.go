@@ -38,7 +38,24 @@ func withDatabase(callback func(*Adapter)) {
 
 func TestAdapter_GetAllTableNames(t *testing.T) {
 	withDatabase(func(a *Adapter) {
-		t.Skip("TODO: Do after")
+		a.db.MustExec(`
+			CREATE TABLE users (
+				id   int not null primary key, 
+				name varchar(191)
+		);`)
+		defer func() {
+			a.db.MustExec("DROP TABLE users;")
+		}()
+
+		a.db.MustExec(`
+			CREATE TABLE articles (
+				id      int not null primary key, 
+				user_id int not null, 
+				FOREIGN KEY fk_users (user_id) REFERENCES users(id)
+		);`)
+		defer func() {
+			a.db.MustExec("DROP TABLE articles;")
+		}()
 
 		tables, err := a.GetAllTableNames()
 

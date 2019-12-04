@@ -26,6 +26,17 @@ func NewAdapter(config *mysql.Config) (*Adapter, Close, error) {
 
 // GetAllTableNames returns all table names in database
 func (a *Adapter) GetAllTableNames() ([]string, error) {
+	var rows []informationSchemaTables
+	err := a.db.Select(&rows, "SELECT table_name FROM information_schema.tables WHERE table_schema=database() ORDER BY table_name")
+
+	if err != nil {
+		return []string{}, err
+	}
+
 	var tables []string
+	for _, row := range rows {
+		tables = append(tables, row.TableName)
+	}
+
 	return tables, nil
 }
