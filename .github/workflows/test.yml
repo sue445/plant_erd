@@ -5,11 +5,25 @@ on:
 
 env:
   GO111MODULE: "on"
+  MYSQL_HOST: localhost
+  MYSQL_USER: root
+  MYSQL_PASSWORD: root
+  MYSQL_DATABASE: plant_erd_test
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        ports:
+          - 3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: plant_erd_test
+
     steps:
       - name: Set up Go
         uses: actions/setup-go@v1
@@ -34,6 +48,7 @@ jobs:
           make testrace
         env:
           TEST_ARGS: -coverprofile coverage.out -covermode atomic
+          MYSQL_PORT: ${{ job.services.mysql.ports['3306'] }}
 
       - name: Run lint
         run: |
