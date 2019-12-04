@@ -29,9 +29,8 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 		a.db.MustExec(sql)
 
 		tables, err := a.GetAllTableNames()
-		assert.NoError(t, err)
 
-		if err == nil {
+		if assert.NoError(t, err) {
 			assert.Equal(t, []string{"articles", "users"}, tables)
 		}
 	})
@@ -112,9 +111,7 @@ func TestAdapter_GetTable(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				got, err := a.GetTable(tt.args.tableName)
 
-				assert.NoError(t, err)
-
-				if err == nil {
+				if assert.NoError(t, err) {
 					assert.Equal(t, tt.want, got)
 				}
 			})
