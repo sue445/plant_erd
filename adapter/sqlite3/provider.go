@@ -5,6 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // for sql
 	"github.com/sue445/plant_erd/db"
+	"sort"
 )
 
 // Adapter represents sqlite3 adapter
@@ -74,6 +75,13 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 
 	table.ForeignKeys = foreignKeys
 
+	indexes, err := a.getIndexes(tableName)
+	if err != nil {
+		return nil, err
+	}
+
+	table.Indexes = indexes
+
 	return &table, nil
 }
 
@@ -98,4 +106,40 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 	}
 
 	return foreignKeys, nil
+}
+
+func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
+	var indexListRows []indexList
+	err := a.db.Select(&indexListRows, fmt.Sprintf("PRAGMA index_list(%s)", tableName))
+
+	if err != nil {
+		return nil, err
+	}
+
+	var indexes []*db.Index
+
+	for _, indexListRow := range indexListRows {
+		index := &db.Index{
+			Name:   indexListRow.Name,
+			Unique: indexListRow.Unique != 0,
+		}
+
+		var indexInfoRows []indexInfo
+		err := a.db.Select(&indexInfoRows, fmt.Sprintf("PRAGMA index_info(%s)", indexListRow.Name))
+
+		if err != nil {
+			return nil, err
+		}
+
+		sort.Slice(indexInfoRows, func(i, j int) bool {
+			return indexInfoRows[i].SeqNo < indexInfoRows[j].SeqNo
+		})
+
+		for _, indexListRow := range indexInfoRows {
+			index.Columns = append(index.Columns, indexListRow.Name)
+		}
+
+		indexes = append(indexes, index)
+	}
+	return indexes, nil
 }
