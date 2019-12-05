@@ -10,6 +10,7 @@ type Table struct {
 	Name        string
 	Columns     []*Column
 	ForeignKeys []*ForeignKey
+	Indexes     []*Index
 }
 
 // ToErd returns ERD formatted table

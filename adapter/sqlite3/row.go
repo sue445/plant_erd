@@ -23,3 +23,17 @@ type foreignKeyList struct {
 	OnDelete string `db:"on_delete"`
 	Match    string `db:"match"`
 }
+
+type indexList struct {
+	Seq     int    `db:"seq"`
+	Name    string `db:"name"`
+	Unique  int    `db:"unique"`
+	Origin  string `db:"origin"`
+	Partial int    `db:"partial"`
+}
+
+type indexInfo struct {
+	SeqNo int    `db:"seqno"`
+	Cid   int    `db:"cid"`
+	Name  string `db:"name"`
+}
