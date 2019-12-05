@@ -22,21 +22,33 @@ func (t *Table) ToErd() string {
 	pkColumns := t.GetPrimaryKeyColumns()
 	nonPkColumns := t.GetNonPrimaryKeyColumns()
 
-	if len(pkColumns) > 0 {
-		for _, column := range pkColumns {
-			lines = append(lines, "  "+column.ToErd())
-		}
-	}
+	var area []string
 
-	if len(pkColumns) > 0 && len(nonPkColumns) > 0 {
-		lines = append(lines, "  --")
+	if len(pkColumns) > 0 {
+		var parts []string
+		for _, column := range pkColumns {
+			parts = append(parts, "  "+column.ToErd())
+		}
+		area = append(area, strings.Join(parts, "\n"))
 	}
 
 	if len(nonPkColumns) > 0 {
+		var parts []string
 		for _, column := range nonPkColumns {
-			lines = append(lines, "  "+column.ToErd())
+			parts = append(parts, "  "+column.ToErd())
 		}
+		area = append(area, strings.Join(parts, "\n"))
 	}
+
+	if len(t.Indexes) > 0 {
+		var parts []string
+		for _, index := range t.Indexes {
+			parts = append(parts, "  "+index.ToErd())
+		}
+		area = append(area, strings.Join(parts, "\n"))
+	}
+
+	lines = append(lines, strings.Join(area, "\n  --\n"))
 
 	lines = append(lines, "}")
 	return strings.Join(lines, "\n")
