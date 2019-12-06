@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/sue445/plant_erd/adapter"
+	"github.com/sue445/plant_erd/adapter/mysql"
 	"github.com/sue445/plant_erd/adapter/sqlite3"
 	"github.com/sue445/plant_erd/db"
 	"github.com/urfave/cli"
@@ -51,6 +53,9 @@ func main() {
 	}
 
 	sqlite3Database := ""
+	mysqlConfig := mysqlDriver.NewConfig()
+	mysqlHost := "localhost"
+	mysqlPort := 3306
 	app.Commands = []cli.Command{
 		{
 			Name:    "sqlite3",
@@ -67,6 +72,73 @@ func main() {
 			),
 			Action: func(c *cli.Context) error {
 				adapter, close, err := sqlite3.NewAdapter(sqlite3Database)
+
+				if err != nil {
+					return err
+				}
+
+				defer close()
+
+				schema, err := loadSchema(adapter)
+				if err != nil {
+					return err
+				}
+
+				return generator.Run(schema)
+			},
+		},
+		{
+			Name:    "mysql",
+			Aliases: []string{"m"},
+			Usage:   "Output erd from mysql",
+			Flags: append(
+				commonFlags,
+				cli.StringFlag{
+					Name:        "host",
+					Usage:       "MySQL host",
+					Required:    false,
+					Destination: &mysqlHost,
+					Value:       "localhost",
+				},
+				cli.IntFlag{
+					Name:        "port",
+					Usage:       "MySQL port",
+					Required:    false,
+					Destination: &mysqlPort,
+					Value:       3306,
+				},
+				cli.StringFlag{
+					Name:        "user",
+					Usage:       "MySQL user",
+					Required:    false,
+					Destination: &mysqlConfig.User,
+					Value:       "root",
+				},
+				cli.StringFlag{
+					Name:        "password",
+					Usage:       "MySQL password",
+					Required:    false,
+					Destination: &mysqlConfig.Passwd,
+					EnvVar:      "MYSQL_PASSWORD",
+				},
+				cli.StringFlag{
+					Name:        "database",
+					Usage:       "MySQL database name",
+					Required:    true,
+					Destination: &mysqlConfig.DBName,
+				},
+				cli.StringFlag{
+					Name:        "collation",
+					Usage:       "MySQL collation",
+					Required:    false,
+					Destination: &mysqlConfig.Collation,
+					Value:       "utf8_general_ci",
+				},
+			),
+			Action: func(c *cli.Context) error {
+				mysqlConfig.Net = "tcp"
+
+				adapter, close, err := mysql.NewAdapter(mysqlConfig)
 
 				if err != nil {
 					return err
