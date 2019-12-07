@@ -54,8 +54,8 @@ func main() {
 
 	sqlite3Database := ""
 	mysqlConfig := mysqlDriver.NewConfig()
-	mysqlHost := "localhost"
-	mysqlPort := 3306
+	mysqlHost := ""
+	mysqlPort := 0
 	app.Commands = []cli.Command{
 		{
 			Name:    "sqlite3",
@@ -137,6 +137,7 @@ func main() {
 			),
 			Action: func(c *cli.Context) error {
 				mysqlConfig.Net = "tcp"
+				mysqlConfig.Addr = fmt.Sprintf("%s:%d", mysqlHost, mysqlPort)
 
 				adapter, close, err := mysql.NewAdapter(mysqlConfig)
 
