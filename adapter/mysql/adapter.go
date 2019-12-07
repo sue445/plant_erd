@@ -5,6 +5,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/sue445/plant_erd/db"
+	"strconv"
 )
 
 // Adapter represents sqlite3 adapter
@@ -24,6 +25,16 @@ func NewAdapter(config *mysql.Config) (*Adapter, Close, error) {
 	}
 
 	return &Adapter{db: db}, db.Close, nil
+}
+
+func rowString(row map[string]interface{}, columnName string) string {
+	return string(row[columnName].([]byte))
+}
+
+func rowInt(row map[string]interface{}, columnName string) int {
+	str := rowString(row, columnName)
+	num, _ := strconv.Atoi(str)
+	return num
 }
 
 // GetAllTableNames returns all table names in database
@@ -49,19 +60,25 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 		Name: tableName,
 	}
 
-	var rows []column
-	err := a.db.Select(&rows, fmt.Sprintf("SHOW COLUMNS FROM %s", tableName))
+	rows, err := a.db.Queryx(fmt.Sprintf("SHOW COLUMNS FROM %s", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
-	for _, row := range rows {
+	for rows.Next() {
+		row := map[string]interface{}{}
+		err := rows.MapScan(row)
+
+		if err != nil {
+			return nil, err
+		}
+
 		column := &db.Column{
-			Name:       row.Field,
-			Type:       row.Type,
-			NotNull:    row.Null == "NO",
-			PrimaryKey: row.Key == "PRI",
+			Name:       rowString(row, "Field"),
+			Type:       rowString(row, "Type"),
+			NotNull:    rowString(row, "Null") == "NO",
+			PrimaryKey: rowString(row, "Key") == "PRI",
 		}
 
 		table.Columns = append(table.Columns, column)
@@ -101,7 +118,8 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
               AND fk.table_schema = database()
               AND fk.table_name = ?
               AND rc.constraint_schema = database()
-              AND rc.table_name = ?`
+              AND rc.table_name = ?
+            ORDER BY 'column', 'to_table', 'primary_key'`
 
 	err := a.db.Select(&rows, sql, tableName, tableName)
 	if err != nil {
@@ -123,8 +141,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 }
 
 func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
-	var rows []index
-	err := a.db.Select(&rows, fmt.Sprintf("SHOW INDEX FROM %s WHERE Key_name != 'PRIMARY'", tableName))
+	rows, err := a.db.Queryx(fmt.Sprintf("SHOW INDEX FROM %s WHERE Key_name != 'PRIMARY'", tableName))
 
 	if err != nil {
 		return nil, err
@@ -133,18 +150,27 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 	var indexes []*db.Index
 
 	currentIndex := ""
-	for _, row := range rows {
-		if row.KeyName != currentIndex {
+	for rows.Next() {
+		row := map[string]interface{}{}
+		err := rows.MapScan(row)
+
+		if err != nil {
+			return nil, err
+		}
+
+		keyName := rowString(row, "Key_name")
+
+		if keyName != currentIndex {
 			index := db.Index{
-				Name:   row.KeyName,
-				Unique: row.NonUnique == 0,
+				Name:   keyName,
+				Unique: rowInt(row, "Non_unique") == 0,
 			}
 			indexes = append(indexes, &index)
-			currentIndex = row.KeyName
+			currentIndex = keyName
 		}
 
 		last := len(indexes) - 1
-		indexes[last].Columns = append(indexes[last].Columns, row.ColumnName)
+		indexes[last].Columns = append(indexes[last].Columns, rowString(row, "Column_name"))
 	}
 
 	return indexes, nil
