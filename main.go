@@ -54,8 +54,8 @@ func main() {
 
 	sqlite3Database := ""
 	mysqlConfig := mysqlDriver.NewConfig()
-	mysqlHost := "localhost"
-	mysqlPort := 3306
+	mysqlHost := ""
+	mysqlPort := 0
 	app.Commands = []cli.Command{
 		{
 			Name:    "sqlite3",
