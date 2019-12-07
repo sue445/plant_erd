@@ -137,6 +137,7 @@ func main() {
 			),
 			Action: func(c *cli.Context) error {
 				mysqlConfig.Net = "tcp"
+				mysqlConfig.Addr = fmt.Sprintf("%s:%d", mysqlHost, mysqlPort)
 
 				adapter, close, err := mysql.NewAdapter(mysqlConfig)
 
