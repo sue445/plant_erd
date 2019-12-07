@@ -33,6 +33,9 @@ func withDatabase(callback func(*Adapter)) {
 
 	defer close()
 
+	adapter.db.MustExec("DROP TABLE IF EXISTS followers;")
+	adapter.db.MustExec("DROP TABLE IF EXISTS articles;")
+	adapter.db.MustExec("DROP TABLE IF EXISTS users;")
 	callback(adapter)
 }
 
