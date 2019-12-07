@@ -5,7 +5,9 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/sue445/plant_erd/db"
+	"sort"
 	"strconv"
+	"strings"
 )
 
 // Adapter represents sqlite3 adapter
@@ -118,8 +120,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
               AND fk.table_schema = database()
               AND fk.table_name = ?
               AND rc.constraint_schema = database()
-              AND rc.table_name = ?
-            ORDER BY 'column', 'to_table', 'primary_key'`
+              AND rc.table_name = ?`
 
 	err := a.db.Select(&rows, sql, tableName, tableName)
 	if err != nil {
@@ -136,6 +137,22 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 
 		foreignKeys = append(foreignKeys, foreignKey)
 	}
+
+	// FIXME: `ORDER BY 'column', 'to_table', 'primary_key'` doesn't work on MySQL 5.6 and 5,7
+	sort.Slice(foreignKeys, func(i, j int) bool {
+		fk1 := foreignKeys[i]
+		fk2 := foreignKeys[j]
+
+		if strings.Compare(fk1.FromColumn, fk2.FromColumn) != 0 {
+			return strings.Compare(fk1.FromColumn, fk2.FromColumn) < 0
+		}
+
+		if strings.Compare(fk1.ToTable, fk2.ToTable) != 0 {
+			return strings.Compare(fk1.ToTable, fk2.ToTable) < 0
+		}
+
+		return strings.Compare(fk1.ToColumn, fk2.ToColumn) < 0
+	})
 
 	return foreignKeys, nil
 }
