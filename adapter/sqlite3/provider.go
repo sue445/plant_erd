@@ -5,7 +5,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // for sql
 	"github.com/sue445/plant_erd/db"
-	"sort"
 )
 
 // Adapter represents sqlite3 adapter
@@ -25,6 +24,10 @@ func NewAdapter(name string) (*Adapter, Close, error) {
 	}
 
 	return &Adapter{db: db}, db.Close, nil
+}
+
+func toBool(i int64) bool {
+	return i != 0
 }
 
 // GetAllTableNames returns all table names in database
@@ -50,19 +53,25 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 		Name: tableName,
 	}
 
-	var rows []tableInfo
-	err := a.db.Select(&rows, fmt.Sprintf("PRAGMA table_info(%s)", tableName))
+	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA table_info(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
-	for _, row := range rows {
+	for rows.Next() {
+		row := map[string]interface{}{}
+		err := rows.MapScan(row)
+
+		if err != nil {
+			return nil, err
+		}
+
 		column := &db.Column{
-			Name:       row.Name,
-			Type:       row.Type,
-			NotNull:    row.NotNull,
-			PrimaryKey: row.PrimaryKey,
+			Name:       row["name"].(string),
+			Type:       row["type"].(string),
+			NotNull:    toBool(row["notnull"].(int64)),
+			PrimaryKey: toBool(row["pk"].(int64)),
 		}
 
 		table.Columns = append(table.Columns, column)
@@ -86,20 +95,26 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 }
 
 func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
-	var rows []foreignKeyList
-	err := a.db.Select(&rows, fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
+	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
 	var foreignKeys []*db.ForeignKey
-	for _, row := range rows {
+	for rows.Next() {
+		row := map[string]interface{}{}
+		err := rows.MapScan(row)
+
+		if err != nil {
+			return nil, err
+		}
+
 		foreignKey := &db.ForeignKey{
-			Sequence:   row.Seq,
-			FromColumn: row.From,
-			ToColumn:   row.To,
-			ToTable:    row.Table,
+			Sequence:   int(row["seq"].(int64)),
+			FromColumn: row["from"].(string),
+			ToColumn:   row["to"].(string),
+			ToTable:    row["table"].(string),
 		}
 
 		foreignKeys = append(foreignKeys, foreignKey)
@@ -109,37 +124,58 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 }
 
 func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
-	var indexListRows []indexList
-	err := a.db.Select(&indexListRows, fmt.Sprintf("PRAGMA index_list(%s)", tableName))
+	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA index_list(%s)", tableName))
 
 	if err != nil {
 		return nil, err
 	}
 
 	var indexes []*db.Index
-
-	for _, indexListRow := range indexListRows {
-		index := &db.Index{
-			Name:   indexListRow.Name,
-			Unique: indexListRow.Unique != 0,
-		}
-
-		var indexInfoRows []indexInfo
-		err := a.db.Select(&indexInfoRows, fmt.Sprintf("PRAGMA index_info(%s)", indexListRow.Name))
+	for rows.Next() {
+		row := map[string]interface{}{}
+		err := rows.MapScan(row)
 
 		if err != nil {
 			return nil, err
 		}
 
-		sort.Slice(indexInfoRows, func(i, j int) bool {
-			return indexInfoRows[i].SeqNo < indexInfoRows[j].SeqNo
-		})
-
-		for _, indexListRow := range indexInfoRows {
-			index.Columns = append(index.Columns, indexListRow.Name)
+		index := &db.Index{
+			Name:   row["name"].(string),
+			Unique: row["unique"].(int64) != 0,
 		}
+
+		columns, err := a.getIndexColumns(index.Name)
+
+		if err != nil {
+			return nil, err
+		}
+
+		index.Columns = columns
 
 		indexes = append(indexes, index)
 	}
+
 	return indexes, nil
+}
+
+func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
+	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA index_info(%s)", indexName))
+
+	if err != nil {
+		return nil, err
+	}
+
+	var columns []string
+	for rows.Next() {
+		row := map[string]interface{}{}
+		err := rows.MapScan(row)
+
+		if err != nil {
+			return nil, err
+		}
+
+		columns = append(columns, row["name"].(string))
+	}
+
+	return columns, nil
 }
