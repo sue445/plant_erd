@@ -1,7 +1,7 @@
 package mysql
 
 type informationSchemaTables struct {
-	TableName string `db:"TABLE_NAME"`
+	TableName string `db:"table_name"`
 }
 
 type foreignKey struct {
