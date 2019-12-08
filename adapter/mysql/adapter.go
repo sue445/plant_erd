@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// Adapter represents sqlite3 adapter
+// Adapter represents MySQL adapter
 type Adapter struct {
 	db *sqlx.DB
 }
