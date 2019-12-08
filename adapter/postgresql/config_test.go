@@ -12,6 +12,7 @@ func TestConfig_FormatDSN(t *testing.T) {
 		Password string
 		Host     string
 		Port     int
+		SslMode  string
 	}
 	tests := []struct {
 		name   string
@@ -26,8 +27,9 @@ func TestConfig_FormatDSN(t *testing.T) {
 				Password: "password",
 				Host:     "localhost",
 				Port:     5432,
+				SslMode:  "verify-full",
 			},
-			want: "dbname=plant_erd_test user=postgres password=password host=localhost port=5432",
+			want: "dbname=plant_erd_test user=postgres password=password host=localhost port=5432 sslmode=verify-full",
 		},
 		{
 			name:   "no fields",
@@ -64,6 +66,7 @@ func TestConfig_FormatDSN(t *testing.T) {
 				Password: tt.fields.Password,
 				Host:     tt.fields.Host,
 				Port:     tt.fields.Port,
+				SslMode:  tt.fields.SslMode,
 			}
 
 			got := c.FormatDSN()

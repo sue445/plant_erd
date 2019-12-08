@@ -9,6 +9,7 @@ services:
 
     links:
       - mysql
+      - postgresql
 
     environment:
       MYSQL_HOST: mysql
@@ -16,6 +17,11 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
       MYSQL_DATABASE: plant_erd_test
+      POSTGRES_HOST: postgresql
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: plant_erd_test
 
     volumes:
       - go-mod:/go/pkg/mod
@@ -30,6 +36,17 @@ services:
       MYSQL_DATABASE: plant_erd_test
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
+
+  postgresql:
+    image: postgres:12-alpine
+
+    ports:
+      - 5432:5432
+
+    environment:
+      POSTGRES_DB: plant_erd_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
 volumes:
   go-mod:
