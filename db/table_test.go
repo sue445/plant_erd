@@ -97,13 +97,11 @@ func TestTable_ToErd(t *testing.T) {
 				},
 				ForeignKeys: []*ForeignKey{
 					{
-						Sequence:   0,
 						FromColumn: "target_user_id",
 						ToTable:    "users",
 						ToColumn:   "id",
 					},
 					{
-						Sequence:   0,
 						FromColumn: "user_id",
 						ToTable:    "users",
 						ToColumn:   "id",

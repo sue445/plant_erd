@@ -35,7 +35,6 @@ func TestSchema_ToErd(t *testing.T) {
 						},
 						ForeignKeys: []*ForeignKey{
 							{
-								Sequence:   0,
 								FromColumn: "user_id",
 								ToTable:    "users",
 								ToColumn:   "id",
@@ -94,7 +93,6 @@ articles }-- users`,
 						},
 						ForeignKeys: []*ForeignKey{
 							{
-								Sequence:   0,
 								FromColumn: "user_id",
 								ToTable:    "users",
 								ToColumn:   "id",
@@ -141,7 +139,6 @@ func TestSchema_SurroundingTablesWithin(t *testing.T) {
 			},
 			ForeignKeys: []*ForeignKey{
 				{
-					Sequence:   0,
 					FromColumn: "user_id",
 					ToTable:    "users",
 					ToColumn:   "id",
@@ -165,7 +162,6 @@ func TestSchema_SurroundingTablesWithin(t *testing.T) {
 			},
 			ForeignKeys: []*ForeignKey{
 				{
-					Sequence:   0,
 					FromColumn: "article_id",
 					ToTable:    "articles",
 					ToColumn:   "id",
@@ -194,13 +190,11 @@ func TestSchema_SurroundingTablesWithin(t *testing.T) {
 			},
 			ForeignKeys: []*ForeignKey{
 				{
-					Sequence:   0,
 					FromColumn: "user_id",
 					ToTable:    "users",
 					ToColumn:   "id",
 				},
 				{
-					Sequence:   0,
 					FromColumn: "target_user_id",
 					ToTable:    "users",
 					ToColumn:   "id",
@@ -229,13 +223,11 @@ func TestSchema_SurroundingTablesWithin(t *testing.T) {
 			},
 			ForeignKeys: []*ForeignKey{
 				{
-					Sequence:   0,
 					FromColumn: "user_id",
 					ToTable:    "users",
 					ToColumn:   "id",
 				},
 				{
-					Sequence:   0,
 					FromColumn: "target_user_id",
 					ToTable:    "users",
 					ToColumn:   "id",
@@ -258,13 +250,11 @@ func TestSchema_SurroundingTablesWithin(t *testing.T) {
 			},
 			ForeignKeys: []*ForeignKey{
 				{
-					Sequence:   0,
 					FromColumn: "article_id",
 					ToTable:    "articles",
 					ToColumn:   "id",
 				},
 				{
-					Sequence:   0,
 					FromColumn: "user_id",
 					ToTable:    "users",
 					ToColumn:   "id",
@@ -288,7 +278,6 @@ func TestSchema_SurroundingTablesWithin(t *testing.T) {
 			},
 			ForeignKeys: []*ForeignKey{
 				{
-					Sequence:   0,
 					FromColumn: "article_id",
 					ToTable:    "articles",
 					ToColumn:   "id",

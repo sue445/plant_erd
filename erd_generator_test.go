@@ -30,7 +30,6 @@ func TestErdGenerator_generate(t *testing.T) {
 			},
 			ForeignKeys: []*db.ForeignKey{
 				{
-					Sequence:   0,
 					FromColumn: "user_id",
 					ToTable:    "users",
 					ToColumn:   "id",
