@@ -9,6 +9,4 @@ type foreignKey struct {
 	PrimaryKey string `db:"primary_key"`
 	Column     string `db:"column"`
 	Name       string `db:"name"`
-	OnUpdate   string `db:"on_update"`
-	OnDelete   string `db:"on_delete"`
 }

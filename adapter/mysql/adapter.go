@@ -107,22 +107,18 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 	var rows []foreignKey
 
 	// c.f. https://github.com/rails/rails/blob/v6.0.1/activerecord/lib/active_record/connection_adapters/abstract_mysql_adapter.rb#L385-L400
-	sql := `SELECT fk.referenced_table_name AS 'to_table',
-                   fk.referenced_column_name AS 'primary_key',
-                   fk.column_name AS 'column',
-                   fk.constraint_name AS 'name',
-                   rc.update_rule AS 'on_update',
-                   rc.delete_rule AS 'on_delete'
-            FROM information_schema.referential_constraints rc
-            JOIN information_schema.key_column_usage fk
-            USING (constraint_schema, constraint_name)
-            WHERE fk.referenced_column_name IS NOT NULL
-              AND fk.table_schema = database()
-              AND fk.table_name = ?
-              AND rc.constraint_schema = database()
-              AND rc.table_name = ?`
+	sql := `
+			SELECT fk.referenced_table_name AS 'to_table',
+			       fk.referenced_column_name AS 'primary_key',
+			       fk.column_name AS 'column',
+			       fk.constraint_name AS 'name'
+			FROM information_schema.key_column_usage fk
+			WHERE fk.referenced_column_name IS NOT NULL
+			  AND fk.table_schema = database()
+			  AND fk.table_name = ?
+            `
 
-	err := a.db.Select(&rows, sql, tableName, tableName)
+	err := a.db.Select(&rows, sql, tableName)
 	if err != nil {
 		return nil, err
 	}
