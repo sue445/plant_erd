@@ -111,7 +111,6 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 		}
 
 		foreignKey := &db.ForeignKey{
-			Sequence:   int(row["seq"].(int64)),
 			FromColumn: row["from"].(string),
 			ToColumn:   row["to"].(string),
 			ToTable:    row["table"].(string),

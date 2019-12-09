@@ -121,7 +121,6 @@ func TestAdapter_GetTable(t *testing.T) {
 					},
 					ForeignKeys: []*db.ForeignKey{
 						{
-							Sequence:   0,
 							FromColumn: "user_id",
 							ToTable:    "users",
 							ToColumn:   "id",
@@ -163,13 +162,11 @@ func TestAdapter_GetTable(t *testing.T) {
 					},
 					ForeignKeys: []*db.ForeignKey{
 						{
-							Sequence:   0,
 							FromColumn: "target_user_id",
 							ToTable:    "users",
 							ToColumn:   "id",
 						},
 						{
-							Sequence:   0,
 							FromColumn: "user_id",
 							ToTable:    "users",
 							ToColumn:   "id",
