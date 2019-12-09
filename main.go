@@ -5,6 +5,7 @@ import (
 	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/sue445/plant_erd/adapter"
 	"github.com/sue445/plant_erd/adapter/mysql"
+	"github.com/sue445/plant_erd/adapter/postgresql"
 	"github.com/sue445/plant_erd/adapter/sqlite3"
 	"github.com/sue445/plant_erd/db"
 	"github.com/urfave/cli"
@@ -56,6 +57,8 @@ func main() {
 	mysqlConfig := mysqlDriver.NewConfig()
 	mysqlHost := ""
 	mysqlPort := 0
+	postgresqlConfig := postgresql.NewConfig()
+
 	app.Commands = []cli.Command{
 		{
 			Name:    "sqlite3",
@@ -140,6 +143,70 @@ func main() {
 				mysqlConfig.Addr = fmt.Sprintf("%s:%d", mysqlHost, mysqlPort)
 
 				adapter, close, err := mysql.NewAdapter(mysqlConfig)
+
+				if err != nil {
+					return err
+				}
+
+				defer close()
+
+				schema, err := loadSchema(adapter)
+				if err != nil {
+					return err
+				}
+
+				return generator.Run(schema)
+			},
+		},
+		{
+			Name:    "postgresql",
+			Aliases: []string{"p"},
+			Usage:   "Output erd from PostgreSQL",
+			Flags: append(
+				commonFlags,
+				cli.StringFlag{
+					Name:        "host",
+					Usage:       "PostgreSQL host",
+					Required:    false,
+					Destination: &postgresqlConfig.Host,
+					Value:       "localhost",
+				},
+				cli.IntFlag{
+					Name:        "port",
+					Usage:       "PostgreSQL port",
+					Required:    false,
+					Destination: &postgresqlConfig.Port,
+					Value:       5432,
+				},
+				cli.StringFlag{
+					Name:        "user",
+					Usage:       "PostgreSQL user",
+					Required:    false,
+					Destination: &postgresqlConfig.User,
+				},
+				cli.StringFlag{
+					Name:        "password",
+					Usage:       "PostgreSQL password",
+					Required:    false,
+					Destination: &postgresqlConfig.Password,
+					EnvVar:      "POSTGRES_PASSWORD",
+				},
+				cli.StringFlag{
+					Name:        "database",
+					Usage:       "PostgreSQL database name",
+					Required:    true,
+					Destination: &postgresqlConfig.DBName,
+				},
+				cli.StringFlag{
+					Name:        "sslmode",
+					Usage:       "PostgreSQL sslmode. c.f. https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS",
+					Required:    false,
+					Destination: &postgresqlConfig.SslMode,
+					Value:       "disable",
+				},
+			),
+			Action: func(c *cli.Context) error {
+				adapter, close, err := postgresql.NewAdapter(postgresqlConfig)
 
 				if err != nil {
 					return err
