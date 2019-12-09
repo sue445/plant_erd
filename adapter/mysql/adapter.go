@@ -104,7 +104,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 }
 
 func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
-	var rows []foreignKey
+	var rows []infomationSchemaKeyColumnUsage
 
 	// c.f. https://github.com/rails/rails/blob/v6.0.1/activerecord/lib/active_record/connection_adapters/abstract_mysql_adapter.rb#L385-L400
 	sql := `
