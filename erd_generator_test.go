@@ -158,3 +158,86 @@ func TestErdGenerator_outputErd_ToStdout(t *testing.T) {
 
 	assert.Equal(t, "aaa", str)
 }
+
+func TestErdGenerator_checkParamTable(t *testing.T) {
+	type fields struct {
+		Filepath string
+		Table    string
+		Distance int
+	}
+	type args struct {
+		schema *db.Schema
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "--table is not passed",
+			fields: fields{
+				Table: "",
+			},
+			args: args{
+				schema: &db.Schema{
+					Tables: []*db.Table{
+						{
+							Name: "users",
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "--table is passed and tables is exists",
+			fields: fields{
+				Table: "users",
+			},
+			args: args{
+				schema: &db.Schema{
+					Tables: []*db.Table{
+						{
+							Name: "users",
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "--table is passed and tables is not exists",
+			fields: fields{
+				Table: "users",
+			},
+			args: args{
+				schema: &db.Schema{
+					Tables: []*db.Table{
+						{
+							Name: "articles",
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			g := &ErdGenerator{
+				Filepath: tt.fields.Filepath,
+				Table:    tt.fields.Table,
+				Distance: tt.fields.Distance,
+			}
+
+			err := g.checkParamTable(tt.args.schema)
+
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
