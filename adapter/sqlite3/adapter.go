@@ -9,7 +9,7 @@ import (
 
 // Adapter represents sqlite3 adapter
 type Adapter struct {
-	db *sqlx.DB
+	DB *sqlx.DB
 }
 
 // Close represents function for close database
@@ -23,7 +23,7 @@ func NewAdapter(name string) (*Adapter, Close, error) {
 		return nil, nil, err
 	}
 
-	return &Adapter{db: db}, db.Close, nil
+	return &Adapter{DB: db}, db.Close, nil
 }
 
 func toBool(i int64) bool {
@@ -33,7 +33,7 @@ func toBool(i int64) bool {
 // GetAllTableNames returns all table names in database
 func (a *Adapter) GetAllTableNames() ([]string, error) {
 	var rows []sqliteMaster
-	err := a.db.Select(&rows, "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+	err := a.DB.Select(&rows, "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
 
 	if err != nil {
 		return []string{}, err
@@ -53,7 +53,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 		Name: tableName,
 	}
 
-	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA table_info(%s)", tableName))
+	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA table_info(%s)", tableName))
 
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 }
 
 func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
-	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
+	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 }
 
 func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
-	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA index_list(%s)", tableName))
+	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA index_list(%s)", tableName))
 
 	if err != nil {
 		return nil, err
@@ -158,7 +158,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 }
 
 func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
-	rows, err := a.db.Queryx(fmt.Sprintf("PRAGMA index_info(%s)", indexName))
+	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA index_info(%s)", indexName))
 
 	if err != nil {
 		return nil, err
