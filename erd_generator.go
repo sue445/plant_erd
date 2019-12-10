@@ -16,8 +16,28 @@ type ErdGenerator struct {
 
 // Run performs generator
 func (g *ErdGenerator) Run(schema *db.Schema) error {
+	err := g.checkParamTable(schema)
+
+	if err != nil {
+		return err
+	}
+
 	erd := g.generate(schema)
 	return g.outputErd(erd)
+}
+
+func (g *ErdGenerator) checkParamTable(schema *db.Schema) error {
+	if g.Table == "" {
+		return nil
+	}
+
+	for _, table := range schema.Tables {
+		if table.Name == g.Table {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("%s is not found in database", g.Table)
 }
 
 func (g *ErdGenerator) generate(schema *db.Schema) string {
