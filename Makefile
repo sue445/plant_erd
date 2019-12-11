@@ -64,5 +64,9 @@ lint:
 vet:
 	go vet ./...
 
+.PHONY: integration_test
+integration_test: bin/$(NAME)
+	go test _integration/check_readme_test.go
+
 .PHONY: test_all
-test_all: test testrace fmt lint vet
+test_all: test testrace fmt lint vet integration_test

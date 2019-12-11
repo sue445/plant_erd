@@ -200,8 +200,8 @@ jobs:
           url: ${{ secrets.SLACK_WEBHOOK }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  check_readme:
-    name: Check README.md
+  integration_test:
+    name: integration_test
     runs-on: ubuntu-latest
 
     steps:
@@ -221,23 +221,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: build bin
-        run: make
-
-      - name: Check whether result of `plant_erd sqlite3 --help` is included in README.md
-        run: |
-          ./bin/plant_erd sqlite3 --help > /tmp/sqlite3.txt
-          go run ./_integration/check_readme.go README.md /tmp/sqlite3.txt
-
-      - name: Check whether result of `plant_erd mysql --help` is included in README.md
-        run: |
-          ./bin/plant_erd mysql --help > /tmp/mysql.txt
-          go run ./_integration/check_readme.go README.md /tmp/mysql.txt
-
-      - name: Check whether result of `plant_erd postgresql --help` is included in README.md
-        run: |
-          ./bin/plant_erd postgresql --help > /tmp/postgresql.txt
-          go run ./_integration/check_readme.go README.md /tmp/postgresql.txt
+      - name: Run integration_test
+        run: make integration_test
 
       - name: Slack Notification (not success)
         uses: homoluctus/slatify@v2.0.0
@@ -254,7 +239,7 @@ jobs:
       - mysql
       - postgresql
       - lint
-      - check_readme
+      - integration_test
 
     runs-on: ubuntu-latest
 
