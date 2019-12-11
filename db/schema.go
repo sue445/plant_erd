@@ -17,12 +17,12 @@ func NewSchema(tables []*Table) *Schema {
 }
 
 // ToErd returns ERD formatted schema
-func (s *Schema) ToErd() string {
+func (s *Schema) ToErd(showIndex bool) string {
 	var lines []string
 	tableNames := mapset.NewSet()
 
 	for _, table := range s.Tables {
-		lines = append(lines, table.ToErd())
+		lines = append(lines, table.ToErd(showIndex))
 		tableNames.Add(table.Name)
 	}
 

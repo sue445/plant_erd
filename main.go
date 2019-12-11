@@ -51,6 +51,12 @@ func main() {
 			Destination: &generator.Distance,
 			Value:       0,
 		},
+		cli.BoolFlag{
+			Name:        "i,skip-index",
+			Usage:       "Whether don't print index to ERD",
+			Required:    false,
+			Destination: &generator.SKipIndex,
+		},
 	}
 
 	sqlite3Database := ""
