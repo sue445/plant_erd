@@ -9,9 +9,13 @@ func TestSchema_ToErd(t *testing.T) {
 	type fields struct {
 		Tables []*Table
 	}
+	type args struct {
+		showIndex bool
+	}
 	tests := []struct {
 		name   string
 		fields fields
+		args   args
 		want   string
 	}{
 		{
@@ -58,6 +62,9 @@ func TestSchema_ToErd(t *testing.T) {
 					},
 				},
 			},
+			args: args{
+				showIndex: true,
+			},
 			want: `entity articles {
   * id : integer
   --
@@ -101,6 +108,9 @@ articles }-- users`,
 					},
 				},
 			},
+			args: args{
+				showIndex: true,
+			},
 			want: `entity articles {
   * id : integer
   --
@@ -114,7 +124,7 @@ articles }-- users`,
 				Tables: tt.fields.Tables,
 			}
 
-			got := s.ToErd()
+			got := s.ToErd(tt.args.showIndex)
 			assert.Equal(t, tt.want, got)
 		})
 	}

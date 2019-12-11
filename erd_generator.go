@@ -9,9 +9,10 @@ import (
 
 // ErdGenerator represents ERD generator
 type ErdGenerator struct {
-	Filepath string
-	Table    string
-	Distance int
+	Filepath  string
+	Table     string
+	Distance  int
+	SKipIndex bool
 }
 
 // Run performs generator
@@ -42,11 +43,11 @@ func (g *ErdGenerator) checkParamTable(schema *db.Schema) error {
 
 func (g *ErdGenerator) generate(schema *db.Schema) string {
 	if g.Table == "" || g.Distance <= 0 {
-		return schema.ToErd()
+		return schema.ToErd(!g.SKipIndex)
 	}
 
 	subset := schema.Subset(g.Table, g.Distance)
-	return subset.ToErd()
+	return subset.ToErd(!g.SKipIndex)
 }
 
 func (g *ErdGenerator) outputErd(content string) error {

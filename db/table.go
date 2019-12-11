@@ -14,7 +14,7 @@ type Table struct {
 }
 
 // ToErd returns ERD formatted table
-func (t *Table) ToErd() string {
+func (t *Table) ToErd(showIndex bool) string {
 	lines := []string{
 		fmt.Sprintf("entity %s {", t.Name),
 	}
@@ -40,7 +40,7 @@ func (t *Table) ToErd() string {
 		area = append(area, strings.Join(parts, "\n"))
 	}
 
-	if len(t.Indexes) > 0 {
+	if showIndex && len(t.Indexes) > 0 {
 		var parts []string
 		for _, index := range t.Indexes {
 			parts = append(parts, "  "+index.ToErd())
