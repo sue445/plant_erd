@@ -15,20 +15,20 @@ func withDatabase(callback func(*Adapter)) {
 
 	defer close()
 
-	adapter.db.MustExec("PRAGMA foreign_keys = ON;")
+	adapter.DB.MustExec("PRAGMA foreign_keys = ON;")
 
 	callback(adapter)
 }
 
 func TestAdapter_GetAllTableNames(t *testing.T) {
 	withDatabase(func(a *Adapter) {
-		a.db.MustExec(`
+		a.DB.MustExec(`
 			CREATE TABLE users (
 				id   integer not null primary key,
 				name text
 		);`)
 
-		a.db.MustExec(`
+		a.DB.MustExec(`
 			CREATE TABLE articles (
 				id      integer not null primary key, 
 				user_id integer not null, 
@@ -45,21 +45,21 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 
 func TestAdapter_GetTable(t *testing.T) {
 	withDatabase(func(a *Adapter) {
-		a.db.MustExec(`
+		a.DB.MustExec(`
 			CREATE TABLE users (
 				id   integer not null primary key,
 				name text
 		);`)
 
-		a.db.MustExec(`
+		a.DB.MustExec(`
 			CREATE TABLE articles (
 				id      integer not null primary key, 
 				user_id integer not null, 
 				FOREIGN KEY(user_id) REFERENCES users(id)
 		);`)
-		a.db.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")
+		a.DB.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")
 
-		a.db.MustExec(`
+		a.DB.MustExec(`
 			CREATE TABLE followers (
 				id             integer not null primary key,
 				user_id        integer not null,
@@ -67,8 +67,8 @@ func TestAdapter_GetTable(t *testing.T) {
 				FOREIGN KEY(user_id)        REFERENCES users(id),
 				FOREIGN KEY(target_user_id) REFERENCES users(id)
 		);`)
-		a.db.MustExec("CREATE UNIQUE INDEX index_user_id_and_target_user_id_on_followers ON followers(user_id, target_user_id)")
-		a.db.MustExec("CREATE UNIQUE INDEX index_target_user_id_and_user_id_on_followers ON followers(target_user_id, user_id)")
+		a.DB.MustExec("CREATE UNIQUE INDEX index_user_id_and_target_user_id_on_followers ON followers(user_id, target_user_id)")
+		a.DB.MustExec("CREATE UNIQUE INDEX index_target_user_id_and_user_id_on_followers ON followers(target_user_id, user_id)")
 
 		type args struct {
 			tableName string
