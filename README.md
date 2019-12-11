@@ -33,8 +33,8 @@ articles }-- users
 
 ## Supports
 * SQLite3
-* MySQL: 5.6, 5.7, 8
-* PostgreSQL: 9, 10, 11, 12
+* MySQL: 5.6, 5.7 and 8
+* PostgreSQL: 9, 10, 11 and 12
 
 ## Usage
 Download latest binary from https://github.com/sue445/plant_erd/releases and `chmod 755`
