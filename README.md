@@ -11,6 +11,8 @@ entity articles {
   * id : integer
   --
   * user_id : integer
+  --
+  index_user_id_on_articles (user_id)
 }
 
 entity users {
