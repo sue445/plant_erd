@@ -66,11 +66,12 @@ jobs:
           infile: coverage.out
           outfile: coverage.lcov
 
-#      - name: Coveralls
-#        uses: coverallsapp/github-action@master
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          path-to-lcov: coverage.lcov
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage.lcov
+          parallel:     true
 
       - name: Slack Notification (not success)
         uses: homoluctus/slatify@v2.0.0
@@ -142,11 +143,12 @@ jobs:
           infile: coverage.out
           outfile: coverage.lcov
 
-#      - name: Coveralls
-#        uses: coverallsapp/github-action@master
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          path-to-lcov: coverage.lcov
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage.lcov
+          parallel:     true
 
       - name: Slack Notification (not success)
         uses: homoluctus/slatify@v2.0.0
@@ -244,6 +246,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token:      ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
+
       - name: Slack Notification (success)
         uses: homoluctus/slatify@v2.0.0
         if: always()
