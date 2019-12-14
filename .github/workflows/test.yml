@@ -5,7 +5,7 @@ on:
 
 env:
   GO111MODULE: "on"
-  TEST_ARGS: -coverprofile coverage.out -covermode atomic
+  TEST_ARGS: -coverprofile c.out -covermode atomic
 
 jobs:
   mysql:
@@ -209,14 +209,14 @@ jobs:
       - name: Convert coverage to lcov
         uses: jandelgado/gcov2lcov-action@v1.0.0
         with:
-          infile: coverage.out
-          outfile: coverage.lcov
+          infile: c.out
+          outfile: c.lcov
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: coverage.lcov
+          path-to-lcov: c.lcov
 
       - name: Slack Notification (not success)
         uses: homoluctus/slatify@v2.0.0
