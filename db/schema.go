@@ -37,15 +37,10 @@ func (s *Schema) ToErd(showIndex bool) string {
 	return strings.Join(lines, "\n\n")
 }
 
-// SurroundingTablesWithin returns surrounding tables from table
-func (s *Schema) SurroundingTablesWithin(tableName string, distance int) []string {
-	explorer := NewSchemaExplorer(s)
-	return explorer.Explore(tableName, distance)
-}
-
 // Subset returns subset of a schema
 func (s *Schema) Subset(tableName string, distance int) *Schema {
-	tableNames := s.SurroundingTablesWithin(tableName, distance)
+	explorer := NewSchemaExplorer(s)
+	tableNames := explorer.Explore(tableName, distance)
 
 	var tables []*Table
 	for _, tableName := range tableNames {
