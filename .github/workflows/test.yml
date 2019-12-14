@@ -139,6 +139,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      CC_TEST_REPORTER_ID:  ${{ secrets.CC_TEST_REPORTER_ID }}
+
     services:
       mysql:
         image: mysql
@@ -174,6 +177,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
+      - name: Setup cc-test-reporter
+        run: |
+          set -xe
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+
       - name: Run test
         run: |
           set -xe
@@ -190,6 +200,11 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DATABASE: plant_erd_test
+
+      - name: Teardown cc-test-reporter
+        if: always()
+        run: |
+          ./cc-test-reporter after-build --exit-code $?
 
       - name: Convert coverage to lcov
         uses: jandelgado/gcov2lcov-action@v1.0.0
