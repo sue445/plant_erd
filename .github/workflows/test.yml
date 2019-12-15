@@ -201,6 +201,15 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DATABASE: plant_erd_test
 
+      - name: Copy to under GOPATH
+        # NOTE: cc-test-reporter doesn't support GO111MODULE
+        # c.f. https://github.com/sue445/plant_erd/pull/45/checks?check_run_id=348749712
+        run: |
+          set -xe
+          REPO_DIR="~/go/src/github.com/${GITHUB_REPOSITORY}/"
+          mkdir -p $REPO_DIR
+          cp -R * $REPO_DIR
+
       - name: Teardown cc-test-reporter
         if: always()
         run: |
