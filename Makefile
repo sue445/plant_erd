@@ -15,7 +15,7 @@ bin/$(NAME): $(SRCS)
 
 .PHONY: gox
 gox:
-	gox -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}"
+	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}"
 
 .PHONY: zip
 zip:
