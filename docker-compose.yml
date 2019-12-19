@@ -10,6 +10,7 @@ services:
     links:
       - mysql
       - postgresql
+      - oracle
 
     environment:
       # TEST_ARGS: -v
@@ -23,6 +24,15 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DATABASE: plant_erd_test
+      ORACLE_SYSTEM_PASSWORD: oracle
+      ORACLE_HOST: oracle
+      ORACLE_USER: system
+      ORACLE_PASSWORD: oracle
+      ORACLE_PORT: 1521
+      ORACLE_SERVICE: xe
+      LD_LIBRARY_PATH: /opt/oracle/instantclient_19_3
+      PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
+      NLS_LANG: AMERICAN_AMERICA.UTF8
 
     volumes:
       - go-mod:/go/pkg/mod
@@ -48,6 +58,15 @@ services:
       POSTGRES_DB: plant_erd_test
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+  oracle:
+    image: deepdiver/docker-oracle-xe-11g
+
+    ports:
+      - 1521:1521
+
+    environment:
+      ORACLE_SYSTEM_PASSWORD: oracle
 
 volumes:
   go-mod:

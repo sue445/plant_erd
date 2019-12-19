@@ -1,0 +1,14 @@
+prefix=/opt/oracle/instantclient_19_3/
+libdir=${prefix}
+includedir=${prefix}/sdk/include/
+
+glib_genmarshal=glib-genmarshal
+gobject_query=gobject-query
+glib_mkenums=glib-mkenums
+
+Name: oci8
+Description: Oracle Instant Client
+Version: 19.3
+Libs: -L${libdir} -lclntsh
+Libs.private:
+Cflags: -I${includedir}
