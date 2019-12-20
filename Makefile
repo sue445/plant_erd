@@ -13,6 +13,9 @@ export GO111MODULE ?= on
 bin/$(NAME): $(SRCS)
 	go build -ldflags=$(LDFLAGS) -o bin/$(NAME)
 
+.PHONY: build
+build: bin/$(NAME)
+
 .PHONY: gox
 gox:
 	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}"
