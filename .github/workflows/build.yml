@@ -8,6 +8,8 @@ on:
 
 env:
   GO111MODULE: "on"
+  PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
+  LD_LIBRARY_PATH: /opt/oracle/instantclient_19_3
 
 jobs:
   gox:
@@ -59,6 +61,13 @@ jobs:
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v1
+
+      - name: Setup
+        run: |
+          set -xe
+          .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
 
       - name: make package
         run: |
