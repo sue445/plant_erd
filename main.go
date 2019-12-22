@@ -5,6 +5,7 @@ import (
 	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/sue445/plant_erd/adapter"
 	"github.com/sue445/plant_erd/adapter/mysql"
+	"github.com/sue445/plant_erd/adapter/oracle"
 	"github.com/sue445/plant_erd/adapter/postgresql"
 	"github.com/sue445/plant_erd/adapter/sqlite3"
 	"github.com/sue445/plant_erd/db"
@@ -64,6 +65,7 @@ func main() {
 	mysqlHost := ""
 	mysqlPort := 0
 	postgresqlConfig := postgresql.NewConfig()
+	oracleConfig := oracle.NewConfig()
 
 	app.Commands = []cli.Command{
 		{
@@ -213,6 +215,63 @@ func main() {
 			),
 			Action: func(c *cli.Context) error {
 				adapter, close, err := postgresql.NewAdapter(postgresqlConfig)
+
+				if err != nil {
+					return err
+				}
+
+				defer close()
+
+				schema, err := loadSchema(adapter)
+				if err != nil {
+					return err
+				}
+
+				return generator.Run(schema)
+			},
+		},
+		{
+			Name:    "oracle",
+			Aliases: []string{"o"},
+			Usage:   "Generate ERD from Oracle",
+			Flags: append(
+				commonFlags,
+				cli.StringFlag{
+					Name:        "user",
+					Usage:       "Oracle `USER`",
+					Required:    true,
+					Destination: &oracleConfig.Username,
+				},
+				cli.StringFlag{
+					Name:        "password",
+					Usage:       "Oracle `PASSWORD`",
+					Required:    false,
+					Destination: &oracleConfig.Password,
+					EnvVar:      "ORACLE_PASSWORD",
+				},
+				cli.StringFlag{
+					Name:        "host",
+					Usage:       "Oracle `HOST`",
+					Required:    false,
+					Destination: &oracleConfig.Host,
+					Value:       "localhost",
+				},
+				cli.IntFlag{
+					Name:        "port",
+					Usage:       "Oracle `PORT`",
+					Required:    false,
+					Destination: &oracleConfig.Port,
+					Value:       1521,
+				},
+				cli.StringFlag{
+					Name:        "service",
+					Usage:       "Oracle `SERVICE` name",
+					Required:    true,
+					Destination: &oracleConfig.ServiceName,
+				},
+			),
+			Action: func(c *cli.Context) error {
+				adapter, close, err := oracle.NewAdapter(oracleConfig)
 
 				if err != nil {
 					return err
