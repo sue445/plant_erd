@@ -219,6 +219,13 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
 
+      oracle:
+        image: deepdiver/docker-oracle-xe-11g
+        ports:
+          - 1521
+        env:
+          ORACLE_SYSTEM_PASSWORD: oracle
+
     steps:
       - name: Set up Go
         uses: actions/setup-go@v1
@@ -254,6 +261,13 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DATABASE: plant_erd_test
+          ORACLE_SYSTEM_PASSWORD: oracle
+          ORACLE_HOST: localhost
+          ORACLE_USER: system
+          ORACLE_PASSWORD: oracle
+          ORACLE_PORT: ${{ job.services.oracle.ports['1521'] }}
+          ORACLE_SERVICE: xe
+          NLS_LANG: AMERICAN_AMERICA.UTF8
 
       - name: Convert coverage to lcov
         uses: jandelgado/gcov2lcov-action@v1.0.0
