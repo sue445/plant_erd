@@ -38,6 +38,7 @@ articles }-- users
 * SQLite3
 * MySQL: 5.6, 5.7 and 8
 * PostgreSQL: 9, 10, 11 and 12
+* Oracle
 
 ## Usage
 Download latest binary from https://github.com/sue445/plant_erd/releases and `chmod 755`
@@ -101,6 +102,27 @@ OPTIONS:
    --sslmode SSLMODE                 PostgreSQL SSLMODE. c.f. https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS (default: "disable")
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       PostgreSQL USER
+```
+
+### Oracle
+```bash
+$ ./plant_erd oracle --help
+NAME:
+   plant_erd oracle - Generate ERD from Oracle
+
+USAGE:
+   plant_erd oracle [command options] [arguments...]
+
+OPTIONS:
+   -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
+   -f FILE, --file FILE              FILE for output (default: stdout)
+   --host HOST                       Oracle HOST (default: "localhost")
+   -i, --skip-index                  Whether don't print index to ERD
+   --password PASSWORD               Oracle PASSWORD [$ORACLE_PASSWORD]
+   --port PORT                       Oracle PORT (default: 1521)
+   --service SERVICE                 Oracle SERVICE name
+   -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
+   --user USER                       Oracle USER
 ```
 
 ## About `--table` and `--distance`
