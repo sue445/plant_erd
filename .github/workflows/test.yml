@@ -50,14 +50,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Run test
+      - name: Setup
         run: |
           set -xe
           .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
+      - name: Run test
+        run: |
+          set -xe
           make test
           make testrace
         env:
-          RUNNER_OS: ${{ runner.os }}
           MYSQL_PORT: ${{ job.services.mysql.ports['3306'] }}
           MYSQL_HOST: localhost
           MYSQL_USER: root
@@ -116,14 +121,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Run test
+      - name: Setup
         run: |
           set -xe
           .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
+      - name: Run test
+        run: |
+          set -xe
           make test
           make testrace
         env:
-          RUNNER_OS: ${{ runner.os }}
           POSTGRES_PORT: ${{ job.services.postgresql.ports['5432'] }}
           POSTGRES_HOST: localhost
           POSTGRES_USER: postgres
@@ -170,14 +180,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Run test
+      - name: Setup
         run: |
           set -xe
           .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
+      - name: Run test
+        run: |
+          set -xe
           make test
           make testrace
         env:
-          RUNNER_OS: ${{ runner.os }}
           ORACLE_SYSTEM_PASSWORD: oracle
           ORACLE_HOST: localhost
           ORACLE_USER: system
@@ -243,14 +258,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Run test
+      - name: Setup
         run: |
           set -xe
           .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
+      - name: Run test
+        run: |
+          set -xe
           make test
           make testrace
         env:
-          RUNNER_OS: ${{ runner.os }}
           MYSQL_PORT: ${{ job.services.mysql.ports['3306'] }}
           MYSQL_HOST: localhost
           MYSQL_USER: root
@@ -312,19 +332,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
+      - name: Setup
+        run: |
+          set -xe
+          .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
       - name: Run lint
         run: |
           set -xe
           export GOPATH=`go env GOPATH`
           export PATH=$GOPATH/bin:$PATH
           go get -u golang.org/x/lint/golint
-          .github/workflows/setup.sh
 
           make fmtci
           make lint
           make vet
-        env:
-          RUNNER_OS: ${{ runner.os }}
 
       - name: Slack Notification (not success)
         uses: homoluctus/slatify@v2.0.0
@@ -357,13 +381,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Run integration_test
+      - name: Setup
         run: |
           set -xe
           .github/workflows/setup.sh
-          make integration_test
         env:
           RUNNER_OS: ${{ runner.os }}
+
+      - name: make integration_test
+        run: |
+          set -xe
+          make integration_test
 
       - name: Slack Notification (not success)
         uses: homoluctus/slatify@v2.0.0
