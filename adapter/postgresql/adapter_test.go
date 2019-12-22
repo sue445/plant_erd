@@ -75,6 +75,9 @@ func TestAdapter_GetTable(t *testing.T) {
 				id   integer not null primary key,
 				name text
 		);`)
+		defer func() {
+			a.db.MustExec("DROP TABLE users;")
+		}()
 
 		a.db.MustExec(`
 			CREATE TABLE articles (
@@ -82,6 +85,9 @@ func TestAdapter_GetTable(t *testing.T) {
 				user_id integer not null, 
 				FOREIGN KEY(user_id) REFERENCES users(id)
 		);`)
+		defer func() {
+			a.db.MustExec("DROP TABLE articles;")
+		}()
 		a.db.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")
 
 		a.db.MustExec(`
@@ -92,6 +98,9 @@ func TestAdapter_GetTable(t *testing.T) {
 				FOREIGN KEY(user_id)        REFERENCES users(id),
 				FOREIGN KEY(target_user_id) REFERENCES users(id)
 		);`)
+		defer func() {
+			a.db.MustExec("DROP TABLE followers;")
+		}()
 		a.db.MustExec("CREATE UNIQUE INDEX index_user_id_and_target_user_id_on_followers ON followers(user_id, target_user_id)")
 		a.db.MustExec("CREATE UNIQUE INDEX index_target_user_id_and_user_id_on_followers ON followers(target_user_id, user_id)")
 
