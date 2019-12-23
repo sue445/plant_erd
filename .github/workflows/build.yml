@@ -16,38 +16,39 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        artifact_key:
+        os:
           - darwin
           - freebsd
-          - linux_1
-          - linux_2
+          - linux
           - netbsd
           - openbsd
           - windows
+        arch:
+          - amd64
+          - arm
+          - 386
         include:
-          - artifact_key: darwin
-            os: macos-latest
-            osarch: darwin/386 darwin/amd64
-          - artifact_key: freebsd
-            os: ubuntu-latest
-            osarch: freebsd/386 freebsd/amd64 freebsd/arm
-          - artifact_key: linux_1
-            os: ubuntu-latest
-            osarch: linux/386 linux/amd64 linux/arm linux/s390x
-          - artifact_key: linux_2
-            os: ubuntu-latest
-            osarch: linux/mips64 linux/mips64le linux/mips linux/mipsle
-          - artifact_key: netbsd
-            os: ubuntu-latest
-            osarch: netbsd/amd64 netbsd/arm netbsd/386
-          - artifact_key: openbsd
-            os: ubuntu-latest
-            osarch: openbsd/386 openbsd/amd64
-          - artifact_key: windows
-            os: ubuntu-latest
-            osarch: windows/amd64 windows/386
+          - os: darwin
+            runner: macos-latest
+          - os: freebsd
+            runner: ubuntu-latest
+          - os: linux
+            runner: ubuntu-latest
+          - os: netbsd
+            runner: ubuntu-latest
+          - os: openbsd
+            runner: ubuntu-latest
+          - os: windows
+            runner: ubuntu-latest
+        exclude:
+          - os: darwin
+            arch: arm
+          - os: openbsd
+            arch: arm
+          - os: windows
+            arch: arm
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: Set up Go
@@ -70,12 +71,12 @@ jobs:
           make clean gox_with_zip
 
         env:
-          GOX_OSARCH: ${{ matrix.osarch }}
+          GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: bin-${{ matrix.artifact_key }}
+          name: bin-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/
 
       - name: Slack Notification (not success)
@@ -97,46 +98,94 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifacts from darwin
+      - name: Download artifacts from darwin-386
         uses: actions/download-artifact@v1
         with:
-          name: bin-darwin
+          name: bin-darwin-386
           path: bin/
 
-      - name: Download artifacts from freebsd
+      - name: Download artifacts from darwin-amd64
         uses: actions/download-artifact@v1
         with:
-          name: bin-freebsd
+          name: bin-darwin-amd64
           path: bin/
 
-      - name: Download artifacts from linux_1
+      - name: Download artifacts from freebsd-386
         uses: actions/download-artifact@v1
         with:
-          name: bin-linux_1
+          name: bin-freebsd-386
           path: bin/
 
-      - name: Download artifacts from linux_2
+      - name: Download artifacts from freebsd-amd64
         uses: actions/download-artifact@v1
         with:
-          name: bin-linux_2
+          name: bin-freebsd-amd64
           path: bin/
 
-      - name: Download artifacts from netbsd
+      - name: Download artifacts from freebsd-arm
         uses: actions/download-artifact@v1
         with:
-          name: bin-netbsd
+          name: bin-freebsd-arm
           path: bin/
 
-      - name: Download artifacts from openbsd
+      - name: Download artifacts from linux-386
         uses: actions/download-artifact@v1
         with:
-          name: bin-openbsd
+          name: bin-linux-386
           path: bin/
 
-      - name: Download artifacts from windows
+      - name: Download artifacts from linux-amd64
         uses: actions/download-artifact@v1
         with:
-          name: bin-windows
+          name: bin-linux-amd64
+          path: bin/
+
+      - name: Download artifacts from linux-arm
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-linux-arm
+          path: bin/
+
+      - name: Download artifacts from netbsd-amd64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-netbsd-amd64
+          path: bin/
+
+      - name: Download artifacts from netbsd-arm
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-netbsd-arm
+          path: bin/
+
+      - name: Download artifacts from netbsd-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-netbsd-386
+          path: bin/
+
+      - name: Download artifacts from openbsd-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-openbsd-386
+          path: bin/
+
+      - name: Download artifacts from openbsd-amd64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-openbsd-amd64
+          path: bin/
+
+      - name: Download artifacts from windows-amd64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-windows-amd64
+          path: bin/
+
+      - name: Download artifacts from windows-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-windows-386
           path: bin/
 
       - name: Upload to GitHub Releases
