@@ -18,7 +18,7 @@ build: bin/$(NAME)
 
 .PHONY: gox
 gox:
-	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}"
+	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" -cgo
 
 .PHONY: zip
 zip:

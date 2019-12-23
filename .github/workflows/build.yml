@@ -20,35 +20,22 @@ jobs:
       matrix:
         os:
           - darwin
-          - freebsd
+          # - freebsd
           - linux
-          - netbsd
-          - openbsd
-          - windows
+          # - netbsd
+          # - openbsd
+          # - windows
         arch:
           - amd64
-          - arm
           - 386
         include:
           - os: darwin
             runner: macos-latest
-          - os: freebsd
-            runner: ubuntu-latest
           - os: linux
-            runner: ubuntu-latest
-          - os: netbsd
-            runner: ubuntu-latest
-          - os: openbsd
-            runner: ubuntu-latest
-          - os: windows
             runner: ubuntu-latest
         exclude:
           - os: darwin
-            arch: arm
-          - os: openbsd
-            arch: arm
-          - os: windows
-            arch: arm
+            arch: 386
 
     runs-on: ${{ matrix.runner }}
 
@@ -68,6 +55,8 @@ jobs:
           .github/workflows/setup.sh
         env:
           RUNNER_OS: ${{ runner.os }}
+          TARGET_OS: ${{ matrix.os }}
+          TARGET_ARCH: ${{ matrix.arch }}
 
       - name: make package
         run: |
@@ -77,10 +66,21 @@ jobs:
           export PATH=$GOPATH/bin:$PATH
 
           go get -u github.com/mitchellh/gox
+
+          if [ -n "${GOX_CC}" ]; then
+            which $GOX_CC
+            export CC=$GOX_CC
+          fi
+          if [ -n "${GOX_CXX}" ]; then
+            which $GOX_CXX
+            export CXX=$GOX_CXX
+          fi
           make clean gox_with_zip
 
         env:
           GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
+          GOX_CC: ${{ matrix.cc }}
+          GOX_CXX: ${{ matrix.cxx }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
@@ -107,35 +107,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifacts from darwin-386
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-darwin-386
-          path: bin/
-
       - name: Download artifacts from darwin-amd64
         uses: actions/download-artifact@v1
         with:
           name: bin-darwin-amd64
           path: bin/
 
-      - name: Download artifacts from freebsd-386
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-freebsd-386
-          path: bin/
+      # - name: Download artifacts from freebsd-386
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-freebsd-386
+      #     path: bin/
 
-      - name: Download artifacts from freebsd-amd64
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-freebsd-amd64
-          path: bin/
+      # - name: Download artifacts from freebsd-amd64
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-freebsd-amd64
+      #     path: bin/
 
-      - name: Download artifacts from freebsd-arm
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-freebsd-arm
-          path: bin/
+      # - name: Download artifacts from freebsd-arm
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-freebsd-arm
+      #     path: bin/
 
       - name: Download artifacts from linux-386
         uses: actions/download-artifact@v1
@@ -149,53 +143,47 @@ jobs:
           name: bin-linux-amd64
           path: bin/
 
-      - name: Download artifacts from linux-arm
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-linux-arm
-          path: bin/
+      # - name: Download artifacts from netbsd-amd64
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-netbsd-amd64
+      #     path: bin/
 
-      - name: Download artifacts from netbsd-amd64
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-netbsd-amd64
-          path: bin/
+      # - name: Download artifacts from netbsd-arm
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-netbsd-arm
+      #     path: bin/
 
-      - name: Download artifacts from netbsd-arm
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-netbsd-arm
-          path: bin/
+      # - name: Download artifacts from netbsd-386
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-netbsd-386
+      #     path: bin/
 
-      - name: Download artifacts from netbsd-386
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-netbsd-386
-          path: bin/
+      # - name: Download artifacts from openbsd-386
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-openbsd-386
+      #     path: bin/
 
-      - name: Download artifacts from openbsd-386
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-openbsd-386
-          path: bin/
+      # - name: Download artifacts from openbsd-amd64
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-openbsd-amd64
+      #     path: bin/
 
-      - name: Download artifacts from openbsd-amd64
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-openbsd-amd64
-          path: bin/
+      # - name: Download artifacts from windows-amd64
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-windows-amd64
+      #     path: bin/
 
-      - name: Download artifacts from windows-amd64
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-windows-amd64
-          path: bin/
-
-      - name: Download artifacts from windows-386
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-windows-386
-          path: bin/
+      # - name: Download artifacts from windows-386
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: bin-windows-386
+      #     path: bin/
 
       - name: Upload to GitHub Releases
         run: |
