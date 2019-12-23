@@ -16,14 +16,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
+        artifact_key:
+          - darwin
+          - freebsd
+          - linux_1
+          - linux_2
+          - netbsd
+          - openbsd
+          - windows
         include:
-          - os: ubuntu-latest
-            osarch: linux/386 linux/amd64 linux/arm freebsd/386 freebsd/amd64 openbsd/386 openbsd/amd64 windows/386 windows/amd64 freebsd/arm netbsd/386 netbsd/amd64 netbsd/arm linux/s390x linux/mips64 linux/mips64le linux/mips linux/mipsle
-          - os: macos-latest
+          - artifact_key: darwin
+            os: macos-latest
             osarch: darwin/386 darwin/amd64
+          - artifact_key: freebsd
+            os: ubuntu-latest
+            osarch: freebsd/386 freebsd/amd64 freebsd/arm
+          - artifact_key: linux_1
+            os: ubuntu-latest
+            osarch: linux/386 linux/amd64 linux/arm linux/s390x
+          - artifact_key: linux_2
+            os: ubuntu-latest
+            osarch: linux/mips64 linux/mips64le linux/mips linux/mipsle
+          - artifact_key: netbsd
+            os: ubuntu-latest
+            osarch: netbsd/amd64 netbsd/arm netbsd/386
+          - artifact_key: openbsd
+            os: ubuntu-latest
+            osarch: openbsd/386 openbsd/amd64
+          - artifact_key: windows
+            os: ubuntu-latest
+            osarch: windows/amd64 windows/386
 
     runs-on: ${{ matrix.os }}
 
@@ -53,7 +75,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: bin-${{ matrix.os }}
+          name: bin-${{ matrix.artifact_key }}
           path: bin/
 
       - name: Slack Notification (not success)
@@ -75,16 +97,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifacts from ubuntu-latest
+      - name: Download artifacts from darwin
         uses: actions/download-artifact@v1
         with:
-          name: bin-ubuntu-latest
+          name: bin-darwin
           path: bin/
 
-      - name: Download artifacts from macos-latest
+      - name: Download artifacts from freebsd
         uses: actions/download-artifact@v1
         with:
-          name: bin-macos-latest
+          name: bin-freebsd
+          path: bin/
+
+      - name: Download artifacts from linux_1
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-linux_1
+          path: bin/
+
+      - name: Download artifacts from linux_2
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-linux_2
+          path: bin/
+
+      - name: Download artifacts from netbsd
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-netbsd
+          path: bin/
+
+      - name: Download artifacts from openbsd
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-openbsd
+          path: bin/
+
+      - name: Download artifacts from windows
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-windows
           path: bin/
 
       - name: Upload to GitHub Releases
