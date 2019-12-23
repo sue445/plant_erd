@@ -1,4 +1,4 @@
-name: Release
+name: Build
 on:
   push:
     branches:
@@ -10,8 +10,8 @@ env:
   GO111MODULE: "on"
 
 jobs:
-  build:
-    name: Build
+  gox:
+    name: gox
 
     strategy:
       fail-fast: false
@@ -70,7 +70,7 @@ jobs:
     name: Release
 
     needs:
-      - build
+      - gox
 
     runs-on: ubuntu-latest
 
