@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - "!**/*"
+      - "**/*"
     tags:
       - "v*"
 
@@ -110,6 +110,7 @@ jobs:
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: startsWith(github.ref, 'refs/tags/')
 
       - name: Slack Notification
         uses: homoluctus/slatify@v2.0.0
