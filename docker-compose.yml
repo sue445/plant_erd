@@ -30,7 +30,7 @@ services:
       ORACLE_PASSWORD: oracle
       ORACLE_PORT: 1521
       ORACLE_SERVICE: xe
-      LD_LIBRARY_PATH: /opt/oracle/instantclient_19_3
+      LD_LIBRARY_PATH: /opt/oracle/instantclient
       PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
       NLS_LANG: AMERICAN_AMERICA.UTF8
 

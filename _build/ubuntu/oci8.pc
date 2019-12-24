@@ -1,4 +1,4 @@
-prefix=/opt/oracle/instantclient_19_3/
+prefix=/opt/oracle/instantclient/
 libdir=${prefix}
 includedir=${prefix}/sdk/include/
 

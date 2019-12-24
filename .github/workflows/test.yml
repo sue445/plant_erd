@@ -7,7 +7,7 @@ env:
   GO111MODULE: "on"
   TEST_ARGS: -coverprofile coverage.out -covermode atomic
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
-  LD_LIBRARY_PATH: /opt/oracle/instantclient_19_3
+  LD_LIBRARY_PATH: /opt/oracle/instantclient
 
 jobs:
   mysql:
