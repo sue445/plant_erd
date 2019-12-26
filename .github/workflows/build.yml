@@ -24,7 +24,7 @@ jobs:
           - linux
           # - netbsd
           # - openbsd
-          # - windows
+          - windows
         arch:
           - amd64
           - 386
@@ -33,8 +33,12 @@ jobs:
             runner: macos-latest
           - os: linux
             runner: ubuntu-latest
+          - os: windows
+            runner: windows-latest
         exclude:
           - os: darwin
+            arch: 386
+          - os: windows
             arch: 386
 
     runs-on: ${{ matrix.runner }}
@@ -50,19 +54,36 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Setup
+        shell: bash
         run: |
           set -xe
+
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            export LD_LIBRARY_PATH="C:${LD_LIBRARY_PATH}"
+          fi
+
           .github/workflows/setup.sh
+
+          pkg-config --cflags --libs oci8
         env:
           RUNNER_OS: ${{ runner.os }}
           TARGET_OS: ${{ matrix.os }}
           TARGET_ARCH: ${{ matrix.arch }}
 
       - name: make package
+        shell: bash
         run: |
           set -xe
 
-          export GOPATH=`go env GOPATH`
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            export LD_LIBRARY_PATH="C:${LD_LIBRARY_PATH}"
+
+            # Convert "C:\Users\runneradmin\go" to "/c/Users/runneradmin/go"
+            export GOPATH=`go env GOPATH | sed 's!C:\\\\!/c/!g' | sed 's!\\\\!/!g'`
+          else
+            export GOPATH=`go env GOPATH`
+          fi
+
           export PATH=$GOPATH/bin:$PATH
 
           go get -u github.com/mitchellh/gox
@@ -78,6 +99,7 @@ jobs:
           make clean gox_with_zip
 
         env:
+          RUNNER_OS: ${{ runner.os }}
           GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
           GOX_CC: ${{ matrix.cc }}
           GOX_CXX: ${{ matrix.cxx }}
@@ -173,17 +195,11 @@ jobs:
       #     name: bin-openbsd-amd64
       #     path: bin/
 
-      # - name: Download artifacts from windows-amd64
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-windows-amd64
-      #     path: bin/
-
-      # - name: Download artifacts from windows-386
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-windows-386
-      #     path: bin/
+      - name: Download artifacts from windows-amd64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-windows-amd64
+          path: bin/
 
       - name: Upload to GitHub Releases
         run: |

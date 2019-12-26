@@ -35,6 +35,14 @@ case "${RUNNER_OS}" in
   sudo cp _build/macos/oci8.pc /usr/local/lib/pkgconfig/oci8.pc
   ;;
 
+"Windows")
+  choco install --yes pkgconfiglite zip
+  _build/windows/setup_oracle_x64.sh
+
+  mkdir -p /usr/local/lib/pkgconfig/
+  cp _build/windows/oci8.pc /usr/local/lib/pkgconfig/oci8.pc
+  ;;
+
 *)
   echo "Uknown OS: ${RUNNER_OS}"
   exit 1

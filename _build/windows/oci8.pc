@@ -1,0 +1,14 @@
+prefix=C:/opt/oracle/instantclient
+exec_prefix=C:/opt/oracle/instantclient
+libdir=C:/opt/oracle/instantclient/sdk/lib/msvc
+includedir=C:/opt/oracle/instantclient/sdk/include
+
+glib_genmarshal=glib-genmarshal
+gobject_query=gobject-query
+glib_mkenums=glib-mkenums
+
+Name: oci8
+Description: oci8 library
+Libs: -LC:/opt/oracle/instantclient/sdk/lib/msvc -loci
+Cflags: -IC:/opt/oracle/instantclient/sdk/include
+Version: 19.5
