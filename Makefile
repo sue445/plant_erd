@@ -3,7 +3,7 @@ NAME     := plant_erd
 VERSION  := $(shell cat VERSION)
 REVISION := $(shell git rev-parse --short HEAD)
 
-SRCS    := $(shell find . -type f -name '*.go')
+SRCS    := $(shell find . -type f -name "*.go")
 LDFLAGS := "-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\""
 
 .DEFAULT_GOAL := bin/$(NAME)
