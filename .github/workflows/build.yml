@@ -8,8 +8,6 @@ on:
 
 env:
   GO111MODULE: "on"
-  PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
-  LD_LIBRARY_PATH: /opt/oracle/instantclient
 
 jobs:
   gox:
@@ -24,7 +22,7 @@ jobs:
           - linux
           # - netbsd
           # - openbsd
-          - windows
+          # - windows
         arch:
           - amd64
           - 386
@@ -33,13 +31,17 @@ jobs:
             runner: macos-latest
           - os: linux
             runner: ubuntu-latest
-          - os: windows
-            runner: windows-latest
+          # - os: windows
+          #   runner: windows-latest
         exclude:
           - os: darwin
             arch: 386
 
     runs-on: ${{ matrix.runner }}
+
+    env:
+      PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
+      LD_LIBRARY_PATH: /opt/oracle/instantclient
 
     steps:
       - name: Set up Go
@@ -51,14 +53,14 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v1
 
-      - uses: actions/cache@v1
-        with:
-          path: "tmp/pacman"
-          key: v1-pacman
-        if: "runner.os == 'Windows'"
+      # - uses: actions/cache@v1
+      #   with:
+      #     path: "tmp/pacman"
+      #     key: v1-pacman
+      #   if: "runner.os == 'Windows'"
 
       - name: Setup
-        shell: bash
+        # shell: bash
         run: |
           set -xe
 
@@ -73,7 +75,7 @@ jobs:
           TARGET_ARCH: ${{ matrix.arch }}
 
       - name: make package
-        shell: bash
+        # shell: bash
         run: |
           set -xe
 
@@ -122,11 +124,97 @@ jobs:
           url: ${{ secrets.SLACK_WEBHOOK }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+  gox-win:
+    name: gox-win
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows
+        arch:
+          - amd64
+          - 386
+
+    runs-on: windows-latest
+
+    env:
+      PKG_CONFIG_PATH: C:\pkgconfig
+      LD_LIBRARY_PATH: C:\opt\oracle\instantclient
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+
+      - run: choco install --yes pkgconfiglite
+
+      - name: Download oracle instantclient
+        run: |
+          Invoke-WebRequest -Uri https://download.oracle.com/otn_software/nt/instantclient/19500/instantclient-basiclite-windows.x64-19.5.0.0.0dbru.zip -OutFile instantclient-basiclite-windows.x64-19.5.0.0.0dbru.zip
+          Invoke-WebRequest -Uri https://download.oracle.com/otn_software/nt/instantclient/19500/instantclient-sdk-windows.x64-19.5.0.0.0dbru.zip -OutFile instantclient-sdk-windows.x64-19.5.0.0.0dbru.zip
+          Expand-Archive -Path instantclient-basiclite-windows.x64-19.5.0.0.0dbru.zip -DestinationPath C:\opt\oracle\
+          Expand-Archive -Path instantclient-sdk-windows.x64-19.5.0.0.0dbru.zip -DestinationPath C:\opt\oracle\
+          Move-Item C:\opt\oracle\instantclient_19_5 C:\opt\oracle\instantclient
+
+      - name: Copy oci8.pc
+        run: |
+          New-Item C:\pkgconfig -ItemType Directory
+          Copy-Item _build\windows\oci8.pc C:\pkgconfig
+
+      - name: make package
+        run: |
+          # $GOPATH = &"go" env GOPATH
+          # $Env:Path = $GOPATH + ";" + $Env:Path
+          # Write-Output $GOPATH
+          # Write-Output $Env:Path
+
+          go get -u github.com/mitchellh/gox
+
+          # make clean gox_win zip
+          $VERSION = Get-Content VERSION
+          $RESISION = &"git" "rev-parse" "--short" "HEAD"
+          $LDFLAGS = "-s -w -X 'main.Version=${VERSION}' -X 'main.Revision=${REVISION}'"
+          $NAME = "plant_erd"
+
+          Write-Output "LDFLAGS: ${LDFLAGS}"
+          # C:\Users\runneradmin\go\bin\gox -osarch=${GOX_OSARCH} -ldflags="$LDFLAGS" -output="bin/${NAME}_{{.OS}}_{{.Arch}}" -cgo
+
+          # make build
+          go build -ldflags="${LDFLAGS}"
+
+          make zip
+
+        env:
+          GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: bin-${{ matrix.os }}-${{ matrix.arch }}
+          path: bin/
+
+      - name: Slack Notification (not success)
+        uses: homoluctus/slatify@v2.0.0
+        if: "! success()"
+        with:
+          job_name: '*build*'
+          type: ${{ job.status }}
+          icon_emoji: ":octocat:"
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
   release:
     name: Release
 
     needs:
       - gox
+      - gox-win
 
     runs-on: ubuntu-latest
 

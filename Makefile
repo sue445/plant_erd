@@ -20,6 +20,11 @@ build: bin/$(NAME)
 gox:
 	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" -cgo
 
+# for GitHub Actions
+.PHONY: gox_win
+gox_win:
+	C:/Users/runneradmin/go/bin/gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" -cgo
+
 .PHONY: zip
 zip:
 	cd bin ; \
