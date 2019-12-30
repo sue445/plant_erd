@@ -20,10 +20,7 @@ jobs:
       matrix:
         os:
           - darwin
-          # - freebsd
           - linux
-          # - netbsd
-          # - openbsd
           - windows
         arch:
           - amd64
@@ -135,24 +132,6 @@ jobs:
           name: bin-darwin-amd64
           path: bin/
 
-      # - name: Download artifacts from freebsd-386
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-freebsd-386
-      #     path: bin/
-
-      # - name: Download artifacts from freebsd-amd64
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-freebsd-amd64
-      #     path: bin/
-
-      # - name: Download artifacts from freebsd-arm
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-freebsd-arm
-      #     path: bin/
-
       - name: Download artifacts from linux-386
         uses: actions/download-artifact@v1
         with:
@@ -164,36 +143,6 @@ jobs:
         with:
           name: bin-linux-amd64
           path: bin/
-
-      # - name: Download artifacts from netbsd-amd64
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-netbsd-amd64
-      #     path: bin/
-
-      # - name: Download artifacts from netbsd-arm
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-netbsd-arm
-      #     path: bin/
-
-      # - name: Download artifacts from netbsd-386
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-netbsd-386
-      #     path: bin/
-
-      # - name: Download artifacts from openbsd-386
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-openbsd-386
-      #     path: bin/
-
-      # - name: Download artifacts from openbsd-amd64
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: bin-openbsd-amd64
-      #     path: bin/
 
       - name: Download artifacts from windows-amd64
         uses: actions/download-artifact@v1
