@@ -3,12 +3,11 @@ package main
 import (
 	"fmt"
 	mysqlDriver "github.com/go-sql-driver/mysql"
-	"github.com/sue445/plant_erd/adapter"
 	"github.com/sue445/plant_erd/adapter/mysql"
 	"github.com/sue445/plant_erd/adapter/oracle"
 	"github.com/sue445/plant_erd/adapter/postgresql"
 	"github.com/sue445/plant_erd/adapter/sqlite3"
-	"github.com/sue445/plant_erd/db"
+	"github.com/sue445/plant_erd/lib"
 	"github.com/urfave/cli"
 	"log"
 	"os"
@@ -30,7 +29,7 @@ func main() {
 	app.Name = "plant_erd"
 	app.Usage = "ERD exporter with PlantUML format"
 
-	generator := ErdGenerator{}
+	generator := lib.ErdGenerator{}
 
 	commonFlags := []cli.Flag{
 		cli.StringFlag{
@@ -90,7 +89,7 @@ func main() {
 
 				defer close()
 
-				schema, err := loadSchema(adapter)
+				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
 					return err
 				}
@@ -158,7 +157,7 @@ func main() {
 
 				defer close()
 
-				schema, err := loadSchema(adapter)
+				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
 					return err
 				}
@@ -222,7 +221,7 @@ func main() {
 
 				defer close()
 
-				schema, err := loadSchema(adapter)
+				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
 					return err
 				}
@@ -279,7 +278,7 @@ func main() {
 
 				defer close()
 
-				schema, err := loadSchema(adapter)
+				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
 					return err
 				}
@@ -300,22 +299,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func loadSchema(adapter adapter.Adapter) (*db.Schema, error) {
-	tableNames, err := adapter.GetAllTableNames()
-	if err != nil {
-		return nil, err
-	}
-
-	var tables []*db.Table
-	for _, tableName := range tableNames {
-		table, err := adapter.GetTable(tableName)
-		if err != nil {
-			return nil, err
-		}
-		tables = append(tables, table)
-	}
-
-	return db.NewSchema(tables), nil
 }
