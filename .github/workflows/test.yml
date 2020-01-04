@@ -392,8 +392,6 @@ jobs:
         run: |
           set -xe
           make integration_test
-          # TODO do after
-          # make integration_test_oracle
 
       - name: Slack Notification (not success)
         uses: homoluctus/slatify@v2.0.0

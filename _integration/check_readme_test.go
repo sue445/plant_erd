@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -34,6 +35,19 @@ func TestReadme(t *testing.T) {
 				assert.Contains(t, readme, subCommandHelp)
 			}
 		})
+	}
+}
+
+func TestReadme_Oracle(t *testing.T) {
+	readme := readFile("../README.md")
+	out, err := exec.Command("../bin/plant_erd-oracle", "--help").Output()
+
+	if assert.NoError(t, err) {
+		commandHelp := strings.TrimSpace(string(out))
+
+		re := regexp.MustCompile(`v[^ ]+ \(build\. [0-9a-z]+\)`)
+		commandHelp = re.ReplaceAllString(commandHelp, "vX.X.X (build. xxxxxxx)")
+		assert.Contains(t, readme, commandHelp)
 	}
 }
 

@@ -106,23 +106,31 @@ OPTIONS:
 
 ### Oracle
 ```bash
-$ ./plant_erd oracle --help
+$ ./plant_erd-oracle --help
 NAME:
-   plant_erd oracle - Generate ERD from Oracle
+   plant_erd-oracle - ERD exporter with PlantUML format (for oracle)
 
 USAGE:
-   plant_erd oracle [command options] [arguments...]
+   plant_erd-oracle [global options] command [command options] [arguments...]
 
-OPTIONS:
-   -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
+VERSION:
+   vX.X.X (build. xxxxxxx)
+
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
    -f FILE, --file FILE              FILE for output (default: stdout)
-   --host HOST                       Oracle HOST (default: "localhost")
+   -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
+   -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    -i, --skip-index                  Whether don't print index to ERD
+   --user USER                       Oracle USER
    --password PASSWORD               Oracle PASSWORD [$ORACLE_PASSWORD]
+   --host HOST                       Oracle HOST (default: "localhost")
    --port PORT                       Oracle PORT (default: 1521)
    --service SERVICE                 Oracle SERVICE name
-   -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
-   --user USER                       Oracle USER
+   --help, -h                        show help
+   --version, -v                     print the version
 ```
 
 ## About `--table` and `--distance`
