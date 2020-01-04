@@ -20,23 +20,35 @@ jobs:
       matrix:
         os:
           - darwin
+          - freebsd
           - linux
+          - netbsd
+          - openbsd
           - windows
         arch:
           - amd64
+          - arm
           - 386
         include:
           - os: darwin
             runner: macos-latest
+          - os: freebsd
+            runner: ubuntu-latest
           - os: linux
             runner: ubuntu-latest
+          - os: netbsd
+            runner: ubuntu-latest
+          - os: openbsd
+            runner: ubuntu-latest
           - os: windows
-            runner: windows-latest
+            runner: ubuntu-latest
         exclude:
           - os: darwin
-            arch: 386
+            arch: arm
+          - os: openbsd
+            arch: arm
           - os: windows
-            arch: 386
+            arch: arm
 
     runs-on: ${{ matrix.runner }}
 
@@ -50,63 +62,15 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v1
 
-      - uses: actions/cache@v1
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-      - name: Setup
-        shell: bash
-        run: |
-          set -xe
-
-          if [ "${RUNNER_OS}" = "Windows" ]; then
-            export LD_LIBRARY_PATH="C:${LD_LIBRARY_PATH}"
-          fi
-
-          .github/workflows/setup.sh
-
-          pkg-config --cflags --libs oci8
-        env:
-          RUNNER_OS: ${{ runner.os }}
-          TARGET_OS: ${{ matrix.os }}
-          TARGET_ARCH: ${{ matrix.arch }}
-
       - name: make package
-        shell: bash
         run: |
           set -xe
-
-          if [ "${RUNNER_OS}" = "Windows" ]; then
-            export LD_LIBRARY_PATH="C:${LD_LIBRARY_PATH}"
-
-            # Convert "C:\Users\runneradmin\go" to "/c/Users/runneradmin/go"
-            export GOPATH=`go env GOPATH | sed 's!C:\\\\!/c/!g' | sed 's!\\\\!/!g'`
-          else
-            export GOPATH=`go env GOPATH`
-          fi
-
+          export GOPATH=`go env GOPATH`
           export PATH=$GOPATH/bin:$PATH
-
           go get -u github.com/mitchellh/gox
-
-          if [ -n "${GOX_CC}" ]; then
-            which $GOX_CC
-            export CC=$GOX_CC
-          fi
-          if [ -n "${GOX_CXX}" ]; then
-            which $GOX_CXX
-            export CXX=$GOX_CXX
-          fi
-          make clean gox_with_zip
-
+          make clean gox-plant_erd zip
         env:
-          RUNNER_OS: ${{ runner.os }}
           GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
-          GOX_CC: ${{ matrix.cc }}
-          GOX_CXX: ${{ matrix.cxx }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
@@ -124,19 +88,157 @@ jobs:
           url: ${{ secrets.SLACK_WEBHOOK }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+# TODO: do after
+#  gox-oracle:
+#    name: gox-oracle
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os:
+#          - darwin
+#          - linux
+#          - windows
+#        arch:
+#          - amd64
+#          - 386
+#        include:
+#          - os: darwin
+#            runner: macos-latest
+#          - os: linux
+#            runner: ubuntu-latest
+#          - os: windows
+#            runner: windows-latest
+#        exclude:
+#          - os: darwin
+#            arch: 386
+#          - os: windows
+#            arch: 386
+#
+#    runs-on: ${{ matrix.runner }}
+#
+#    steps:
+#      - name: Set up Go
+#        uses: actions/setup-go@v1
+#        with:
+#          go-version: 1.13
+#        id: go
+#
+#      - name: Check out code into the Go module directory
+#        uses: actions/checkout@v1
+#
+#      - uses: actions/cache@v1
+#        with:
+#          path: ~/go/pkg/mod
+#          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+#          restore-keys: |
+#            ${{ runner.os }}-go-
+#
+#      - name: Setup
+#        shell: bash
+#        run: |
+#          set -xe
+#
+#          if [ "${RUNNER_OS}" = "Windows" ]; then
+#            export LD_LIBRARY_PATH="C:${LD_LIBRARY_PATH}"
+#          fi
+#
+#          .github/workflows/setup.sh
+#
+#          pkg-config --cflags --libs oci8
+#        env:
+#          RUNNER_OS: ${{ runner.os }}
+#          TARGET_OS: ${{ matrix.os }}
+#          TARGET_ARCH: ${{ matrix.arch }}
+#
+#      - name: make package
+#        shell: bash
+#        run: |
+#          set -xe
+#
+#          if [ "${RUNNER_OS}" = "Windows" ]; then
+#            export LD_LIBRARY_PATH="C:${LD_LIBRARY_PATH}"
+#
+#            # Convert "C:\Users\runneradmin\go" to "/c/Users/runneradmin/go"
+#            export GOPATH=`go env GOPATH | sed 's!C:\\\\!/c/!g' | sed 's!\\\\!/!g'`
+#          else
+#            export GOPATH=`go env GOPATH`
+#          fi
+#
+#          export PATH=$GOPATH/bin:$PATH
+#
+#          go get -u github.com/mitchellh/gox
+#
+#          if [ -n "${GOX_CC}" ]; then
+#            which $GOX_CC
+#            export CC=$GOX_CC
+#          fi
+#          if [ -n "${GOX_CXX}" ]; then
+#            which $GOX_CXX
+#            export CXX=$GOX_CXX
+#          fi
+#          make clean gox_with_zip
+#
+#        env:
+#          RUNNER_OS: ${{ runner.os }}
+#          GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
+#          GOX_CC: ${{ matrix.cc }}
+#          GOX_CXX: ${{ matrix.cxx }}
+#
+#      - name: Upload artifacts
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: bin-oracle-${{ matrix.os }}-${{ matrix.arch }}
+#          path: bin/
+#
+#      - name: Slack Notification (not success)
+#        uses: homoluctus/slatify@v2.0.0
+#        if: "! success()"
+#        with:
+#          job_name: '*build*'
+#          type: ${{ job.status }}
+#          icon_emoji: ":octocat:"
+#          url: ${{ secrets.SLACK_WEBHOOK }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
+
   release:
     name: Release
 
     needs:
       - gox
+      # - gox-oracle
 
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download artifacts from darwin-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-darwin-386
+          path: bin/
+
       - name: Download artifacts from darwin-amd64
         uses: actions/download-artifact@v1
         with:
           name: bin-darwin-amd64
+          path: bin/
+
+      - name: Download artifacts from freebsd-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-freebsd-386
+          path: bin/
+
+      - name: Download artifacts from freebsd-amd64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-freebsd-amd64
+          path: bin/
+
+      - name: Download artifacts from freebsd-arm
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-freebsd-arm
           path: bin/
 
       - name: Download artifacts from linux-386
@@ -151,11 +253,78 @@ jobs:
           name: bin-linux-amd64
           path: bin/
 
+      - name: Download artifacts from linux-arm
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-linux-arm
+          path: bin/
+
+      - name: Download artifacts from netbsd-amd64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-netbsd-amd64
+          path: bin/
+
+      - name: Download artifacts from netbsd-arm
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-netbsd-arm
+          path: bin/
+
+      - name: Download artifacts from netbsd-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-netbsd-386
+          path: bin/
+
+      - name: Download artifacts from openbsd-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-openbsd-386
+          path: bin/
+
+      - name: Download artifacts from openbsd-amd64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-openbsd-amd64
+          path: bin/
+
       - name: Download artifacts from windows-amd64
         uses: actions/download-artifact@v1
         with:
           name: bin-windows-amd64
           path: bin/
+
+      - name: Download artifacts from windows-386
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-windows-386
+          path: bin/
+
+# TODO: do after
+#      - name: Download artifacts from darwin-amd64
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: bin-oracle-darwin-amd64
+#          path: bin/
+#
+#      - name: Download artifacts from linux-386
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: bin-oracle-linux-386
+#          path: bin/
+#
+#      - name: Download artifacts from linux-amd64
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: bin-oracle-linux-amd64
+#          path: bin/
+#
+#      - name: Download artifacts from windows-amd64
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: bin-oracle-windows-amd64
+#          path: bin/
 
       - name: Upload to GitHub Releases
         run: |

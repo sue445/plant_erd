@@ -22,9 +22,6 @@ func TestReadme(t *testing.T) {
 		{
 			subCommand: "postgresql",
 		},
-		{
-			subCommand: "oracle",
-		},
 	}
 
 	readme := readFile("../README.md")

@@ -1,4 +1,5 @@
 # Requirements: git, go, vgo
+PACKAGE  := github.com/sue445/plant_erd
 NAME     := plant_erd
 VERSION  := $(shell cat VERSION)
 REVISION := $(shell git rev-parse --short HEAD)
@@ -10,15 +11,15 @@ LDFLAGS := "-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\
 
 export GO111MODULE ?= on
 
-bin/$(NAME): $(SRCS)
-	go build -ldflags=$(LDFLAGS) -o bin/$(NAME)
+bin/%: cmd/%/main.go
+	go build -ldflags=$(LDFLAGS) -o bin/$(NAME) -o $@ $<
 
 .PHONY: build
-build: bin/$(NAME)
+build: bin/plant_erd
 
-.PHONY: gox
-gox:
-	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" -cgo
+.PHONY: gox-plant_erd
+gox-plant_erd:
+	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" $(PACKAGE)/cmd/plant_erd
 
 .PHONY: zip
 zip:
