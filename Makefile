@@ -17,9 +17,16 @@ bin/%: cmd/%/main.go
 .PHONY: build
 build: bin/plant_erd
 
+.PHONY: build-oracle
+build-oracle: bin/plant_erd-oracle
+
 .PHONY: gox-plant_erd
 gox-plant_erd:
 	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" $(PACKAGE)/cmd/plant_erd
+
+.PHONY: gox-plant_erd-oracle
+gox-plant_erd-oracle:
+	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)-oracle_{{.OS}}_{{.Arch}}" -cgo $(PACKAGE)/cmd/plant_erd-oracle
 
 .PHONY: zip
 zip:
