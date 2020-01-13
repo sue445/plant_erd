@@ -343,7 +343,12 @@ jobs:
           export REPO=$(echo $GITHUB_REPOSITORY | cut -d / -f 2)
 
           go get -u github.com/tcnksm/ghr
-          $GOPATH/bin/ghr -u ${USERNAME} -r ${REPO} -n ${TAGNAME} -b "Release ${TAGNAME}" ${TAGNAME} bin/
+
+          if [ "$(echo $TAGNAME | grep -E 'v[0-9.]+$' | wc -l)" = "0" ]; then
+            GHR_OPTIONS="${GHR_OPTIONS} -prerelease"
+          fi
+
+          $GOPATH/bin/ghr -u ${USERNAME} -r ${REPO} -n ${TAGNAME} -b "Release ${TAGNAME}" ${GHR_OPTIONS} ${TAGNAME} bin/
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
