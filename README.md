@@ -40,9 +40,37 @@ articles }-- users
 * PostgreSQL: 9, 10, 11 and 12
 * Oracle
 
-## Usage
+## Setup
 Download latest binary from https://github.com/sue445/plant_erd/releases and `chmod 755`
 
+* `plant_erd` : for SQLite3, MySQL and PostgreSQL
+* `plant_erd-oracle` : for Oracle
+
+### Setup for `plant_erd-oracle`
+`plant_erd-oracle` requires Basic Package or Basic Light Package in [Oracle Instant Client](https://www.oracle.com/database/technologies/instant-client.html)
+
+#### Example (Linux)
+```bash
+mkdir -p /opt/oracle
+wget --quiet --tries=0 https://download.oracle.com/otn_software/linux/instantclient/193000/instantclient-basiclite-linux.x64-19.3.0.0.0dbru.zip
+unzip -q instantclient-basiclite-linux.x64-19.3.0.0.0dbru.zip -d /opt/oracle
+export LD_LIBRARY_PATH=/opt/oracle/instantclient_19_3
+
+# for Ubuntu
+apt-get update
+apt-get install -y libaio1
+```
+
+#### Example (Mac)
+See https://github.com/kubo/ruby-oci8/blob/master/docs/install-on-osx.md and install `instantclient-basic` or `instantclient-basiclite`
+
+#### Example (Windows)
+1. Go to https://www.oracle.com/database/technologies/instant-client/winx64-64-downloads.html
+2. Download `instantclient-basic-windows.x64-19.5.0.0.0dbru.zip` or ` instantclient-basiclite-windows.x64-19.5.0.0.0dbru.zip`
+3. Extract zip
+4. Move `plant_erd-oracle` to same directory as `oci.dll`
+
+## Usage
 ### SQLite3
 ```
 $ ./plant_erd sqlite3 --help
