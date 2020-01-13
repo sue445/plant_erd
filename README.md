@@ -192,3 +192,9 @@ Run test on local
 ```bash
 make test
 ```
+
+## License
+The program is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+But `plant_erd-oracle` contains [Oracle Instant Client](https://www.oracle.com/database/technologies/instant-client.html).
+Oracle Instant Client is under [OTN License](https://www.oracle.com/downloads/licenses/distribution-license.html).
