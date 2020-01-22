@@ -186,7 +186,7 @@ Run test in container
 docker-compose up --build --abort-on-container-exit
 ```
 
-### without MySQL and PostgreSQL
+### with only SQLite3
 Run test on local
 
 ```bash
