@@ -1,10 +1,12 @@
 package mysql
 
 import (
+	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 	"github.com/sue445/plant_erd/db"
 	"os"
+	"regexp"
 	"testing"
 )
 
@@ -122,7 +124,7 @@ func TestAdapter_GetTable(t *testing.T) {
 					Columns: []*db.Column{
 						{
 							Name:       "id",
-							Type:       "int(11)",
+							Type:       "int",
 							NotNull:    true,
 							PrimaryKey: true,
 						},
@@ -143,13 +145,13 @@ func TestAdapter_GetTable(t *testing.T) {
 					Columns: []*db.Column{
 						{
 							Name:       "id",
-							Type:       "int(11)",
+							Type:       "int",
 							NotNull:    true,
 							PrimaryKey: true,
 						},
 						{
 							Name:    "user_id",
-							Type:    "int(11)",
+							Type:    "int",
 							NotNull: true,
 						},
 					},
@@ -179,18 +181,18 @@ func TestAdapter_GetTable(t *testing.T) {
 					Columns: []*db.Column{
 						{
 							Name:       "id",
-							Type:       "int(11)",
+							Type:       "int",
 							NotNull:    true,
 							PrimaryKey: true,
 						},
 						{
 							Name:    "user_id",
-							Type:    "int(11)",
+							Type:    "int",
 							NotNull: true,
 						},
 						{
 							Name:    "target_user_id",
-							Type:    "int(11)",
+							Type:    "int",
 							NotNull: true,
 						},
 					},
@@ -227,7 +229,29 @@ func TestAdapter_GetTable(t *testing.T) {
 				got, err := a.GetTable(tt.args.tableName)
 
 				if assert.NoError(t, err) {
-					assert.Equal(t, tt.want, got)
+					// assert.Equal(t, tt.want, got)
+
+					assert.Equal(t, tt.want.Name, got.Name)
+					assert.Equal(t, tt.want.ForeignKeys, got.ForeignKeys)
+					assert.Equal(t, tt.want.Indexes, got.Indexes)
+
+					if assert.Equal(t, len(tt.want.Columns), len(got.Columns)) {
+						for i := 0; i < len(got.Columns); i++ {
+							wantColumn := tt.want.Columns[i]
+							gotColumn := got.Columns[i]
+
+							assert.Equal(t, wantColumn.Name, gotColumn.Name)
+							assert.Equal(t, wantColumn.NotNull, gotColumn.NotNull)
+							assert.Equal(t, wantColumn.PrimaryKey, gotColumn.PrimaryKey)
+
+							// FIXME: Type is `int(11)` when MySQL 5.6 and 5.7, but Type is `int` when MySQL 8
+							if wantColumn.Type == "int" {
+								assert.Regexp(t, regexp.MustCompile(fmt.Sprintf("^%s(\\(\\d+\\))?$", wantColumn.Type)), gotColumn.Type)
+							} else {
+								assert.Equal(t, wantColumn.Type, gotColumn.Type)
+							}
+						}
+					}
 				}
 			})
 		}
