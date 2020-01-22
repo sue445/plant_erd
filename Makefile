@@ -1,24 +1,32 @@
 # Requirements: git, go, vgo
+PACKAGE  := github.com/sue445/plant_erd
 NAME     := plant_erd
 VERSION  := $(shell cat VERSION)
 REVISION := $(shell git rev-parse --short HEAD)
 
-SRCS    := $(shell find . -type f -name '*.go')
+SRCS    := $(shell find . -type f -name "*.go")
 LDFLAGS := "-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\""
 
 .DEFAULT_GOAL := bin/$(NAME)
 
 export GO111MODULE ?= on
 
-bin/$(NAME): $(SRCS)
-	go build -ldflags=$(LDFLAGS) -o bin/$(NAME)
+bin/%: cmd/%/main.go
+	go build -ldflags=$(LDFLAGS) -o bin/$(NAME) -o $@ $<
 
 .PHONY: build
-build: bin/$(NAME)
+build: bin/plant_erd
 
-.PHONY: gox
-gox:
-	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}"
+.PHONY: build-oracle
+build-oracle: bin/plant_erd-oracle
+
+.PHONY: gox-plant_erd
+gox-plant_erd:
+	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" $(PACKAGE)/cmd/plant_erd
+
+.PHONY: gox-plant_erd-oracle
+gox-plant_erd-oracle:
+	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)-oracle_{{.OS}}_{{.Arch}}" -cgo $(PACKAGE)/cmd/plant_erd-oracle
 
 .PHONY: zip
 zip:
@@ -68,7 +76,7 @@ vet:
 	go vet ./...
 
 .PHONY: integration_test
-integration_test: bin/$(NAME)
+integration_test: build build-oracle
 	go test _integration/check_readme_test.go
 
 .PHONY: test_all

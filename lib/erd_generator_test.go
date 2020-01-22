@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"bytes"
@@ -273,7 +273,7 @@ func ExampleErdGenerator_Run_two_tables() {
 		);`)
 		a.DB.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")
 
-		schema, err := loadSchema(a)
+		schema, err := LoadSchema(a)
 		if err != nil {
 			panic(err)
 		}
@@ -368,7 +368,7 @@ func ExampleErdGenerator_Run_many_tables() {
 	withDatabase(func(a *sqlite3.Adapter) {
 		createManyExampleTables(a)
 
-		schema, err := loadSchema(a)
+		schema, err := LoadSchema(a)
 		if err != nil {
 			panic(err)
 		}
@@ -459,7 +459,7 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 	withDatabase(func(a *sqlite3.Adapter) {
 		createManyExampleTables(a)
 
-		schema, err := loadSchema(a)
+		schema, err := LoadSchema(a)
 		if err != nil {
 			panic(err)
 		}
