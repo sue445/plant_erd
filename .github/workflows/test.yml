@@ -70,7 +70,7 @@ jobs:
           MYSQL_DATABASE: plant_erd_test
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@v2.0.0
+        uses: homoluctus/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -141,7 +141,7 @@ jobs:
           POSTGRES_DATABASE: plant_erd_test
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@v2.0.0
+        uses: homoluctus/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -202,7 +202,7 @@ jobs:
           NLS_LANG: AMERICAN_AMERICA.UTF8
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@v2.0.0
+        uses: homoluctus/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -302,7 +302,7 @@ jobs:
           path-to-lcov: coverage.lcov
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@v2.0.0
+        uses: homoluctus/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -351,7 +351,7 @@ jobs:
           make vet
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@v2.0.0
+        uses: homoluctus/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -394,7 +394,7 @@ jobs:
           make integration_test
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@v2.0.0
+        uses: homoluctus/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -416,7 +416,7 @@ jobs:
 
     steps:
       - name: Slack Notification (success)
-        uses: homoluctus/slatify@v2.0.0
+        uses: homoluctus/slatify@master
         if: always()
         with:
           job_name: '*build*'
