@@ -20,3 +20,4 @@ jobs:
           git_user_name: GitHub Actions
           git_user_email: github-actions@example.cpm
           assign: sue445
+          labels: go-mod-tidy
