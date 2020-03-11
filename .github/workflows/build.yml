@@ -5,6 +5,11 @@ on:
       - "*"
     tags:
       - "v*"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 env:
   GO111MODULE: "on"
