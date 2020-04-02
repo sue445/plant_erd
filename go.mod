@@ -10,5 +10,5 @@ require (
 	github.com/mattn/go-oci8 v0.0.7
 	github.com/mattn/go-sqlite3 v1.13.0
 	github.com/stretchr/testify v1.5.1
-	github.com/urfave/cli v1.22.3
+	github.com/urfave/cli v1.22.4
 )
