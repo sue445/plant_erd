@@ -9,6 +9,6 @@ require (
 	github.com/lib/pq v1.5.2
 	github.com/mattn/go-oci8 v0.0.8
 	github.com/mattn/go-sqlite3 v1.13.0
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.0
 	github.com/urfave/cli v1.22.4
 )
