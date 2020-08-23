@@ -50,6 +50,8 @@ jobs:
         exclude:
           - os: darwin
             arch: arm
+          - os: darwin
+            arch: 386
           - os: openbsd
             arch: arm
           - os: windows
@@ -215,12 +217,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifacts from darwin-386
-        uses: actions/download-artifact@v1
-        with:
-          name: bin-darwin-386
-          path: bin/
-
       - name: Download artifacts from darwin-amd64
         uses: actions/download-artifact@v1
         with:
