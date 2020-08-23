@@ -11,6 +11,7 @@ on:
       - reopened
 
 env:
+  GO_VERSION: 1.15
   GO111MODULE: "on"
   TEST_ARGS: -coverprofile coverage.out -covermode atomic
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
@@ -44,7 +45,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: ${{ env.GO_VERSION }}
         id: go
 
       - name: Check out code into the Go module directory
@@ -116,7 +117,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: ${{ env.GO_VERSION }}
         id: go
 
       - name: Check out code into the Go module directory
@@ -176,7 +177,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: ${{ env.GO_VERSION }}
         id: go
 
       - name: Check out code into the Go module directory
@@ -255,7 +256,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: ${{ env.GO_VERSION }}
         id: go
 
       - name: Check out code into the Go module directory
@@ -330,7 +331,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: ${{ env.GO_VERSION }}
         id: go
 
       - name: Check out code into the Go module directory
@@ -380,7 +381,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.15
+          go-version: ${{ env.GO_VERSION }}
         id: go
 
       - name: Check out code into the Go module directory
