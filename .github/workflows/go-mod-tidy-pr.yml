@@ -12,11 +12,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_PRIVATE_KEY }}
 
       - name: Run go-mod-tidy-pr
         uses: sue445/go-mod-tidy-pr@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.generate_token.outputs.token }}
           git_user_name: GitHub Actions
           git_user_email: github-actions@example.cpm
           assign: sue445
