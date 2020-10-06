@@ -29,3 +29,14 @@ jobs:
           assign: sue445
           labels: go-mod-tidy
           timezone: Asia/Tokyo
+
+      - name: Slack Notification
+        uses: homoluctus/slatify@master
+        if: always()
+        continue-on-error: true
+        with:
+          job_name: '*go-mod-tidy-pr*'
+          type: ${{ job.status }}
+          icon_emoji: ":octocat:"
+          url: ${{ secrets.SLACK_WEBHOOK }}
+          token: ${{ secrets.GITHUB_TOKEN }}
