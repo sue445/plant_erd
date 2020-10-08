@@ -87,7 +87,7 @@ jobs:
           path: bin/
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@master
+        uses: lazy-actions/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -199,7 +199,7 @@ jobs:
           path: bin/
 
       - name: Slack Notification (not success)
-        uses: homoluctus/slatify@master
+        uses: lazy-actions/slatify@master
         if: "! success()"
         with:
           job_name: '*build*'
@@ -357,7 +357,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
 
       - name: Slack Notification
-        uses: homoluctus/slatify@master
+        uses: lazy-actions/slatify@master
         if: always()
         with:
           job_name: '*release*'
