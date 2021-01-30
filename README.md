@@ -38,7 +38,7 @@ articles }-- users
 ## Supports
 * SQLite3
 * MySQL: 5.6, 5.7 and 8
-* PostgreSQL: 9, 10, 11 and 12
+* PostgreSQL: 9, 10, 11, 12 and 13
 * Oracle
 
 ## Setup
