@@ -34,6 +34,7 @@ jobs:
         arch:
           - amd64
           - arm
+          - arm64
           - 386
         include:
           - os: darwin
@@ -53,10 +54,20 @@ jobs:
             arch: arm
           - os: darwin
             arch: 386
+          - os: freebsd
+            arch: arm64
+          - os: linux
+            arch: arm64
+          - os: netbsd
+            arch: arm64
           - os: openbsd
             arch: arm
+          - os: openbsd
+            arch: arm64
           - os: windows
             arch: arm
+          - os: windows
+            arch: arm64
 
     runs-on: ${{ matrix.runner }}
 
@@ -222,6 +233,12 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: bin-darwin-amd64
+          path: bin/
+
+      - name: Download artifacts from darwin-arm64
+        uses: actions/download-artifact@v1
+        with:
+          name: bin-darwin-arm64
           path: bin/
 
       - name: Download artifacts from freebsd-386
