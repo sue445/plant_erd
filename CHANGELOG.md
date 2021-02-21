@@ -4,7 +4,7 @@
 ## v0.2.1
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.2.0...v0.2.1)
 
-* Add darwin/arm64 (a.k.a. Mac M1) binary
+* Add darwin/arm64 (a.k.a. Apple M1) binary
   * https://github.com/sue445/plant_erd/pull/138
 * Upgrade to Go 1.16
   * https://github.com/sue445/plant_erd/pull/137
