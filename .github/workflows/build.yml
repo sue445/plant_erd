@@ -100,6 +100,7 @@ jobs:
       - name: Slack Notification (not success)
         uses: lazy-actions/slatify@master
         if: "! success()"
+        continue-on-error: true
         with:
           job_name: '*build*'
           type: ${{ job.status }}
@@ -212,6 +213,7 @@ jobs:
       - name: Slack Notification (not success)
         uses: lazy-actions/slatify@master
         if: "! success()"
+        continue-on-error: true
         with:
           job_name: '*build*'
           type: ${{ job.status }}
@@ -376,6 +378,7 @@ jobs:
       - name: Slack Notification
         uses: lazy-actions/slatify@master
         if: always()
+        continue-on-error: true
         with:
           job_name: '*release*'
           type: ${{ job.status }}
