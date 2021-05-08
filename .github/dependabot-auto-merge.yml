@@ -1,0 +1,5 @@
+- match:
+    update_type: "semver:patch"
+- match:
+    dependency_name: "github.com/stretchr/testify"
+    update_type: "all"
