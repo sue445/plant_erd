@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.1...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.2...master)
+
+## v0.2.2
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.1...v0.2.2)
+
+* Fixed. `version 'GLIBC_2.28' not found error` on Ubuntu 18.04
+  * https://github.com/sue445/plant_erd/pull/153
+  * https://github.com/sue445/plant_erd/issues/152
 
 ## v0.2.1
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.2.0...v0.2.1)
