@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.2...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.4...master)
+
+## v0.2.3
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.2...v0.2.3)
+
+* Exclude views on MySQL command
+  * https://github.com/sue445/plant_erd/pull/158
+  * https://github.com/sue445/plant_erd/issues/156
 
 ## v0.2.2
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.2.1...v0.2.2)
