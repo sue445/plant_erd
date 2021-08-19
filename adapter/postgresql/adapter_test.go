@@ -1,16 +1,17 @@
 package postgresql
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/sue445/plant_erd/db"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/sue445/plant_erd/db"
 )
 
 func TestMain(m *testing.M) {
 	if os.Getenv("POSTGRES_HOST") == "" || os.Getenv("POSTGRES_PORT") == "" || os.Getenv("POSTGRES_USER") == "" || os.Getenv("POSTGRES_DATABASE") == "" {
-		println("adapter/postgresql test is skipped because POSTGRES_HOST, POSTGRES_PORT and POSTGRES_USER not all set")
+		println("adapter/postgresql test is skipped because POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER and POSTGRES_DATABASE not all set")
 		return
 	}
 
@@ -43,7 +44,7 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 	withDatabase(func(a *Adapter) {
 		a.db.MustExec(`
 			CREATE TABLE users (
-				id   integer not null primary key, 
+				id   integer not null primary key,
 				name varchar(191)
 		);`)
 		defer func() {
@@ -52,12 +53,17 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 
 		a.db.MustExec(`
 			CREATE TABLE articles (
-				id      integer not null primary key, 
-				user_id integer not null, 
+				id      integer not null primary key,
+				user_id integer not null,
 				FOREIGN KEY (user_id) REFERENCES users(id)
 		);`)
 		defer func() {
 			a.db.MustExec("DROP TABLE articles;")
+		}()
+
+		a.db.MustExec("CREATE VIEW user_names AS SELECT name FROM users;")
+		defer func() {
+			a.db.MustExec("DROP VIEW user_names;")
 		}()
 
 		tables, err := a.GetAllTableNames()
@@ -81,8 +87,8 @@ func TestAdapter_GetTable(t *testing.T) {
 
 		a.db.MustExec(`
 			CREATE TABLE articles (
-				id      integer not null primary key, 
-				user_id integer not null, 
+				id      integer not null primary key,
+				user_id integer not null,
 				FOREIGN KEY(user_id) REFERENCES users(id)
 		);`)
 		defer func() {

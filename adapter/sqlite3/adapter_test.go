@@ -1,9 +1,10 @@
 package sqlite3
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/sue445/plant_erd/db"
-	"testing"
 )
 
 func withDatabase(callback func(*Adapter)) {
@@ -30,10 +31,12 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 
 		a.DB.MustExec(`
 			CREATE TABLE articles (
-				id      integer not null primary key, 
-				user_id integer not null, 
+				id      integer not null primary key,
+				user_id integer not null,
 				FOREIGN KEY(user_id) REFERENCES users(id)
 		);`)
+
+		a.DB.MustExec("CREATE VIEW user_names AS SELECT name FROM users;")
 
 		tables, err := a.GetAllTableNames()
 
@@ -53,8 +56,8 @@ func TestAdapter_GetTable(t *testing.T) {
 
 		a.DB.MustExec(`
 			CREATE TABLE articles (
-				id      integer not null primary key, 
-				user_id integer not null, 
+				id      integer not null primary key,
+				user_id integer not null,
 				FOREIGN KEY(user_id) REFERENCES users(id)
 		);`)
 		a.DB.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")

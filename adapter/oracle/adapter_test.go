@@ -1,16 +1,17 @@
 package oracle
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/sue445/plant_erd/db"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/sue445/plant_erd/db"
 )
 
 func TestMain(m *testing.M) {
 	if os.Getenv("ORACLE_HOST") == "" || os.Getenv("ORACLE_PORT") == "" || os.Getenv("ORACLE_USER") == "" || os.Getenv("ORACLE_SERVICE") == "" {
-		println("adapter/oracle test is skipped because ORACLE_HOST, ORACLE_PORT and ORACLE_USER and ORACLE_SERVICE not all set")
+		println("adapter/oracle test is skipped because ORACLE_HOST, ORACLE_PORT, ORACLE_USER and ORACLE_SERVICE not all set")
 		return
 	}
 
@@ -43,7 +44,7 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 	withDatabase(func(a *Adapter) {
 		a.db.MustExec(`
 			CREATE TABLE users (
-				id   integer not null primary key, 
+				id   integer not null primary key,
 				name varchar(191)
 		)`)
 		defer func() {
@@ -52,12 +53,17 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 
 		a.db.MustExec(`
 			CREATE TABLE articles (
-				id      integer not null primary key, 
-				user_id integer not null, 
+				id      integer not null primary key,
+				user_id integer not null,
 				FOREIGN KEY (user_id) REFERENCES users(id)
 		)`)
 		defer func() {
 			a.db.MustExec("DROP TABLE articles")
+		}()
+
+		a.db.MustExec("CREATE VIEW user_names AS SELECT name FROM users")
+		defer func() {
+			a.db.MustExec("DROP VIEW user_names")
 		}()
 
 		tables, err := a.GetAllTableNames()
@@ -82,8 +88,8 @@ func TestAdapter_GetTable(t *testing.T) {
 
 		a.db.MustExec(`
 			CREATE TABLE articles (
-				id      integer not null primary key, 
-				user_id integer not null, 
+				id      integer not null primary key,
+				user_id integer not null,
 				FOREIGN KEY(user_id) REFERENCES users(id)
 		)`)
 		defer func() {

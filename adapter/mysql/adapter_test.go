@@ -2,17 +2,18 @@ package mysql
 
 import (
 	"fmt"
-	"github.com/go-sql-driver/mysql"
-	"github.com/stretchr/testify/assert"
-	"github.com/sue445/plant_erd/db"
 	"os"
 	"regexp"
 	"testing"
+
+	"github.com/go-sql-driver/mysql"
+	"github.com/stretchr/testify/assert"
+	"github.com/sue445/plant_erd/db"
 )
 
 func TestMain(m *testing.M) {
 	if os.Getenv("MYSQL_HOST") == "" || os.Getenv("MYSQL_PORT") == "" || os.Getenv("MYSQL_USER") == "" || os.Getenv("MYSQL_DATABASE") == "" {
-		println("adapter/mysql test is skipped because MYSQL_HOST, MYSQL_PORT and MYSQL_USER not all set")
+		println("adapter/mysql test is skipped because MYSQL_HOST, MYSQL_PORT, MYSQL_USER and MYSQL_DATABASE not all set")
 		return
 	}
 
@@ -45,7 +46,7 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 	withDatabase(func(a *Adapter) {
 		a.db.MustExec(`
 			CREATE TABLE users (
-				id   int not null primary key, 
+				id   int not null primary key,
 				name varchar(191)
 		);`)
 		defer func() {
@@ -54,12 +55,18 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 
 		a.db.MustExec(`
 			CREATE TABLE articles (
-				id      int not null primary key, 
-				user_id int not null, 
+				id      int not null primary key,
+				user_id int not null,
 				FOREIGN KEY fk_users (user_id) REFERENCES users(id)
 		);`)
+
 		defer func() {
 			a.db.MustExec("DROP TABLE articles;")
+		}()
+
+		a.db.MustExec("CREATE VIEW user_names AS SELECT name FROM users;")
+		defer func() {
+			a.db.MustExec("DROP VIEW user_names;")
 		}()
 
 		tables, err := a.GetAllTableNames()
@@ -74,7 +81,7 @@ func TestAdapter_GetTable(t *testing.T) {
 	withDatabase(func(a *Adapter) {
 		a.db.MustExec(`
 			CREATE TABLE users (
-				id   int not null primary key, 
+				id   int not null primary key,
 				name varchar(191)
 		);`)
 		defer func() {
@@ -83,8 +90,8 @@ func TestAdapter_GetTable(t *testing.T) {
 
 		a.db.MustExec(`
 			CREATE TABLE articles (
-				id      int not null primary key, 
-				user_id int not null, 
+				id      int not null primary key,
+				user_id int not null,
 				FOREIGN KEY fk_users (user_id) REFERENCES users(id)
 		);`)
 		defer func() {
