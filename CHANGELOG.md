@@ -1,6 +1,13 @@
 ## Unreleased
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.2.4...master)
 
+## v0.2.4
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.3...v0.2.4)
+
+* Fixed. `plant_erd sqlite3` doesn't work
+  * https://github.com/sue445/plant_erd/pull/157
+  * https://github.com/sue445/plant_erd/issues/155
+
 ## v0.2.3
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.2.2...v0.2.3)
 
