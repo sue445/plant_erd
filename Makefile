@@ -22,7 +22,7 @@ build-oracle: bin/plant_erd-oracle
 
 .PHONY: gox-plant_erd
 gox-plant_erd:
-	gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" $(PACKAGE)/cmd/plant_erd
+	CGO_ENABLED=1 gox -osarch="$${GOX_OSARCH}" -ldflags=$(LDFLAGS) -output="bin/$(NAME)_{{.OS}}_{{.Arch}}" $(PACKAGE)/cmd/plant_erd
 
 .PHONY: gox-plant_erd-oracle
 gox-plant_erd-oracle:
