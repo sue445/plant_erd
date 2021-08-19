@@ -2,12 +2,13 @@ package mysql
 
 import (
 	"fmt"
-	"github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
-	"github.com/sue445/plant_erd/db"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+	"github.com/sue445/plant_erd/db"
 )
 
 // Adapter represents MySQL adapter
@@ -42,7 +43,7 @@ func rowInt(row map[string]interface{}, columnName string) int {
 // GetAllTableNames returns all table names in database
 func (a *Adapter) GetAllTableNames() ([]string, error) {
 	var rows []informationSchemaTables
-	err := a.db.Select(&rows, "SELECT table_name AS table_name FROM information_schema.tables WHERE table_schema=database() ORDER BY table_name")
+	err := a.db.Select(&rows, "SELECT table_name AS table_name FROM information_schema.tables WHERE table_schema=database() AND table_type = 'BASE TABLE' ORDER BY table_name")
 
 	if err != nil {
 		return []string{}, err
