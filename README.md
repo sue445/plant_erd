@@ -86,7 +86,7 @@ OPTIONS:
    --database DATABASE               SQLite3 DATABASE file
    -f FILE, --file FILE              FILE for output (default: stdout)
    -i, --skip-index                  Whether don't print index to ERD
-   -s, --skip-table                  Skip generating table by using regex patterns
+   -s value, --skip-table value      Skip generating table by using regex patterns
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
 ```
 
@@ -106,9 +106,9 @@ OPTIONS:
    -f FILE, --file FILE              FILE for output (default: stdout)
    --host HOST                       MySQL HOST (default: "localhost")
    -i, --skip-index                  Whether don't print index to ERD
-   -s, --skip-table                  Skip generating table by using regex patterns
    --password PASSWORD               MySQL PASSWORD [$MYSQL_PASSWORD]
    --port PORT                       MySQL PORT (default: 3306)
+   -s value, --skip-table value      Skip generating table by using regex patterns
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       MySQL USER (default: "root")
 ```
@@ -128,9 +128,9 @@ OPTIONS:
    -f FILE, --file FILE              FILE for output (default: stdout)
    --host HOST                       PostgreSQL HOST (default: "localhost")
    -i, --skip-index                  Whether don't print index to ERD
-   -s, --skip-table                  Skip generating table by using regex patterns
    --password PASSWORD               PostgreSQL PASSWORD [$POSTGRES_PASSWORD]
    --port PORT                       PostgreSQL PORT (default: 5432)
+   -s value, --skip-table value      Skip generating table by using regex patterns
    --sslmode SSLMODE                 PostgreSQL SSLMODE. c.f. https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS (default: "disable")
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       PostgreSQL USER
@@ -156,7 +156,6 @@ GLOBAL OPTIONS:
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    -i, --skip-index                  Whether don't print index to ERD
-   -s, --skip-table                  Skip generating table by using regex patterns
    --user USER                       Oracle USER
    --password PASSWORD               Oracle PASSWORD [$ORACLE_PASSWORD]
    --host HOST                       Oracle HOST (default: "localhost")
