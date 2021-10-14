@@ -207,7 +207,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 		args   args
 	}{
 		{
-			name: "with skip tables begin with QRTZ* ",
+			name: "with skip tables begin with QRTZ*",
 			fields: fields{
 				SkipTable: "(QRTZ*)\\w+",
 			},
@@ -218,7 +218,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 		{
 			name: "with skip all tables",
 			fields: fields{
-				SkipTable: "(.)\\w+",
+				SkipTable: "()\\w+",
 			},
 			args: args{
 				schema: schema,
@@ -231,7 +231,14 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 				SkipTable: tt.fields.SkipTable,
 			}
 			got := g.generate(tt.args.schema)
-			assert.GreaterOrEqual(t, len(got), 0)
+			if tt.name == "with skip tables begin with QRTZ*" {
+				assert.Contains(t, got, "articles", "users")
+				assert.NotContains(t, got, "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
+			}
+			if tt.name == "with skip all tables" {
+				assert.Equal(t, len(got), 0)
+				assert.NotContains(t, got, "articles", "users", "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
+			}
 		})
 	}
 }

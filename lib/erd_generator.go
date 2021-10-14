@@ -80,12 +80,10 @@ func (g *ErdGenerator) filterSchema(schema *db.Schema, skipTable []string) *db.S
 }
 
 func (g *ErdGenerator) matchedSkippedTable(skipPatterns []string, tableName string) bool {
-	skip := false
 	for _, pattern := range skipPatterns {
 		if matched, _ := regexp.MatchString(pattern, tableName); matched {
-			skip = true
-			break
+			return true
 		}
 	}
-	return skip
+	return false
 }

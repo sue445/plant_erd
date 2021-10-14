@@ -58,7 +58,7 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:        "s,skip-table",
-			Usage:       "Skip table by pattern",
+			Usage:       "Skip generating table by using regex patterns",
 			Required:    false,
 			Destination: &generator.SkipTable,
 		},
