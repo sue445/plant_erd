@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.4...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.3.0...master)
+
+## v0.3.0
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.2.4...v0.3.0)
+
+* Add SkipTable patterns parameter
+  * https://github.com/sue445/plant_erd/pull/161
+* Update dependencies
 
 ## v0.2.4
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.2.3...v0.2.4)
