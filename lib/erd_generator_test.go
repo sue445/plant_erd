@@ -2,14 +2,15 @@ package lib
 
 import (
 	"bytes"
-	"github.com/stretchr/testify/assert"
-	"github.com/sue445/plant_erd/adapter/sqlite3"
-	"github.com/sue445/plant_erd/db"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/sue445/plant_erd/adapter/sqlite3"
+	"github.com/sue445/plant_erd/db"
 )
 
 func withDatabase(callback func(*sqlite3.Adapter)) {
@@ -172,6 +173,67 @@ func TestErdGenerator_outputErd_ToStdout(t *testing.T) {
 	})
 
 	assert.Equal(t, "aaa", str)
+}
+
+func TestErdGenerator_generate_withSkipTable(t *testing.T) {
+	tables := []*db.Table{
+		{
+			Name: "articles",
+		},
+		{
+			Name: "users",
+		},
+		{
+			Name: "QRTZ_TRIGGERS",
+		},
+		{
+			Name: "QRTZ_ALARMS",
+		},
+		{
+			Name: "QRTZ_SCHEDULER",
+		},
+	}
+	schema := db.NewSchema(tables)
+
+	type fields struct {
+		SkipTable string
+	}
+	type args struct {
+		schema *db.Schema
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		{
+			name: "with skip tables begin with QRTZ* ",
+			fields: fields{
+				SkipTable: "(QRTZ*)\\w+",
+			},
+			args: args{
+				schema: schema,
+			},
+		},
+		{
+			name: "with skip all tables",
+			fields: fields{
+				SkipTable: "(.)\\w+",
+			},
+			args: args{
+				schema: schema,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			g := &ErdGenerator{
+				SkipTable: tt.fields.SkipTable,
+			}
+			got := g.generate(tt.args.schema)
+			assert.GreaterOrEqual(t, len(got), 0)
+		})
+	}
 }
 
 func TestErdGenerator_checkParamTable(t *testing.T) {

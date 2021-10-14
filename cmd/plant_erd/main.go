@@ -56,6 +56,12 @@ func main() {
 			Required:    false,
 			Destination: &generator.SKipIndex,
 		},
+		cli.StringFlag{
+			Name:        "s,skip-table",
+			Usage:       "Skip table by pattern",
+			Required:    false,
+			Destination: &generator.SkipTable,
+		},
 	}
 
 	sqlite3Database := ""
