@@ -11,7 +11,7 @@ on:
       - reopened
 
 env:
-  GO_VERSION: 1.16
+  GO_VERSION: 1.17
   GO111MODULE: "on"
   TEST_ARGS: -coverprofile coverage.out -covermode atomic
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
@@ -355,7 +355,7 @@ jobs:
       - name: Run lint
         run: |
           set -xe
-          go get -u golang.org/x/lint/golint
+          go install golang.org/x/lint/golint@latest
 
           make fmtci
           make lint
