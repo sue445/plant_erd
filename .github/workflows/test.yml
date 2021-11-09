@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
         id: go
@@ -176,7 +176,7 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
         id: go
@@ -255,7 +255,7 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
         id: go
@@ -330,7 +330,7 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
         id: go
@@ -355,8 +355,6 @@ jobs:
       - name: Run lint
         run: |
           set -xe
-          export GOPATH=`go env GOPATH`
-          export PATH=$GOPATH/bin:$PATH
           go get -u golang.org/x/lint/golint
 
           make fmtci
@@ -380,7 +378,7 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
         id: go

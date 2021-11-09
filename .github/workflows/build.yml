@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
         id: go
@@ -84,8 +84,6 @@ jobs:
       - name: make package
         run: |
           set -xe
-          export GOPATH=`go env GOPATH`
-          export PATH=$GOPATH/bin:$PATH
           go get -u github.com/mitchellh/gox
           make clean gox-plant_erd zip
         env:
@@ -138,7 +136,7 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
         id: go
@@ -348,9 +346,6 @@ jobs:
       - name: Upload to GitHub Releases
         run: |
           set -xe
-
-          export GOPATH=`go env GOPATH`
-          export PATH=$GOPATH/bin:$PATH
 
           export PUSH_EVENT_REF=$(jq --raw-output .ref "$GITHUB_EVENT_PATH")
 
