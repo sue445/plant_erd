@@ -12,7 +12,7 @@ on:
       - reopened
 
 env:
-  GO_VERSION: 1.16
+  GO_VERSION: 1.17
   GO111MODULE: "on"
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
   LD_LIBRARY_PATH: /opt/oracle/instantclient
