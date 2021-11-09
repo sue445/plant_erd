@@ -355,7 +355,7 @@ jobs:
       - name: Run lint
         run: |
           set -xe
-          go get -u golang.org/x/lint/golint
+          go install golang.org/x/lint/golint@latest
 
           make fmtci
           make lint

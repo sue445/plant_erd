@@ -84,7 +84,7 @@ jobs:
       - name: make package
         run: |
           set -xe
-          go get -u github.com/mitchellh/gox
+          go install github.com/mitchellh/gox@latest
           make clean gox-plant_erd zip
         env:
           GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
@@ -184,7 +184,7 @@ jobs:
 
           export PATH=$GOPATH/bin:$PATH
 
-          go get -u github.com/mitchellh/gox
+          go install github.com/mitchellh/gox@latest
 
           if [ -n "${GOX_CC}" ]; then
             which $GOX_CC
@@ -358,7 +358,7 @@ jobs:
           export USERNAME=$(echo $GITHUB_REPOSITORY | cut -d / -f 1)
           export REPO=$(echo $GITHUB_REPOSITORY | cut -d / -f 2)
 
-          go get -u github.com/tcnksm/ghr
+          go install github.com/tcnksm/ghr@latest
 
           if [ "$(echo $TAGNAME | grep -E 'v[0-9.]+$' | wc -l)" = "0" ]; then
             GHR_OPTIONS="${GHR_OPTIONS} -prerelease"
