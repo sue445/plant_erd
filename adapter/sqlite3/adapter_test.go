@@ -91,13 +91,13 @@ func TestAdapter_GetTable(t *testing.T) {
 					Columns: []*db.Column{
 						{
 							Name:       "id",
-							Type:       "integer",
+							Type:       "INTEGER",
 							NotNull:    true,
 							PrimaryKey: true,
 						},
 						{
 							Name: "name",
-							Type: "text",
+							Type: "TEXT",
 						},
 					},
 				},
@@ -112,13 +112,13 @@ func TestAdapter_GetTable(t *testing.T) {
 					Columns: []*db.Column{
 						{
 							Name:       "id",
-							Type:       "integer",
+							Type:       "INTEGER",
 							NotNull:    true,
 							PrimaryKey: true,
 						},
 						{
 							Name:    "user_id",
-							Type:    "integer",
+							Type:    "INTEGER",
 							NotNull: true,
 						},
 					},
@@ -148,18 +148,18 @@ func TestAdapter_GetTable(t *testing.T) {
 					Columns: []*db.Column{
 						{
 							Name:       "id",
-							Type:       "integer",
+							Type:       "INTEGER",
 							NotNull:    true,
 							PrimaryKey: true,
 						},
 						{
 							Name:    "user_id",
-							Type:    "integer",
+							Type:    "INTEGER",
 							NotNull: true,
 						},
 						{
 							Name:    "target_user_id",
-							Type:    "integer",
+							Type:    "INTEGER",
 							NotNull: true,
 						},
 					},
