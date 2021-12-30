@@ -352,17 +352,17 @@ func ExampleErdGenerator_Run_two_tables() {
 
 		// Output:
 		// entity articles {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * user_id : integer
+		//   * user_id : INTEGER
 		//   --
 		//   index_user_id_on_articles (user_id)
 		// }
 		//
 		// entity users {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   name : text
+		//   name : TEXT
 		// }
 		//
 		// articles }-- users
@@ -447,61 +447,61 @@ func ExampleErdGenerator_Run_many_tables() {
 
 		// Output:
 		// entity articles {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * user_id : integer
+		//   * user_id : INTEGER
 		//   --
 		//   index_user_id_on_articles (user_id)
 		// }
 		//
 		// entity comments {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * article_id : integer
+		//   * article_id : INTEGER
 		//   --
 		//   index_article_id_on_articles (article_id)
 		// }
 		//
 		// entity followers {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * user_id : integer
-		//   * target_user_id : integer
+		//   * user_id : INTEGER
+		//   * target_user_id : INTEGER
 		//   --
 		//   - index_target_user_id_and_user_id_on_followers (target_user_id, user_id)
 		//   - index_user_id_and_target_user_id_on_followers (user_id, target_user_id)
 		// }
 		//
 		// entity followings {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * user_id : integer
-		//   * target_user_id : integer
+		//   * user_id : INTEGER
+		//   * target_user_id : INTEGER
 		//   --
 		//   - index_target_user_id_and_user_id_on_followings (target_user_id, user_id)
 		//   - index_user_id_and_target_user_id_on_followings (user_id, target_user_id)
 		// }
 		//
 		// entity likes {
-		//   * article_id : integer
-		//   * user_id : integer
+		//   * article_id : INTEGER
+		//   * user_id : INTEGER
 		//   --
 		//   index_user_id_on_likes (user_id)
 		//   - index_article_id_and_user_id_on_likes (article_id, user_id)
 		// }
 		//
 		// entity revisions {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * article_id : integer
+		//   * article_id : INTEGER
 		//   --
 		//   index_article_id_on_revisions (article_id)
 		// }
 		//
 		// entity users {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   name : text
+		//   name : TEXT
 		// }
 		//
 		// articles }-- users
@@ -538,41 +538,41 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 
 		// Output:
 		// entity articles {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * user_id : integer
+		//   * user_id : INTEGER
 		//   --
 		//   index_user_id_on_articles (user_id)
 		// }
 		//
 		// entity comments {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * article_id : integer
+		//   * article_id : INTEGER
 		//   --
 		//   index_article_id_on_articles (article_id)
 		// }
 		//
 		// entity likes {
-		//   * article_id : integer
-		//   * user_id : integer
+		//   * article_id : INTEGER
+		//   * user_id : INTEGER
 		//   --
 		//   index_user_id_on_likes (user_id)
 		//   - index_article_id_and_user_id_on_likes (article_id, user_id)
 		// }
 		//
 		// entity revisions {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   * article_id : integer
+		//   * article_id : INTEGER
 		//   --
 		//   index_article_id_on_revisions (article_id)
 		// }
 		//
 		// entity users {
-		//   * id : integer
+		//   * id : INTEGER
 		//   --
-		//   name : text
+		//   name : TEXT
 		// }
 		//
 		// articles }-- users
