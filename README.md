@@ -1,5 +1,5 @@
 # PlantERD
-ERD exporter with [PlantUML](https://plantuml.com/) format
+ERD exporter with [PlantUML](https://plantuml.com/) and [mermaid](https://mermaid-js.github.io/mermaid/) format
 
 [![Build Status](https://github.com/sue445/plant_erd/workflows/test/badge.svg?branch=master)](https://github.com/sue445/plant_erd/actions?query=workflow%3Atest)
 [![Build Status](https://github.com/sue445/plant_erd/workflows/build/badge.svg?branch=master)](https://github.com/sue445/plant_erd/actions?query=workflow%3Abuild)
@@ -7,7 +7,7 @@ ERD exporter with [PlantUML](https://plantuml.com/) format
 [![Maintainability](https://api.codeclimate.com/v1/badges/0a9432880ae3f992cc65/maintainability)](https://codeclimate.com/github/sue445/plant_erd/maintainability)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sue445/plant_erd)](https://goreportcard.com/report/github.com/sue445/plant_erd)
 
-## Example
+## Example (PlantUML)
 ```bash
 $ ./plant_erd sqlite3 --database /path/to/test_db.sqlite3
 
@@ -30,16 +30,41 @@ articles }-- users
 
 ![example-plantuml](./img/example-plantuml.svg)
 
+## Example (mermaid)
+```bash
+$ ./plant_erd sqlite3 --database /path/to/test_db.sqlite3 --format=mermaid --show-comment
+
+erDiagram
+
+articles {
+  INTEGER id PK
+  INTEGER user_id FK
+}
+
+users {
+  INTEGER id PK
+  TEXT name
+}
+
+users ||--o{ articles : owns
+```
+
+![example-mermaid](./img/example-mermaid.svg)
+
 ## Features
 * Output ERD from real database
 * Output ERD to stdout or file
 * Output only tables within a certain distance adjacent to each other with foreign keys from a specific table
 
-## Supports
+## Supported databases
 * SQLite3
 * MySQL: 5.6, 5.7 and 8
 * PostgreSQL: 9, 10, 11, 12 and 13
 * Oracle
+
+## Supported output formats
+* [PlantUML](https://plantuml.com/)
+* [mermaid](https://mermaid-js.github.io/mermaid/)
 
 ## Setup
 Download latest binary from https://github.com/sue445/plant_erd/releases and `chmod 755`
