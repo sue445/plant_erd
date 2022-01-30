@@ -26,7 +26,7 @@ func (g *ErdGenerator) Run(schema *db.Schema) error {
 	}
 
 	erd := g.generateErd(schema)
-	return g.outputErd(erd)
+	return g.output(erd)
 }
 
 func (g *ErdGenerator) checkParamTable(schema *db.Schema) error {
@@ -56,7 +56,7 @@ func (g *ErdGenerator) generateErd(schema *db.Schema) string {
 	return subset.ToErd(!g.SKipIndex)
 }
 
-func (g *ErdGenerator) outputErd(content string) error {
+func (g *ErdGenerator) output(content string) error {
 	if g.Filepath == "" {
 		// Print to stdout
 		fmt.Fprint(os.Stdout, content)

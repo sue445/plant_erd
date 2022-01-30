@@ -117,7 +117,7 @@ func TestErdGenerator_generateErd(t *testing.T) {
 	}
 }
 
-func TestErdGenerator_outputErd_ToFile(t *testing.T) {
+func TestErdGenerator_output_ToFile(t *testing.T) {
 	dir, err := ioutil.TempDir("", "example")
 
 	if err != nil {
@@ -131,7 +131,7 @@ func TestErdGenerator_outputErd_ToFile(t *testing.T) {
 		Filepath: filePath,
 	}
 
-	g.outputErd("aaa")
+	g.output("aaa")
 
 	data, err := ioutil.ReadFile(filePath)
 
@@ -162,13 +162,13 @@ func captureStdout(f func()) string {
 	return buf.String()
 }
 
-func TestErdGenerator_outputErd_ToStdout(t *testing.T) {
+func TestErdGenerator_output_ToStdout(t *testing.T) {
 	g := &ErdGenerator{
 		Filepath: "",
 	}
 
 	str := captureStdout(func() {
-		err := g.outputErd("aaa")
+		err := g.output("aaa")
 		assert.NoError(t, err)
 	})
 
