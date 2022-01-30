@@ -23,9 +23,9 @@ func main() {
 
 	app.Version = fmt.Sprintf("%s (build. %s)", Version, Revision)
 	app.Name = "plant_erd-oracle"
-	app.Usage = "ERD exporter with PlantUML format (for oracle)"
+	app.Usage = "ERD exporter with PlantUML and Mermaid format (for oracle)"
 
-	generator := lib.ErdGenerator{}
+	generator := lib.ErdGenerator{ShowComment: true}
 
 	commonFlags := []cli.Flag{
 		cli.StringFlag{
@@ -49,7 +49,7 @@ func main() {
 		},
 		cli.BoolFlag{
 			Name:        "i,skip-index",
-			Usage:       "Whether don't print index to ERD",
+			Usage:       "Whether don't print index to ERD. This option is used only --format=plant_uml",
 			Required:    false,
 			Destination: &generator.SKipIndex,
 		},
@@ -58,6 +58,18 @@ func main() {
 			Usage:       "Skip generating table by using regex patterns",
 			Required:    false,
 			Destination: &generator.SkipTable,
+		},
+		cli.StringFlag{
+			Name:        "format",
+			Usage:       "Output format (plant_uml, mermaid. default:plant_uml)",
+			Required:    false,
+			Destination: &generator.Format,
+		},
+		cli.BoolFlag{
+			Name:        "show-comment",
+			Usage:       "Show column comment. This option is used only --format=mermaid",
+			Required:    false,
+			Destination: &generator.ShowComment,
 		},
 	}
 

@@ -85,8 +85,10 @@ OPTIONS:
    -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    --database DATABASE               SQLite3 DATABASE file
    -f FILE, --file FILE              FILE for output (default: stdout)
-   -i, --skip-index                  Whether don't print index to ERD
+   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
+   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
    -s value, --skip-table value      Skip generating table by using regex patterns
+   --show-comment                    Show column comment. This option is used only --format=mermaid
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
 ```
 
@@ -104,11 +106,13 @@ OPTIONS:
    -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    --database DATABASE               MySQL DATABASE name
    -f FILE, --file FILE              FILE for output (default: stdout)
+   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
    --host HOST                       MySQL HOST (default: "localhost")
-   -i, --skip-index                  Whether don't print index to ERD
+   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --password PASSWORD               MySQL PASSWORD [$MYSQL_PASSWORD]
    --port PORT                       MySQL PORT (default: 3306)
    -s value, --skip-table value      Skip generating table by using regex patterns
+   --show-comment                    Show column comment. This option is used only --format=mermaid
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       MySQL USER (default: "root")
 ```
@@ -126,11 +130,13 @@ OPTIONS:
    -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    --database DATABASE               PostgreSQL DATABASE name
    -f FILE, --file FILE              FILE for output (default: stdout)
+   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
    --host HOST                       PostgreSQL HOST (default: "localhost")
-   -i, --skip-index                  Whether don't print index to ERD
+   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --password PASSWORD               PostgreSQL PASSWORD [$POSTGRES_PASSWORD]
    --port PORT                       PostgreSQL PORT (default: 5432)
    -s value, --skip-table value      Skip generating table by using regex patterns
+   --show-comment                    Show column comment. This option is used only --format=mermaid
    --sslmode SSLMODE                 PostgreSQL SSLMODE. c.f. https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS (default: "disable")
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       PostgreSQL USER
@@ -140,7 +146,7 @@ OPTIONS:
 ```bash
 $ ./plant_erd-oracle --help
 NAME:
-   plant_erd-oracle - ERD exporter with PlantUML format (for oracle)
+   plant_erd-oracle - ERD exporter with PlantUML and Mermaid format (for oracle)
 
 USAGE:
    plant_erd-oracle [global options] command [command options] [arguments...]
@@ -155,8 +161,10 @@ GLOBAL OPTIONS:
    -f FILE, --file FILE              FILE for output (default: stdout)
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
-   -i, --skip-index                  Whether don't print index to ERD
+   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
    -s value, --skip-table value      Skip generating table by using regex patterns
+   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
+   --show-comment                    Show column comment. This option is used only --format=mermaid
    --user USER                       Oracle USER
    --password PASSWORD               Oracle PASSWORD [$ORACLE_PASSWORD]
    --host HOST                       Oracle HOST (default: "localhost")
