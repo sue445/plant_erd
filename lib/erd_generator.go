@@ -10,11 +10,13 @@ import (
 
 // ErdGenerator represents ERD generator
 type ErdGenerator struct {
-	Filepath  string
-	Table     string
-	Distance  int
-	SKipIndex bool
-	SkipTable string
+	Filepath    string
+	Table       string
+	Distance    int
+	SKipIndex   bool
+	SkipTable   string
+	Format      string
+	ShowComment bool
 }
 
 // Run performs generator
@@ -25,7 +27,11 @@ func (g *ErdGenerator) Run(schema *db.Schema) error {
 		return err
 	}
 
-	erd := g.generateErd(schema)
+	erd, err := g.generate(schema)
+	if err != nil {
+		return err
+	}
+
 	return g.output(erd)
 }
 
@@ -43,17 +49,37 @@ func (g *ErdGenerator) checkParamTable(schema *db.Schema) error {
 	return fmt.Errorf("%s is not found in database", g.Table)
 }
 
-func (g *ErdGenerator) generateErd(schema *db.Schema) string {
+func (g *ErdGenerator) generate(schema *db.Schema) (string, error) {
 	if g.SkipTable != "" {
 		schema = g.filterSchema(schema, []string{g.SkipTable})
 	}
 
+	switch g.Format {
+	case "", "plant_uml":
+		return g.generateErd(schema), nil
+	case "mermaid":
+		return g.generateMermaid(schema), nil
+	}
+
+	return "", fmt.Errorf("%s is unknown format", g.Format)
+}
+
+func (g *ErdGenerator) generateErd(schema *db.Schema) string {
 	if g.Table == "" || g.Distance <= 0 {
 		return schema.ToErd(!g.SKipIndex)
 	}
 
 	subset := schema.Subset(g.Table, g.Distance)
 	return subset.ToErd(!g.SKipIndex)
+}
+
+func (g *ErdGenerator) generateMermaid(schema *db.Schema) string {
+	if g.Table == "" || g.Distance <= 0 {
+		return schema.ToMermaid(g.ShowComment)
+	}
+
+	subset := schema.Subset(g.Table, g.Distance)
+	return subset.ToMermaid(g.ShowComment)
 }
 
 func (g *ErdGenerator) output(content string) error {

@@ -117,6 +117,96 @@ func TestErdGenerator_generateErd(t *testing.T) {
 	}
 }
 
+func TestErdGenerator_generateMermaid(t *testing.T) {
+	tables := []*db.Table{
+		{
+			Name: "articles",
+			Columns: []*db.Column{
+				{
+					Name:       "id",
+					Type:       "integer",
+					NotNull:    true,
+					PrimaryKey: true,
+				},
+				{
+					Name:    "user_id",
+					Type:    "integer",
+					NotNull: true,
+				},
+			},
+			ForeignKeys: []*db.ForeignKey{
+				{
+					FromColumn: "user_id",
+					ToTable:    "users",
+					ToColumn:   "id",
+				},
+			},
+		},
+		{
+			Name: "users",
+			Columns: []*db.Column{
+				{
+					Name:       "id",
+					Type:       "integer",
+					NotNull:    true,
+					PrimaryKey: true,
+				},
+				{
+					Name: "name",
+					Type: "text",
+				},
+			},
+		},
+	}
+	schema := db.NewSchema(tables)
+
+	type fields struct {
+		Filepath string
+		Table    string
+		Distance int
+	}
+	type args struct {
+		schema *db.Schema
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		{
+			name: "no table",
+			fields: fields{
+				Table:    "",
+				Distance: 0,
+			},
+			args: args{
+				schema: schema,
+			},
+		},
+		{
+			name: "with table and distance",
+			fields: fields{
+				Table:    "users",
+				Distance: 1,
+			},
+			args: args{
+				schema: schema,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			g := &ErdGenerator{
+				Filepath: tt.fields.Filepath,
+				Table:    tt.fields.Table,
+				Distance: tt.fields.Distance,
+			}
+			got := g.generateMermaid(tt.args.schema)
+			assert.Greater(t, len(got), 0)
+		})
+	}
+}
+
 func TestErdGenerator_output_ToFile(t *testing.T) {
 	dir, err := ioutil.TempDir("", "example")
 
@@ -197,6 +287,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 
 	type fields struct {
 		SkipTable string
+		Format    string
 	}
 	type args struct {
 		schema *db.Schema
@@ -210,6 +301,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			name: "with skip tables begin with QRTZ*",
 			fields: fields{
 				SkipTable: "(QRTZ*)\\w+",
+				Format:    "plant_uml",
 			},
 			args: args{
 				schema: schema,
@@ -219,6 +311,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			name: "with skip all tables",
 			fields: fields{
 				SkipTable: "()\\w+",
+				Format:    "plant_uml",
 			},
 			args: args{
 				schema: schema,
@@ -229,15 +322,18 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			g := &ErdGenerator{
 				SkipTable: tt.fields.SkipTable,
+				Format:    tt.fields.Format,
 			}
-			got := g.generateErd(tt.args.schema)
-			if tt.name == "with skip tables begin with QRTZ*" {
-				assert.Contains(t, got, "articles", "users")
-				assert.NotContains(t, got, "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
-			}
-			if tt.name == "with skip all tables" {
-				assert.Equal(t, len(got), 0)
-				assert.NotContains(t, got, "articles", "users", "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
+			got, err := g.generate(tt.args.schema)
+			if assert.NoError(t, err) {
+				if tt.name == "with skip tables begin with QRTZ*" {
+					assert.Contains(t, got, "articles", "users")
+					assert.NotContains(t, got, "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
+				}
+				if tt.name == "with skip all tables" {
+					assert.Equal(t, len(got), 0)
+					assert.NotContains(t, got, "articles", "users", "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
+				}
 			}
 		})
 	}
@@ -347,7 +443,7 @@ func ExampleErdGenerator_Run_two_tables() {
 			panic(err)
 		}
 
-		generator := ErdGenerator{}
+		generator := ErdGenerator{Format: "plant_uml"}
 		generator.Run(schema)
 
 		// Output:
@@ -442,7 +538,7 @@ func ExampleErdGenerator_Run_many_tables() {
 			panic(err)
 		}
 
-		generator := ErdGenerator{}
+		generator := ErdGenerator{Format: "plant_uml"}
 		generator.Run(schema)
 
 		// Output:
@@ -533,7 +629,7 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 			panic(err)
 		}
 
-		generator := ErdGenerator{Table: "articles", Distance: 1}
+		generator := ErdGenerator{Format: "plant_uml", Table: "articles", Distance: 1}
 		generator.Run(schema)
 
 		// Output:
