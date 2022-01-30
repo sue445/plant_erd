@@ -28,7 +28,7 @@ entity users {
 articles }-- users
 ```
 
-![example](./img/example.svg)
+![example-plantuml](./img/example-plantuml.svg)
 
 ## Features
 * Output ERD from real database
