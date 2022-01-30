@@ -156,6 +156,7 @@ GLOBAL OPTIONS:
    -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    -i, --skip-index                  Whether don't print index to ERD
+   -s value, --skip-table value      Skip generating table by using regex patterns
    --user USER                       Oracle USER
    --password PASSWORD               Oracle PASSWORD [$ORACLE_PASSWORD]
    --host HOST                       Oracle HOST (default: "localhost")
