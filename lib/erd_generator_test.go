@@ -27,7 +27,7 @@ func withDatabase(callback func(*sqlite3.Adapter)) {
 	callback(adapter)
 }
 
-func TestErdGenerator_generateErd(t *testing.T) {
+func TestErdGenerator_generatePlantUmlErd(t *testing.T) {
 	tables := []*db.Table{
 		{
 			Name: "articles",
@@ -111,13 +111,13 @@ func TestErdGenerator_generateErd(t *testing.T) {
 				Table:    tt.fields.Table,
 				Distance: tt.fields.Distance,
 			}
-			got := g.generateErd(tt.args.schema)
+			got := g.generatePlantUmlErd(tt.args.schema)
 			assert.Greater(t, len(got), 0)
 		})
 	}
 }
 
-func TestErdGenerator_generateMermaid(t *testing.T) {
+func TestErdGenerator_generateMermaidErd(t *testing.T) {
 	tables := []*db.Table{
 		{
 			Name: "articles",
@@ -201,7 +201,7 @@ func TestErdGenerator_generateMermaid(t *testing.T) {
 				Table:    tt.fields.Table,
 				Distance: tt.fields.Distance,
 			}
-			got := g.generateMermaid(tt.args.schema)
+			got := g.generateMermaidErd(tt.args.schema)
 			assert.Greater(t, len(got), 0)
 		})
 	}

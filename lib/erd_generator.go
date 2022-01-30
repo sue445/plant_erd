@@ -62,15 +62,15 @@ func (g *ErdGenerator) generate(schema *db.Schema) (string, error) {
 
 	switch g.Format {
 	case "", "plant_uml":
-		return g.generateErd(schema), nil
+		return g.generatePlantUmlErd(schema), nil
 	case "mermaid":
-		return g.generateMermaid(schema), nil
+		return g.generateMermaidErd(schema), nil
 	}
 
 	return "", fmt.Errorf("%s is unknown format", g.Format)
 }
 
-func (g *ErdGenerator) generateErd(schema *db.Schema) string {
+func (g *ErdGenerator) generatePlantUmlErd(schema *db.Schema) string {
 	if g.Table == "" || g.Distance <= 0 {
 		return schema.ToErd(!g.SKipIndex)
 	}
@@ -79,7 +79,7 @@ func (g *ErdGenerator) generateErd(schema *db.Schema) string {
 	return subset.ToErd(!g.SKipIndex)
 }
 
-func (g *ErdGenerator) generateMermaid(schema *db.Schema) string {
+func (g *ErdGenerator) generateMermaidErd(schema *db.Schema) string {
 	if g.Table == "" || g.Distance <= 0 {
 		return schema.ToMermaid(g.ShowComment)
 	}
