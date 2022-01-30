@@ -422,49 +422,6 @@ func TestErdGenerator_checkParamTable(t *testing.T) {
 	}
 }
 
-func ExampleErdGenerator_Run_two_tables() {
-	withDatabase(func(a *sqlite3.Adapter) {
-		a.DB.MustExec(`
-			CREATE TABLE users (
-				id   integer not null primary key,
-				name text
-		);`)
-
-		a.DB.MustExec(`
-			CREATE TABLE articles (
-				id      integer not null primary key, 
-				user_id integer not null, 
-				FOREIGN KEY(user_id) REFERENCES users(id)
-		);`)
-		a.DB.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")
-
-		schema, err := LoadSchema(a)
-		if err != nil {
-			panic(err)
-		}
-
-		generator := ErdGenerator{Format: "plant_uml"}
-		generator.Run(schema)
-
-		// Output:
-		// entity articles {
-		//   * id : INTEGER
-		//   --
-		//   * user_id : INTEGER
-		//   --
-		//   index_user_id_on_articles (user_id)
-		// }
-		//
-		// entity users {
-		//   * id : INTEGER
-		//   --
-		//   name : TEXT
-		// }
-		//
-		// articles }-- users
-	})
-}
-
 func createManyExampleTables(a *sqlite3.Adapter) {
 	a.DB.MustExec(`
 		CREATE TABLE users (
@@ -529,7 +486,50 @@ func createManyExampleTables(a *sqlite3.Adapter) {
 	a.DB.MustExec("CREATE INDEX index_article_id_on_revisions ON revisions(article_id)")
 }
 
-func ExampleErdGenerator_Run_many_tables() {
+func ExampleErdGenerator_Run_two_tables_with_PlantUML() {
+	withDatabase(func(a *sqlite3.Adapter) {
+		a.DB.MustExec(`
+			CREATE TABLE users (
+				id   integer not null primary key,
+				name text
+		);`)
+
+		a.DB.MustExec(`
+			CREATE TABLE articles (
+				id      integer not null primary key, 
+				user_id integer not null, 
+				FOREIGN KEY(user_id) REFERENCES users(id)
+		);`)
+		a.DB.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")
+
+		schema, err := LoadSchema(a)
+		if err != nil {
+			panic(err)
+		}
+
+		generator := ErdGenerator{Format: "plant_uml"}
+		generator.Run(schema)
+
+		// Output:
+		// entity articles {
+		//   * id : INTEGER
+		//   --
+		//   * user_id : INTEGER
+		//   --
+		//   index_user_id_on_articles (user_id)
+		// }
+		//
+		// entity users {
+		//   * id : INTEGER
+		//   --
+		//   name : TEXT
+		// }
+		//
+		// articles }-- users
+	})
+}
+
+func ExampleErdGenerator_Run_many_tables_with_PlantUML() {
 	withDatabase(func(a *sqlite3.Adapter) {
 		createManyExampleTables(a)
 
@@ -620,7 +620,7 @@ func ExampleErdGenerator_Run_many_tables() {
 	})
 }
 
-func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_articles() {
+func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_articles_with_PlantUML() {
 	withDatabase(func(a *sqlite3.Adapter) {
 		createManyExampleTables(a)
 
@@ -680,5 +680,170 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 		// likes }-- articles
 		//
 		// revisions }-- articles
+	})
+}
+
+func ExampleErdGenerator_Run_two_tables_with_Mermaid() {
+	withDatabase(func(a *sqlite3.Adapter) {
+		a.DB.MustExec(`
+			CREATE TABLE users (
+				id   integer not null primary key,
+				name text
+		);`)
+
+		a.DB.MustExec(`
+			CREATE TABLE articles (
+				id      integer not null primary key, 
+				user_id integer not null, 
+				FOREIGN KEY(user_id) REFERENCES users(id)
+		);`)
+		a.DB.MustExec("CREATE INDEX index_user_id_on_articles ON articles(user_id)")
+
+		schema, err := LoadSchema(a)
+		if err != nil {
+			panic(err)
+		}
+
+		generator := ErdGenerator{Format: "mermaid"}
+		generator.Run(schema)
+
+		// Output:
+		// erDiagram
+		//
+		// articles {
+		//   INTEGER id
+		//   INTEGER user_id
+		// }
+		//
+		// users {
+		//   INTEGER id
+		//   TEXT name
+		// }
+		//
+		// users ||--o{ articles : owns
+	})
+}
+
+func ExampleErdGenerator_Run_many_tables_with_Mermaid() {
+	withDatabase(func(a *sqlite3.Adapter) {
+		createManyExampleTables(a)
+
+		schema, err := LoadSchema(a)
+		if err != nil {
+			panic(err)
+		}
+
+		generator := ErdGenerator{Format: "mermaid"}
+		generator.Run(schema)
+
+		// Output:
+		// erDiagram
+		//
+		// articles {
+		//   INTEGER id
+		//   INTEGER user_id
+		// }
+		//
+		// comments {
+		//   INTEGER id
+		//   INTEGER article_id
+		// }
+		//
+		// followers {
+		//   INTEGER id
+		//   INTEGER user_id
+		//   INTEGER target_user_id
+		// }
+		//
+		// followings {
+		//   INTEGER id
+		//   INTEGER user_id
+		//   INTEGER target_user_id
+		// }
+		//
+		// likes {
+		//   INTEGER article_id
+		//   INTEGER user_id
+		// }
+		//
+		// revisions {
+		//   INTEGER id
+		//   INTEGER article_id
+		// }
+		//
+		// users {
+		//   INTEGER id
+		//   TEXT name
+		// }
+		//
+		// users ||--o{ articles : owns
+		//
+		// articles ||--o{ comments : owns
+		//
+		// users ||--o{ followers : owns
+		//
+		// users ||--o{ followers : owns
+		//
+		// users ||--o{ followings : owns
+		//
+		// users ||--o{ followings : owns
+		//
+		// users ||--o{ likes : owns
+		//
+		// articles ||--o{ likes : owns
+		//
+		// articles ||--o{ revisions : owns
+	})
+}
+
+func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_articles_with_Mermaid() {
+	withDatabase(func(a *sqlite3.Adapter) {
+		createManyExampleTables(a)
+
+		schema, err := LoadSchema(a)
+		if err != nil {
+			panic(err)
+		}
+
+		generator := ErdGenerator{Format: "mermaid", Table: "articles", Distance: 1}
+		generator.Run(schema)
+
+		// Output:
+		// erDiagram
+		//
+		// articles {
+		//   INTEGER id
+		//   INTEGER user_id
+		// }
+		//
+		// comments {
+		//   INTEGER id
+		//   INTEGER article_id
+		// }
+		//
+		// likes {
+		//   INTEGER article_id
+		//   INTEGER user_id
+		// }
+		//
+		// revisions {
+		//   INTEGER id
+		//   INTEGER article_id
+		// }
+		//
+		// users {
+		//   INTEGER id
+		//   TEXT name
+		// }
+		//
+		// users ||--o{ articles : owns
+		//
+		// articles ||--o{ comments : owns
+		//
+		// users ||--o{ likes : owns
+		//
+		// articles ||--o{ likes : owns
+		//
+		// articles ||--o{ revisions : owns
 	})
 }
