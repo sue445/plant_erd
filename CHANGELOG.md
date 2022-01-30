@@ -1,5 +1,16 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.3.0...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.0...master)
+
+## v0.4.0
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.3.0...v0.4.0)
+
+* Upgrade to Go 1.17
+  * https://github.com/sue445/plant_erd/pull/165
+* Support mermaid :mermaid:
+  * https://github.com/sue445/plant_erd/pull/170
+* Add `--skip-table` argument to `plant_erd-oracle`
+  * https://github.com/sue445/plant_erd/pull/171
+* Update dependencies
 
 ## v0.3.0
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.2.4...v0.3.0)
