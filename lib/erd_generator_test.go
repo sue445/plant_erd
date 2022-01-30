@@ -293,9 +293,11 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 		schema *db.Schema
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
+		name                 string
+		fields               fields
+		args                 args
+		wantContainTables    []string
+		wantNotContainTables []string
 	}{
 		{
 			name: "with skip tables begin with QRTZ*",
@@ -306,6 +308,8 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			args: args{
 				schema: schema,
 			},
+			wantContainTables:    []string{"articles", "users"},
+			wantNotContainTables: []string{"QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER"},
 		},
 		{
 			name: "with skip all tables",
@@ -316,6 +320,8 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			args: args{
 				schema: schema,
 			},
+			wantContainTables:    []string{},
+			wantNotContainTables: []string{"articles", "users", "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER"},
 		},
 	}
 	for _, tt := range tests {
@@ -326,13 +332,18 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			}
 			got, err := g.generate(tt.args.schema)
 			if assert.NoError(t, err) {
-				if tt.name == "with skip tables begin with QRTZ*" {
-					assert.Contains(t, got, "articles", "users")
-					assert.NotContains(t, got, "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
+				if len(tt.wantContainTables) == 0 {
+					assert.Equal(t, got, "")
+				} else {
+					for _, tableName := range tt.wantContainTables {
+						assert.Contains(t, got, tableName)
+					}
 				}
-				if tt.name == "with skip all tables" {
-					assert.Equal(t, len(got), 0)
-					assert.NotContains(t, got, "articles", "users", "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")
+
+				if len(tt.wantNotContainTables) > 0 {
+					for _, tableName := range tt.wantNotContainTables {
+						assert.NotContains(t, got, tableName)
+					}
 				}
 			}
 		})
