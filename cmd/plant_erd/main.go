@@ -29,9 +29,8 @@ func main() {
 	app.Name = "plant_erd"
 	app.Usage = "ERD exporter with PlantUML and Mermaid format"
 
-	generator := lib.ErdGenerator{ShowComment: true}
-
-	commonFlags := cmd.CreateCliCommonFlags(&generator)
+	generator := lib.NewErdGenerator()
+	commonFlags := cmd.CreateCliCommonFlags(generator)
 
 	sqlite3Database := ""
 	mysqlConfig := mysqlDriver.NewConfig()

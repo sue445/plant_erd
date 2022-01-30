@@ -26,8 +26,8 @@ func main() {
 	app.Name = "plant_erd-oracle"
 	app.Usage = "ERD exporter with PlantUML and Mermaid format (for oracle)"
 
-	generator := lib.ErdGenerator{ShowComment: true}
-	commonFlags := cmd.CreateCliCommonFlags(&generator)
+	generator := lib.NewErdGenerator()
+	commonFlags := cmd.CreateCliCommonFlags(generator)
 
 	oracleConfig := oracle.NewConfig()
 	app.Flags = append(

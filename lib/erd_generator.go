@@ -19,6 +19,12 @@ type ErdGenerator struct {
 	ShowComment bool
 }
 
+// NewErdGenerator returns a new NewErdGenerator instance
+func NewErdGenerator() *ErdGenerator {
+	g := ErdGenerator{ShowComment: true}
+	return &g
+}
+
 // Run performs generator
 func (g *ErdGenerator) Run(schema *db.Schema) error {
 	err := g.checkParamTable(schema)
