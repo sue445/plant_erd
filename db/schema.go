@@ -37,6 +37,29 @@ func (s *Schema) ToErd(showIndex bool) string {
 	return strings.Join(lines, "\n\n")
 }
 
+// ToMermaid returns Mermaid formatted table
+func (s *Schema) ToMermaid(showComment bool) string {
+	var lines []string
+	tableNames := mapset.NewSet()
+
+	lines = append(lines, "erDiagram")
+
+	for _, table := range s.Tables {
+		lines = append(lines, table.ToMermaid(showComment))
+		tableNames.Add(table.Name)
+	}
+
+	for _, table := range s.Tables {
+		for _, foreignKey := range table.ForeignKeys {
+			if tableNames.Contains(foreignKey.ToTable) {
+				lines = append(lines, fmt.Sprintf("%s ||--o{ %s : owns", foreignKey.ToTable, table.Name))
+			}
+		}
+	}
+
+	return strings.Join(lines, "\n\n")
+}
+
 // Subset returns subset of a schema
 func (s *Schema) Subset(tableName string, distance int) *Schema {
 	explorer := NewSchemaExplorer(s)
