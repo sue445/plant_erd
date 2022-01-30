@@ -27,7 +27,7 @@ func withDatabase(callback func(*sqlite3.Adapter)) {
 	callback(adapter)
 }
 
-func TestErdGenerator_generate(t *testing.T) {
+func TestErdGenerator_generateErd(t *testing.T) {
 	tables := []*db.Table{
 		{
 			Name: "articles",
@@ -111,7 +111,7 @@ func TestErdGenerator_generate(t *testing.T) {
 				Table:    tt.fields.Table,
 				Distance: tt.fields.Distance,
 			}
-			got := g.generate(tt.args.schema)
+			got := g.generateErd(tt.args.schema)
 			assert.Greater(t, len(got), 0)
 		})
 	}
@@ -230,7 +230,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			g := &ErdGenerator{
 				SkipTable: tt.fields.SkipTable,
 			}
-			got := g.generate(tt.args.schema)
+			got := g.generateErd(tt.args.schema)
 			if tt.name == "with skip tables begin with QRTZ*" {
 				assert.Contains(t, got, "articles", "users")
 				assert.NotContains(t, got, "QRTZ_TRIGGERS", "QRTZ_ALARMS", "QRTZ_SCHEDULER")

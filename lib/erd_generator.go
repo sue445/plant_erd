@@ -25,7 +25,7 @@ func (g *ErdGenerator) Run(schema *db.Schema) error {
 		return err
 	}
 
-	erd := g.generate(schema)
+	erd := g.generateErd(schema)
 	return g.outputErd(erd)
 }
 
@@ -43,7 +43,7 @@ func (g *ErdGenerator) checkParamTable(schema *db.Schema) error {
 	return fmt.Errorf("%s is not found in database", g.Table)
 }
 
-func (g *ErdGenerator) generate(schema *db.Schema) string {
+func (g *ErdGenerator) generateErd(schema *db.Schema) string {
 	if g.SkipTable != "" {
 		schema = g.filterSchema(schema, []string{g.SkipTable})
 	}
