@@ -215,3 +215,111 @@ func TestTable_ToErd(t *testing.T) {
 		})
 	}
 }
+
+func TestTable_ToMermaid(t *testing.T) {
+	type fields struct {
+		Name        string
+		Columns     []*Column
+		ForeignKeys []*ForeignKey
+		Indexes     []*Index
+	}
+	type args struct {
+		showComment bool
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "with comment",
+			fields: fields{
+				Name: "articles",
+				Columns: []*Column{
+					{
+						Name:       "id",
+						Type:       "integer",
+						NotNull:    true,
+						PrimaryKey: true,
+					},
+					{
+						Name:    "user_id",
+						Type:    "integer",
+						NotNull: true,
+					},
+					{
+						Name: "title",
+						Type: "text",
+					},
+				},
+				ForeignKeys: []*ForeignKey{
+					{
+						FromColumn: "user_id",
+						ToTable:    "users",
+						ToColumn:   "id",
+					},
+				},
+			},
+			args: args{
+				showComment: true,
+			},
+			want: `articles {
+  integer id PK
+  integer user_id FK
+  text title
+}`,
+		},
+		{
+			name: "without comment",
+			fields: fields{
+				Name: "articles",
+				Columns: []*Column{
+					{
+						Name:       "id",
+						Type:       "integer",
+						NotNull:    true,
+						PrimaryKey: true,
+					},
+					{
+						Name:    "user_id",
+						Type:    "integer",
+						NotNull: true,
+					},
+					{
+						Name: "title",
+						Type: "text",
+					},
+				},
+				ForeignKeys: []*ForeignKey{
+					{
+						FromColumn: "user_id",
+						ToTable:    "users",
+						ToColumn:   "id",
+					},
+				},
+			},
+			args: args{
+				showComment: false,
+			},
+			want: `articles {
+  integer id
+  integer user_id
+  text title
+}`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			table := &Table{
+				Name:        tt.fields.Name,
+				Columns:     tt.fields.Columns,
+				ForeignKeys: tt.fields.ForeignKeys,
+				Indexes:     tt.fields.Indexes,
+			}
+
+			got := table.ToMermaid(tt.args.showComment)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
