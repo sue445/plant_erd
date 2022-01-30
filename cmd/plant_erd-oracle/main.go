@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/sue445/plant_erd/adapter/oracle"
+	"github.com/sue445/plant_erd/cmd"
 	"github.com/sue445/plant_erd/lib"
 	"github.com/urfave/cli"
 	"log"
@@ -23,43 +24,10 @@ func main() {
 
 	app.Version = fmt.Sprintf("%s (build. %s)", Version, Revision)
 	app.Name = "plant_erd-oracle"
-	app.Usage = "ERD exporter with PlantUML format (for oracle)"
+	app.Usage = "ERD exporter with PlantUML and Mermaid format (for oracle)"
 
-	generator := lib.ErdGenerator{}
-
-	commonFlags := []cli.Flag{
-		cli.StringFlag{
-			Name:        "f,file",
-			Usage:       "`FILE` for output (default: stdout)",
-			Required:    false,
-			Destination: &generator.Filepath,
-		},
-		cli.StringFlag{
-			Name:        "t,table",
-			Usage:       "Output only tables within a certain distance adjacent to each other with foreign keys from a specific `TABLE`",
-			Required:    false,
-			Destination: &generator.Table,
-		},
-		cli.IntFlag{
-			Name:        "d,distance",
-			Usage:       "Output only tables within a certain `DISTANCE` adjacent to each other with foreign keys from a specific table",
-			Required:    false,
-			Destination: &generator.Distance,
-			Value:       0,
-		},
-		cli.BoolFlag{
-			Name:        "i,skip-index",
-			Usage:       "Whether don't print index to ERD",
-			Required:    false,
-			Destination: &generator.SKipIndex,
-		},
-		cli.StringFlag{
-			Name:        "s,skip-table",
-			Usage:       "Skip generating table by using regex patterns",
-			Required:    false,
-			Destination: &generator.SkipTable,
-		},
-	}
+	generator := lib.NewErdGenerator()
+	commonFlags := cmd.CreateCliCommonFlags(generator)
 
 	oracleConfig := oracle.NewConfig()
 	app.Flags = append(

@@ -22,3 +22,8 @@ func (c *Column) ToErd() string {
 
 	return str
 }
+
+// ToMermaid returns Mermaid formatted column
+func (c *Column) ToMermaid() string {
+	return fmt.Sprintf("%s %s", c.Type, c.Name)
+}

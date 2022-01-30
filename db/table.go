@@ -75,3 +75,42 @@ func (t *Table) GetNonPrimaryKeyColumns() []*Column {
 	}
 	return columns
 }
+
+// ToMermaid returns Mermaid formatted table
+func (t *Table) ToMermaid(showComment bool) string {
+	lines := []string{
+		fmt.Sprintf("%s {", t.Name),
+	}
+
+	for _, column := range t.Columns {
+		var parts []string
+		parts = append(parts, column.ToMermaid())
+
+		if showComment {
+			comment := t.mermaidColumnComment(column)
+			if comment != "" {
+				parts = append(parts, comment)
+			}
+		}
+
+		line := "  " + strings.Join(parts, " ")
+		lines = append(lines, line)
+	}
+
+	lines = append(lines, "}")
+	return strings.Join(lines, "\n")
+}
+
+func (t *Table) mermaidColumnComment(column *Column) string {
+	if column.PrimaryKey {
+		return "PK"
+	}
+
+	for _, foreignKey := range t.ForeignKeys {
+		if foreignKey.FromColumn == column.Name {
+			return "FK"
+		}
+	}
+
+	return ""
+}

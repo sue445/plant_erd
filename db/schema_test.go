@@ -130,6 +130,132 @@ articles }-- users`,
 	}
 }
 
+func TestSchema_ToMermaid(t *testing.T) {
+	type fields struct {
+		Tables []*Table
+	}
+	type args struct {
+		showComment bool
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "users and articles",
+			fields: fields{
+				Tables: []*Table{
+					{
+						Name: "articles",
+						Columns: []*Column{
+							{
+								Name:       "id",
+								Type:       "integer",
+								NotNull:    true,
+								PrimaryKey: true,
+							},
+							{
+								Name:    "user_id",
+								Type:    "integer",
+								NotNull: true,
+							},
+						},
+						ForeignKeys: []*ForeignKey{
+							{
+								FromColumn: "user_id",
+								ToTable:    "users",
+								ToColumn:   "id",
+							},
+						},
+					},
+					{
+						Name: "users",
+						Columns: []*Column{
+							{
+								Name:       "id",
+								Type:       "integer",
+								NotNull:    true,
+								PrimaryKey: true,
+							},
+							{
+								Name: "name",
+								Type: "text",
+							},
+						},
+					},
+				},
+			},
+			args: args{
+				showComment: true,
+			},
+			want: `erDiagram
+
+articles {
+  integer id PK
+  integer user_id FK
+}
+
+users {
+  integer id PK
+  text name
+}
+
+users ||--o{ articles : owns`,
+		},
+		{
+			name: "Reject foreign key which table isn't in schema",
+			fields: fields{
+				Tables: []*Table{
+					{
+						Name: "articles",
+						Columns: []*Column{
+							{
+								Name:       "id",
+								Type:       "integer",
+								NotNull:    true,
+								PrimaryKey: true,
+							},
+							{
+								Name:    "user_id",
+								Type:    "integer",
+								NotNull: true,
+							},
+						},
+						ForeignKeys: []*ForeignKey{
+							{
+								FromColumn: "user_id",
+								ToTable:    "users",
+								ToColumn:   "id",
+							},
+						},
+					},
+				},
+			},
+			args: args{
+				showComment: true,
+			},
+			want: `erDiagram
+
+articles {
+  integer id PK
+  integer user_id FK
+}`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Schema{
+				Tables: tt.fields.Tables,
+			}
+
+			got := s.ToMermaid(tt.args.showComment)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
 func TestSchema_Subset(t *testing.T) {
 	articles := &Table{
 		Name: "articles",
