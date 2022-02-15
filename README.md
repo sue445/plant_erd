@@ -49,7 +49,21 @@ users {
 users ||--o{ articles : owns
 ```
 
-![example-mermaid](./img/example-mermaid.svg)
+```mermaid
+erDiagram
+
+articles {
+  INTEGER id PK
+  INTEGER user_id FK
+}
+
+users {
+  INTEGER id PK
+  TEXT name
+}
+
+users ||--o{ articles : owns
+```
 
 ## Features
 * Output ERD from real database
