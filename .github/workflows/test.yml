@@ -103,6 +103,7 @@ jobs:
           - 11-alpine
           - 12-alpine
           - 13-alpine
+          - 14-alpine
 
     services:
       postgresql:
