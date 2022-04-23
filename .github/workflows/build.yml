@@ -92,7 +92,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: bin-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/
 
       - name: Slack Notification (not success)
@@ -205,7 +204,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: bin-oracle-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/
 
       - name: Slack Notification (not success)
@@ -237,6 +235,8 @@ jobs:
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3
+        with:
+          path: bin/
 
       - name: Upload to GitHub Releases
         run: |
