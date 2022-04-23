@@ -4,7 +4,7 @@
 ## v0.4.1
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.0...v0.4.1)
 
-* Fixed foreign keys not included in public schema couldn't be retrieved
+* [PostgreSQL] Fixed foreign keys not included in public schema couldn't be retrieved
   * https://github.com/sue445/plant_erd/pull/182
   * https://github.com/sue445/plant_erd/issues/179
 * Upgrade to Go 1.18
