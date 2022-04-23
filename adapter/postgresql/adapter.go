@@ -1,10 +1,12 @@
 package postgresql
 
 import (
+	"fmt"
 	"github.com/deckarep/golang-set"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // for sql
 	"github.com/sue445/plant_erd/db"
+	"strings"
 )
 
 // Adapter represents PostgreSQL adapter
@@ -30,7 +32,7 @@ func NewAdapter(config *Config) (*Adapter, Close, error) {
 // GetAllTableNames returns all table names in database
 func (a *Adapter) GetAllTableNames() ([]string, error) {
 	var rows []pgStatUserTables
-	err := a.db.Select(&rows, "SELECT relname FROM pg_stat_user_tables ORDER BY relname")
+	err := a.db.Select(&rows, "SELECT schemaname, relname FROM pg_stat_user_tables ORDER BY schemaname, relname")
 
 	if err != nil {
 		return []string{}, err
@@ -38,19 +40,23 @@ func (a *Adapter) GetAllTableNames() ([]string, error) {
 
 	var tables []string
 	for _, row := range rows {
-		tables = append(tables, row.Relname)
+		tables = append(tables, fmt.Sprintf("%s.%s", row.Schemaname, row.Relname))
 	}
 
 	return tables, nil
 }
 
 // GetTable returns table info
-func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
+func (a *Adapter) GetTable(tableWithSchemaName string) (*db.Table, error) {
+	names := strings.Split(tableWithSchemaName, ".")
+	schemaName := names[0]
+	tableName := names[1]
+
 	table := db.Table{
-		Name: tableName,
+		Name: tableWithSchemaName,
 	}
 
-	primaryKeyColumns, err := a.getPrimaryKeyColumns(tableName)
+	primaryKeyColumns, err := a.getPrimaryKeyColumns(tableName, schemaName)
 	if err != nil {
 		return nil, err
 	}
@@ -61,9 +67,9 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 		       data_type,
 		       is_nullable
 		FROM information_schema.columns
-		WHERE table_catalog = $1 AND table_name = $2
+		WHERE table_catalog = $1 AND table_name = $2 AND table_schema = $3
 		ORDER BY ordinal_position
-	`, a.dbName, tableName)
+	`, a.dbName, tableName, schemaName)
 
 	if err != nil {
 		return nil, err
@@ -79,13 +85,13 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 		table.Columns = append(table.Columns, column)
 	}
 
-	foreignKeys, err := a.getForeignKeys(tableName)
+	foreignKeys, err := a.getForeignKeys(tableName, schemaName)
 	if err != nil {
 		return nil, err
 	}
 	table.ForeignKeys = foreignKeys
 
-	indexes, err := a.getIndexes(tableName)
+	indexes, err := a.getIndexes(tableName, schemaName)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +100,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	return &table, nil
 }
 
-func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
+func (a *Adapter) getPrimaryKeyColumns(tableName string, schemaName string) (mapset.Set, error) {
 	var rows []primaryKeys
 
 	err := a.db.Select(&rows, `
@@ -122,7 +128,7 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 	return columns, nil
 }
 
-func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
+func (a *Adapter) getForeignKeys(tableName string, schemaName string) ([]*db.ForeignKey, error) {
 	var rows []foreignKey
 
 	// c.f. https://github.com/rails/rails/blob/v6.0.1/activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb#L483
@@ -138,7 +144,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 		  AND t1.relname = $1
 		  AND t3.nspname = $2
 		ORDER BY c.conname
-	`, tableName, "public")
+	`, tableName, schemaName)
 
 	if err != nil {
 		return nil, err
@@ -151,13 +157,19 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 			ToTable:    row.ToTable,
 			ToColumn:   row.PrimaryKey,
 		}
+
+		// Add public schema
+		if !strings.Contains(foreignKey.ToTable, ".") {
+			foreignKey.ToTable = "public." + foreignKey.ToTable
+		}
+
 		foreignKeys = append(foreignKeys, foreignKey)
 	}
 
 	return foreignKeys, nil
 }
 
-func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
+func (a *Adapter) getIndexes(tableName string, schemaName string) ([]*db.Index, error) {
 	// c.f. https://github.com/rails/rails/blob/v6.0.1/activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb#L89
 	var rows []indexes
 	err := a.db.Select(&rows, `
@@ -169,8 +181,9 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 		WHERE i.relkind = 'i'
 		  AND d.indisprimary = 'f'
 		  AND t.relname = $1
+		  AND n.nspname = $2
 		ORDER BY i.relname
-	`, tableName)
+	`, tableName, schemaName)
 
 	if err != nil {
 		return nil, err
