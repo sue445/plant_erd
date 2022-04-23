@@ -6,7 +6,8 @@ import (
 )
 
 type pgStatUserTables struct {
-	Relname string `db:"relname"`
+	Relname    string `db:"relname"`
+	Schemaname string `db:"schemaname"`
 }
 
 type informationSchemaColumns struct {

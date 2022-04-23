@@ -66,15 +66,67 @@ func TestAdapter_GetAllTableNames(t *testing.T) {
 			a.db.MustExec("DROP VIEW user_names;")
 		}()
 
-		tables, err := a.GetAllTableNames()
+		a.db.MustExec(`CREATE SCHEMA people;`)
+		defer func() {
+			a.db.MustExec("DROP SCHEMA people;")
+		}()
+
+		a.db.MustExec(`
+			CREATE TABLE people.author (
+				id int4 NOT NULL,
+				"name" varchar NOT NULL,
+				CONSTRAINT author_pk PRIMARY KEY (id)
+			);
+		`)
+		defer func() {
+			a.db.MustExec("DROP TABLE people.author;")
+		}()
+
+		a.db.MustExec(`
+			CREATE TABLE people.book_author (
+				isbn varchar NOT NULL,
+				author_id int4 NOT NULL,
+				CONSTRAINT book_author_pk PRIMARY KEY (isbn, author_id),
+				CONSTRAINT book_author_fk_1 FOREIGN KEY (author_id) REFERENCES people.author(id) ON DELETE CASCADE ON UPDATE CASCADE
+			);
+		`)
+		defer func() {
+			a.db.MustExec("DROP TABLE people.book_author;")
+		}()
+
+		a.db.MustExec(`CREATE SCHEMA "library";`)
+		defer func() {
+			a.db.MustExec(`DROP SCHEMA "library";`)
+		}()
+
+		a.db.MustExec(`
+			CREATE TABLE "library".book (
+				isbn varchar NOT NULL,
+				"name" varchar NOT NULL,
+				CONSTRAINT book_pk PRIMARY KEY (isbn)
+			);
+		`)
+		defer func() {
+			a.db.MustExec(`DROP TABLE "library".book;`)
+		}()
+
+		gotTables, err := a.GetAllTableNames()
+
+		wantTables := []string{
+			"library.book",
+			"people.author",
+			"people.book_author",
+			"public.articles",
+			"public.users",
+		}
 
 		if assert.NoError(t, err) {
-			assert.Equal(t, []string{"articles", "users"}, tables)
+			assert.Equal(t, wantTables, gotTables)
 		}
 	})
 }
 
-func TestAdapter_GetTable(t *testing.T) {
+func TestAdapter_GetTable_in_public_schema(t *testing.T) {
 	withDatabase(func(a *Adapter) {
 		a.db.MustExec(`
 			CREATE TABLE users (
@@ -119,12 +171,12 @@ func TestAdapter_GetTable(t *testing.T) {
 			want *db.Table
 		}{
 			{
-				name: "users",
+				name: "public.users",
 				args: args{
-					tableName: "users",
+					tableName: "public.users",
 				},
 				want: &db.Table{
-					Name: "users",
+					Name: "public.users",
 					Columns: []*db.Column{
 						{
 							Name:       "id",
@@ -140,12 +192,12 @@ func TestAdapter_GetTable(t *testing.T) {
 				},
 			},
 			{
-				name: "articles",
+				name: "public.articles",
 				args: args{
-					tableName: "articles",
+					tableName: "public.articles",
 				},
 				want: &db.Table{
-					Name: "articles",
+					Name: "public.articles",
 					Columns: []*db.Column{
 						{
 							Name:       "id",
@@ -162,7 +214,7 @@ func TestAdapter_GetTable(t *testing.T) {
 					ForeignKeys: []*db.ForeignKey{
 						{
 							FromColumn: "user_id",
-							ToTable:    "users",
+							ToTable:    "public.users",
 							ToColumn:   "id",
 						},
 					},
@@ -176,12 +228,12 @@ func TestAdapter_GetTable(t *testing.T) {
 				},
 			},
 			{
-				name: "followers",
+				name: "public.followers",
 				args: args{
-					tableName: "followers",
+					tableName: "public.followers",
 				},
 				want: &db.Table{
-					Name: "followers",
+					Name: "public.followers",
 					Columns: []*db.Column{
 						{
 							Name:       "id",
@@ -203,12 +255,12 @@ func TestAdapter_GetTable(t *testing.T) {
 					ForeignKeys: []*db.ForeignKey{
 						{
 							FromColumn: "target_user_id",
-							ToTable:    "users",
+							ToTable:    "public.users",
 							ToColumn:   "id",
 						},
 						{
 							FromColumn: "user_id",
-							ToTable:    "users",
+							ToTable:    "public.users",
 							ToColumn:   "id",
 						},
 					},
@@ -222,6 +274,148 @@ func TestAdapter_GetTable(t *testing.T) {
 							Name:    "index_user_id_and_target_user_id_on_followers",
 							Columns: []string{"user_id", "target_user_id"},
 							Unique:  true,
+						},
+					},
+				},
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got, err := a.GetTable(tt.args.tableName)
+
+				if assert.NoError(t, err) {
+					assert.Equal(t, tt.want, got)
+				}
+			})
+		}
+	})
+}
+
+func TestAdapter_GetTable_in_non_public_schema(t *testing.T) {
+	withDatabase(func(a *Adapter) {
+		a.db.MustExec(`CREATE SCHEMA people;`)
+		defer func() {
+			a.db.MustExec("DROP SCHEMA people;")
+		}()
+
+		a.db.MustExec(`
+			CREATE TABLE people.author (
+				id int4 NOT NULL,
+				"name" varchar NOT NULL,
+				CONSTRAINT author_pk PRIMARY KEY (id)
+			);
+		`)
+		defer func() {
+			a.db.MustExec("DROP TABLE people.author;")
+		}()
+
+		a.db.MustExec(`
+			CREATE TABLE people.book_author (
+				isbn varchar NOT NULL,
+				author_id int4 NOT NULL,
+				CONSTRAINT book_author_pk PRIMARY KEY (isbn, author_id),
+				CONSTRAINT book_author_fk_1 FOREIGN KEY (author_id) REFERENCES people.author(id) ON DELETE CASCADE ON UPDATE CASCADE
+			);
+		`)
+		defer func() {
+			a.db.MustExec("DROP TABLE people.book_author;")
+		}()
+
+		a.db.MustExec(`CREATE SCHEMA "library";`)
+		defer func() {
+			a.db.MustExec(`DROP SCHEMA "library";`)
+		}()
+
+		a.db.MustExec(`
+			CREATE TABLE "library".book (
+				isbn varchar NOT NULL,
+				"name" varchar NOT NULL,
+				CONSTRAINT book_pk PRIMARY KEY (isbn)
+			);
+		`)
+		defer func() {
+			a.db.MustExec(`DROP TABLE "library".book;`)
+		}()
+
+		type args struct {
+			tableName string
+		}
+		tests := []struct {
+			name string
+			args args
+			want *db.Table
+		}{
+			{
+				name: "people.author",
+				args: args{
+					tableName: "people.author",
+				},
+				want: &db.Table{
+					Name: "people.author",
+					Columns: []*db.Column{
+						{
+							Name:       "id",
+							Type:       "integer",
+							NotNull:    true,
+							PrimaryKey: true,
+						},
+						{
+							Name:    "name",
+							Type:    "character varying",
+							NotNull: true,
+						},
+					},
+				},
+			},
+			{
+				name: "people.book_author",
+				args: args{
+					tableName: "people.book_author",
+				},
+				want: &db.Table{
+					Name: "people.book_author",
+					Columns: []*db.Column{
+						{
+							Name:       "isbn",
+							Type:       "character varying",
+							NotNull:    true,
+							PrimaryKey: true,
+						},
+						{
+							Name:       "author_id",
+							Type:       "integer",
+							NotNull:    true,
+							PrimaryKey: true,
+						},
+					},
+					ForeignKeys: []*db.ForeignKey{
+						{
+							FromColumn: "author_id",
+							ToTable:    "people.author",
+							ToColumn:   "id",
+						},
+					},
+				},
+			},
+			{
+				name: "library.book",
+				args: args{
+					tableName: "library.book",
+				},
+				want: &db.Table{
+					Name: "library.book",
+					Columns: []*db.Column{
+						{
+							Name:       "isbn",
+							Type:       "character varying",
+							NotNull:    true,
+							PrimaryKey: true,
+						},
+						{
+							Name:    "name",
+							Type:    "character varying",
+							NotNull: true,
 						},
 					},
 				},
