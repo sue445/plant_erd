@@ -1,5 +1,17 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.0...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.1...master)
+
+## v0.4.1
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.0...v0.4.1)
+
+* Fixed foreign keys not included in public schema couldn't be retrieved
+  * https://github.com/sue445/plant_erd/pull/182
+  * https://github.com/sue445/plant_erd/issues/179
+* Upgrade to Go 1.18
+  * https://github.com/sue445/plant_erd/pull/176
+* Support PostgreSQL 14
+  * https://github.com/sue445/plant_erd/pull/177
+* Update dependencies
 
 ## v0.4.0
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.3.0...v0.4.0)
