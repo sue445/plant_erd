@@ -10,7 +10,7 @@ require (
 	github.com/mattn/go-oci8 v0.1.1
 	github.com/mattn/go-sqlite3 v1.14.10
 	github.com/stretchr/testify v1.7.1
-	github.com/urfave/cli v1.22.7
+	github.com/urfave/cli v1.22.8
 )
 
 require (
