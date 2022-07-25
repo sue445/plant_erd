@@ -40,15 +40,15 @@ jobs:
           - os: darwin
             runner: macos-latest
           - os: freebsd
-            runner: ubuntu-18.04
+            runner: ubuntu-latest
           - os: linux
-            runner: ubuntu-18.04
+            runner: ubuntu-latest
           - os: netbsd
-            runner: ubuntu-18.04
+            runner: ubuntu-latest
           - os: openbsd
-            runner: ubuntu-18.04
+            runner: ubuntu-latest
           - os: windows
-            runner: ubuntu-18.04
+            runner: ubuntu-latest
         exclude:
           - os: darwin
             arch: arm

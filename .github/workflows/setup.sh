@@ -36,7 +36,7 @@ case "${RUNNER_OS}" in
   ;;
 
 "Windows")
-  choco install --yes pkgconfiglite zip
+  choco install --yes --allow-empty-checksums pkgconfiglite zip
   _build/windows/setup_oracle_x64.sh
 
   mkdir -p /usr/local/lib/pkgconfig/
