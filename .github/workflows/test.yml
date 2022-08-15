@@ -48,14 +48,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: "go.mod"
+          cache: true
         id: go
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: Setup
         run: |
@@ -122,14 +116,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: "go.mod"
+          cache: true
         id: go
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: Setup
         run: |
@@ -182,14 +170,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: "go.mod"
+          cache: true
         id: go
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: Setup
         run: |
@@ -261,14 +243,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: "go.mod"
+          cache: true
         id: go
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: Setup
         run: |
@@ -336,14 +312,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: "go.mod"
+          cache: true
         id: go
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: Setup
         run: |
@@ -384,14 +354,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: "go.mod"
+          cache: true
         id: go
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: Setup
         run: |
