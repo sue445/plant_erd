@@ -6,7 +6,7 @@ require (
 	github.com/deckarep/golang-set v1.8.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/lib/pq v1.10.6
+	github.com/lib/pq v1.10.7
 	github.com/mattn/go-oci8 v0.1.1
 	github.com/mattn/go-sqlite3 v1.14.15
 	github.com/stretchr/testify v1.8.0
