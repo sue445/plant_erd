@@ -194,7 +194,7 @@ func TestSchema_ToMermaid(t *testing.T) {
 			want: `erDiagram
 
 articles {
-  integer[10]_unsigned id PK "not null"
+  integer_10_unsigned id PK "not null"
   integer user_id FK "not null"
 }
 
@@ -240,7 +240,7 @@ users ||--o{ articles : owns`,
 			want: `erDiagram
 
 articles {
-  integer[10]_unsigned id PK "not null"
+  integer_10_unsigned id PK "not null"
   integer user_id FK "not null"
 }`,
 		},
