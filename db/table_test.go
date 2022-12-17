@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTable_ToErd(t *testing.T) {
@@ -239,7 +240,7 @@ func TestTable_ToMermaid(t *testing.T) {
 				Columns: []*Column{
 					{
 						Name:       "id",
-						Type:       "integer",
+						Type:       "integer(10) unsigned",
 						NotNull:    true,
 						PrimaryKey: true,
 					},
@@ -265,8 +266,8 @@ func TestTable_ToMermaid(t *testing.T) {
 				showComment: true,
 			},
 			want: `articles {
-  integer id PK
-  integer user_id FK
+  integer[10]_unsigned id PK "not null"
+  integer user_id FK "not null"
   text title
 }`,
 		},
@@ -277,7 +278,7 @@ func TestTable_ToMermaid(t *testing.T) {
 				Columns: []*Column{
 					{
 						Name:       "id",
-						Type:       "integer",
+						Type:       "integer(10) unsigned",
 						NotNull:    true,
 						PrimaryKey: true,
 					},
@@ -303,7 +304,7 @@ func TestTable_ToMermaid(t *testing.T) {
 				showComment: false,
 			},
 			want: `articles {
-  integer id
+  integer[10]_unsigned id
   integer user_id
   text title
 }`,

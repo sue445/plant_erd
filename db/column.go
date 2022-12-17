@@ -1,6 +1,9 @@
 package db
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // Column represents column info
 type Column struct {
@@ -25,5 +28,13 @@ func (c *Column) ToErd() string {
 
 // ToMermaid returns Mermaid formatted column
 func (c *Column) ToMermaid() string {
-	return fmt.Sprintf("%s %s", c.Type, c.Name)
+	mermaidType := c.Type
+
+	// mermaid cannot display Type Column "()" and "unsigned"
+	mermaidType = strings.Replace(mermaidType, "(", "[", -1)
+	mermaidType = strings.Replace(mermaidType, ")", "]", -1)
+
+	mermaidType = strings.Replace(mermaidType, " ", "_", -1)
+
+	return fmt.Sprintf("%s %s", mermaidType, c.Name)
 }

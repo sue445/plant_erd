@@ -87,6 +87,11 @@ func (t *Table) ToMermaid(showComment bool) string {
 		parts = append(parts, column.ToMermaid())
 
 		if showComment {
+			key := t.mermaidColumnKey(column)
+			if key != "" {
+				parts = append(parts, key)
+			}
+
 			comment := t.mermaidColumnComment(column)
 			if comment != "" {
 				parts = append(parts, comment)
@@ -101,7 +106,7 @@ func (t *Table) ToMermaid(showComment bool) string {
 	return strings.Join(lines, "\n")
 }
 
-func (t *Table) mermaidColumnComment(column *Column) string {
+func (t *Table) mermaidColumnKey(column *Column) string {
 	if column.PrimaryKey {
 		return "PK"
 	}
@@ -113,4 +118,16 @@ func (t *Table) mermaidColumnComment(column *Column) string {
 	}
 
 	return ""
+}
+
+func (t *Table) mermaidColumnComment(column *Column) string {
+	parts := []string{}
+	if column.NotNull {
+		parts = append(parts, "not null")
+	}
+
+	if len(parts) == 0 {
+		return ""
+	}
+	return fmt.Sprintf("\"%s\"", strings.Join(parts, " "))
 }
