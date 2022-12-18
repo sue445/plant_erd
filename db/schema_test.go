@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSchema_ToErd(t *testing.T) {
@@ -152,7 +153,7 @@ func TestSchema_ToMermaid(t *testing.T) {
 						Columns: []*Column{
 							{
 								Name:       "id",
-								Type:       "integer",
+								Type:       "integer(10) unsigned",
 								NotNull:    true,
 								PrimaryKey: true,
 							},
@@ -193,12 +194,12 @@ func TestSchema_ToMermaid(t *testing.T) {
 			want: `erDiagram
 
 articles {
-  integer id PK
-  integer user_id FK
+  integer_10_unsigned id PK "not null"
+  integer user_id FK "not null"
 }
 
 users {
-  integer id PK
+  integer id PK "not null"
   text name
 }
 
@@ -213,7 +214,7 @@ users ||--o{ articles : owns`,
 						Columns: []*Column{
 							{
 								Name:       "id",
-								Type:       "integer",
+								Type:       "integer(10) unsigned",
 								NotNull:    true,
 								PrimaryKey: true,
 							},
@@ -239,8 +240,8 @@ users ||--o{ articles : owns`,
 			want: `erDiagram
 
 articles {
-  integer id PK
-  integer user_id FK
+  integer_10_unsigned id PK "not null"
+  integer user_id FK "not null"
 }`,
 		},
 	}
@@ -262,7 +263,7 @@ func TestSchema_Subset(t *testing.T) {
 		Columns: []*Column{
 			{
 				Name:       "id",
-				Type:       "integer",
+				Type:       "integer(10) unsigned",
 				NotNull:    true,
 				PrimaryKey: true,
 			},
@@ -286,7 +287,7 @@ func TestSchema_Subset(t *testing.T) {
 		Columns: []*Column{
 			{
 				Name:       "id",
-				Type:       "integer",
+				Type:       "integer(10) unsigned",
 				NotNull:    true,
 				PrimaryKey: true,
 			},
@@ -310,7 +311,7 @@ func TestSchema_Subset(t *testing.T) {
 		Columns: []*Column{
 			{
 				Name:       "id",
-				Type:       "integer",
+				Type:       "integer(10) unsigned",
 				NotNull:    true,
 				PrimaryKey: true,
 			},
@@ -344,7 +345,7 @@ func TestSchema_Subset(t *testing.T) {
 		Columns: []*Column{
 			{
 				Name:       "id",
-				Type:       "integer",
+				Type:       "integer(10) unsigned",
 				NotNull:    true,
 				PrimaryKey: true,
 			},
@@ -378,7 +379,7 @@ func TestSchema_Subset(t *testing.T) {
 		Columns: []*Column{
 			{
 				Name:    "article_id",
-				Type:    "integer",
+				Type:    "integer(10) unsigned",
 				NotNull: true,
 			},
 			{
