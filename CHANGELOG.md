@@ -1,5 +1,14 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.1...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.2...master)
+
+## v0.4.2
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.1...v0.4.2)
+
+* Fix mermaid attribute error and display "not null"
+  * https://github.com/sue445/plant_erd/pull/204
+* Upgrade to Go 1.19 :rocket:
+  * https://github.com/sue445/plant_erd/pull/194
+* Update dependencies
 
 ## v0.4.1
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.0...v0.4.1)
