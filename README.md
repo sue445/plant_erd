@@ -73,7 +73,7 @@ users ||--o{ articles : owns
 ## Supported databases
 * SQLite3
 * MySQL: 5.6, 5.7, 8
-* PostgreSQL: 9, 10, 11, 12, 13, 14
+* PostgreSQL: 9, 10, 11, 12, 13, 14, 15
 * Oracle
 
 ## Supported output formats
