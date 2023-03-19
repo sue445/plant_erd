@@ -73,6 +73,18 @@ func TestAdapter_GetTable(t *testing.T) {
 		a.DB.MustExec("CREATE UNIQUE INDEX index_user_id_and_target_user_id_on_followers ON followers(user_id, target_user_id)")
 		a.DB.MustExec("CREATE UNIQUE INDEX index_target_user_id_and_user_id_on_followers ON followers(target_user_id, user_id)")
 
+		a.DB.MustExec(`
+			CREATE TABLE album_genres (
+				album_id varchar default null not null
+					references album
+						on delete cascade,
+				genre_id varchar default null not null
+					references genre
+						on delete cascade,
+				constraint album_genre_ux
+					unique (album_id, genre_id)
+		);`)
+
 		type args struct {
 			tableName string
 		}
@@ -184,6 +196,46 @@ func TestAdapter_GetTable(t *testing.T) {
 						{
 							Name:    "index_user_id_and_target_user_id_on_followers",
 							Columns: []string{"user_id", "target_user_id"},
+							Unique:  true,
+						},
+					},
+				},
+			},
+			{
+				name: "album_genres",
+				args: args{
+					tableName: "album_genres",
+				},
+				want: &db.Table{
+					Name: "album_genres",
+					Columns: []*db.Column{
+						{
+							Name:    "album_id",
+							Type:    "varchar",
+							NotNull: true,
+						},
+						{
+							Name:    "genre_id",
+							Type:    "varchar",
+							NotNull: true,
+						},
+					},
+					ForeignKeys: []*db.ForeignKey{
+						{
+							FromColumn: "genre_id",
+							ToTable:    "genre",
+							ToColumn:   "id",
+						},
+						{
+							FromColumn: "album_id",
+							ToTable:    "album",
+							ToColumn:   "id",
+						},
+					},
+					Indexes: []*db.Index{
+						{
+							Name:    "sqlite_autoindex_album_genres_1",
+							Columns: []string{"album_id", "genre_id"},
 							Unique:  true,
 						},
 					},

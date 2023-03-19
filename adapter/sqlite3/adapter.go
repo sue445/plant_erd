@@ -110,9 +110,18 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 			return nil, err
 		}
 
+		toColumn := ""
+		if row["to"] == nil {
+			// NOTE: If `to` is NULL, implicitly equals `id` (maybe...)
+			// c.f. https://github.com/diesel-rs/diesel/issues/1535
+			toColumn = "id"
+		} else {
+			toColumn = row["to"].(string)
+		}
+
 		foreignKey := &db.ForeignKey{
 			FromColumn: row["from"].(string),
-			ToColumn:   row["to"].(string),
+			ToColumn:   toColumn,
 			ToTable:    row["table"].(string),
 		}
 
