@@ -1,5 +1,15 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.2...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.3...master)
+
+## v0.4.3
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.2...v0.4.3)
+
+* [Sqlite3] Fixed. panic: interface conversion when foreign key `to` column is `nil`
+  * https://github.com/sue445/plant_erd/pull/211
+  * https://github.com/sue445/plant_erd/issues/210
+* Upgrade to Go 1.20 :rocket:
+  * https://github.com/sue445/plant_erd/pull/208
+* Update dependencies
 
 ## v0.4.2
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.1...v0.4.2)
