@@ -48,7 +48,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
-          cache: true
         id: go
 
       - name: Setup
@@ -117,7 +116,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
-          cache: true
         id: go
 
       - name: Setup
@@ -171,7 +169,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
-          cache: true
         id: go
 
       - name: Setup
@@ -244,7 +241,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
-          cache: true
         id: go
 
       - name: Setup
@@ -313,7 +309,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
-          cache: true
         id: go
 
       - name: Setup
@@ -355,7 +350,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
-          cache: true
         id: go
 
       - name: Setup
