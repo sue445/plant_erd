@@ -104,6 +104,8 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	}
 	table.Indexes = indexes
 
+	defer stmt.Close()
+
 	return &table, nil
 }
 
@@ -136,6 +138,8 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 	for _, row := range rows {
 		columns.Add(row.ColumnName)
 	}
+
+	defer stmt.Close()
 
 	return columns, nil
 }
@@ -184,6 +188,8 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 		foreignKeys = append(foreignKeys, foreignKey)
 	}
 
+	defer stmt.Close()
+
 	return foreignKeys, nil
 }
 
@@ -228,6 +234,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 		}
 		indexes = append(indexes, index)
 	}
+	defer stmt.Close()
 
 	return indexes, nil
 }
@@ -254,5 +261,7 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 		columns = append(columns, row.ColumnName)
 	}
 
+    defer stmt.Close()
+	
 	return columns, nil
 }
