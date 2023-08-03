@@ -52,8 +52,9 @@ func (s *Schema) ToMermaid(showComment bool) string {
 
 	for _, table := range s.Tables {
 		for _, foreignKey := range table.ForeignKeys {
-			if tableNames.Contains(foreignKey.ToTable) {
-				lines = append(lines, fmt.Sprintf("%s ||--o{ %s : owns", foreignKey.ToTable, table.Name))
+			toTable := strings.ToLower(foreignKey.ToTable)
+			if tableNames.Contains(toTable) {
+				lines = append(lines, fmt.Sprintf("%s ||--o{ %s : owns", toTable, table.Name))
 			}
 		}
 	}
