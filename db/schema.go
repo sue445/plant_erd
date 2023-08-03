@@ -28,7 +28,7 @@ func (s *Schema) ToErd(showIndex bool) string {
 
 	for _, table := range s.Tables {
 		for _, foreignKey := range table.ForeignKeys {
-            toTable := strings.ToLower(foreignKey.ToTable)
+			toTable := strings.ToLower(foreignKey.ToTable)
 			if tableNames.Contains(toTable) {
 				lines = append(lines, fmt.Sprintf("%s }-- %s", table.Name, toTable))
 			}
