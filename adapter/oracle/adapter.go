@@ -134,7 +134,6 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 		return nil, err
 	}
 
-
 	columns := mapset.NewSet()
 	for _, row := range rows {
 		columns.Add(row.ColumnName)
@@ -219,7 +218,6 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	var indexes []*db.Index
 	for _, row := range rows {
 		columns, err := a.getIndexColumns(row.IndexName)
