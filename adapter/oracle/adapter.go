@@ -250,7 +250,7 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 	var rows []allIndColumns
 	err = stmt.Select(&rows, indexName)
 	defer stmt.Close()
-	
+
 	if err != nil {
 		return nil, err
 	}
