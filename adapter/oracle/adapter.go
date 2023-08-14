@@ -77,6 +77,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 
 	var rows []allTabColumns
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
@@ -104,7 +105,6 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	}
 	table.Indexes = indexes
 
-	defer stmt.Close()
 	return &table, nil
 }
 
@@ -128,17 +128,18 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 
 	var rows []primaryKeys
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
 	}
+
 
 	columns := mapset.NewSet()
 	for _, row := range rows {
 		columns.Add(row.ColumnName)
 	}
 
-	defer stmt.Close()
 	return columns, nil
 }
 
@@ -170,6 +171,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 
 	var rows []foreignKey
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
@@ -186,7 +188,6 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 		foreignKeys = append(foreignKeys, foreignKey)
 	}
 
-	defer stmt.Close()
 	return foreignKeys, nil
 }
 
@@ -213,10 +214,12 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 
 	var rows []allIndexes
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
 	}
+
 	var indexes []*db.Index
 	for _, row := range rows {
 		columns, err := a.getIndexColumns(row.IndexName)
@@ -231,7 +234,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 		}
 		indexes = append(indexes, index)
 	}
-	defer stmt.Close()
+
 	return indexes, nil
 }
 
@@ -246,7 +249,8 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 
 	var rows []allIndColumns
 	err = stmt.Select(&rows, indexName)
-
+	defer stmt.Close()
+	
 	if err != nil {
 		return nil, err
 	}
@@ -257,6 +261,5 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 		columns = append(columns, row.ColumnName)
 	}
 
-    defer stmt.Close()
 	return columns, nil
 }
