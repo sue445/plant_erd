@@ -77,6 +77,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 
 	var rows []allTabColumns
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
@@ -127,6 +128,7 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 
 	var rows []primaryKeys
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
@@ -168,6 +170,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 
 	var rows []foreignKey
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
@@ -210,6 +213,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 
 	var rows []allIndexes
 	err = stmt.Select(&rows, tableName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
@@ -243,6 +247,7 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 
 	var rows []allIndColumns
 	err = stmt.Select(&rows, indexName)
+	defer stmt.Close()
 
 	if err != nil {
 		return nil, err
