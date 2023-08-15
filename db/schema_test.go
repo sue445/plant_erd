@@ -81,6 +81,67 @@ entity users {
 articles }-- users`,
 		},
 		{
+			name: "users and articles (ToTable is UPPER CASE)",
+			fields: fields{
+				Tables: []*Table{
+					{
+						Name: "articles",
+						Columns: []*Column{
+							{
+								Name:       "id",
+								Type:       "integer",
+								NotNull:    true,
+								PrimaryKey: true,
+							},
+							{
+								Name:    "user_id",
+								Type:    "integer",
+								NotNull: true,
+							},
+						},
+						ForeignKeys: []*ForeignKey{
+							{
+								FromColumn: "user_id",
+								ToTable:    "USERS",
+								ToColumn:   "id",
+							},
+						},
+					},
+					{
+						Name: "users",
+						Columns: []*Column{
+							{
+								Name:       "id",
+								Type:       "integer",
+								NotNull:    true,
+								PrimaryKey: true,
+							},
+							{
+								Name: "name",
+								Type: "text",
+							},
+						},
+					},
+				},
+			},
+			args: args{
+				showIndex: true,
+			},
+			want: `entity articles {
+  * id : integer
+  --
+  * user_id : integer
+}
+
+entity users {
+  * id : integer
+  --
+  name : text
+}
+
+articles }-- users`,
+		},
+		{
 			name: "Reject foreign key which table isn't in schema",
 			fields: fields{
 				Tables: []*Table{
@@ -167,6 +228,67 @@ func TestSchema_ToMermaid(t *testing.T) {
 							{
 								FromColumn: "user_id",
 								ToTable:    "users",
+								ToColumn:   "id",
+							},
+						},
+					},
+					{
+						Name: "users",
+						Columns: []*Column{
+							{
+								Name:       "id",
+								Type:       "integer",
+								NotNull:    true,
+								PrimaryKey: true,
+							},
+							{
+								Name: "name",
+								Type: "text",
+							},
+						},
+					},
+				},
+			},
+			args: args{
+				showComment: true,
+			},
+			want: `erDiagram
+
+articles {
+  integer_10_unsigned id PK "not null"
+  integer user_id FK "not null"
+}
+
+users {
+  integer id PK "not null"
+  text name
+}
+
+users ||--o{ articles : owns`,
+		},
+		{
+			name: "users and articles (ToTable is UPPER CASE)",
+			fields: fields{
+				Tables: []*Table{
+					{
+						Name: "articles",
+						Columns: []*Column{
+							{
+								Name:       "id",
+								Type:       "integer(10) unsigned",
+								NotNull:    true,
+								PrimaryKey: true,
+							},
+							{
+								Name:    "user_id",
+								Type:    "integer",
+								NotNull: true,
+							},
+						},
+						ForeignKeys: []*ForeignKey{
+							{
+								FromColumn: "user_id",
+								ToTable:    "USERS",
 								ToColumn:   "id",
 							},
 						},
