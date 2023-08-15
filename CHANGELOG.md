@@ -1,5 +1,15 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.3...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.4...master)
+
+## v0.4.4
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.3...v0.4.4)
+
+* [Oracle] Fix for oracle open cursor and foreign key issue
+  * https://github.com/sue445/plant_erd/pull/225
+  * https://github.com/sue445/plant_erd/issues/224
+* Upgrade to Go 1.21 :rocket:
+  * https://github.com/sue445/plant_erd/pull/226
+* Update dependencies
 
 ## v0.4.3
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.2...v0.4.3)
