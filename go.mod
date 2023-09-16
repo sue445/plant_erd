@@ -1,6 +1,7 @@
 module github.com/sue445/plant_erd
 
 go 1.21
+toolchain go1.21.0
 
 require (
 	github.com/deckarep/golang-set v1.8.0
