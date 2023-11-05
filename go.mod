@@ -1,6 +1,7 @@
 module github.com/sue445/plant_erd
 
 go 1.21
+
 toolchain go1.21.0
 
 require (
@@ -9,7 +10,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-oci8 v0.1.1
-	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli v1.22.14
 )
