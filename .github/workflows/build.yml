@@ -89,7 +89,7 @@ jobs:
           GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bin-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/
@@ -195,7 +195,7 @@ jobs:
           GOX_CXX: ${{ matrix.cxx }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bin-oracle-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/
@@ -231,115 +231,115 @@ jobs:
         id: go
 
       - name: Download artifacts from darwin-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-darwin-amd64
           path: bin/
 
       - name: Download artifacts from darwin-arm64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-darwin-arm64
           path: bin/
 
       - name: Download artifacts from freebsd-386
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-freebsd-386
           path: bin/
 
       - name: Download artifacts from freebsd-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-freebsd-amd64
           path: bin/
 
       - name: Download artifacts from freebsd-arm
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-freebsd-arm
           path: bin/
 
       - name: Download artifacts from linux-386
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-linux-386
           path: bin/
 
       - name: Download artifacts from linux-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-linux-amd64
           path: bin/
 
       - name: Download artifacts from linux-arm
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-linux-arm
           path: bin/
 
       - name: Download artifacts from netbsd-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-netbsd-amd64
           path: bin/
 
       - name: Download artifacts from netbsd-arm
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-netbsd-arm
           path: bin/
 
       - name: Download artifacts from netbsd-386
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-netbsd-386
           path: bin/
 
       - name: Download artifacts from openbsd-386
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-openbsd-386
           path: bin/
 
       - name: Download artifacts from openbsd-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-openbsd-amd64
           path: bin/
 
       - name: Download artifacts from windows-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-windows-amd64
           path: bin/
 
       - name: Download artifacts from windows-386
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-windows-386
           path: bin/
 
       - name: Download artifacts from darwin-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-oracle-darwin-amd64
           path: bin/
 
       - name: Download artifacts from linux-386
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-oracle-linux-386
           path: bin/
 
       - name: Download artifacts from linux-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-oracle-linux-amd64
           path: bin/
 
       - name: Download artifacts from windows-amd64
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bin-oracle-windows-amd64
           path: bin/
