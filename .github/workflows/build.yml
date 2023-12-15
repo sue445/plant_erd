@@ -89,7 +89,7 @@ jobs:
           GOX_OSARCH: ${{ matrix.os }}/${{ matrix.arch }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bin-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/
@@ -195,7 +195,7 @@ jobs:
           GOX_CXX: ${{ matrix.cxx }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bin-oracle-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/
