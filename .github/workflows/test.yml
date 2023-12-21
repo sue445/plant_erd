@@ -97,6 +97,7 @@ jobs:
           - 13-alpine
           - 14-alpine
           - 15-alpine
+          - 16-alpine
 
     services:
       postgresql:
