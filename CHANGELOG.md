@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.4...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.5...master)
+
+## v0.4.5
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.4...v0.4.5)
+
+* Build darwin arm64 binary on Apple M1 Runner
+  * https://github.com/sue445/plant_erd/pull/242
+* Update dependencies
 
 ## v0.4.4
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.3...v0.4.4)
