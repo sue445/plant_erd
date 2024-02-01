@@ -37,7 +37,11 @@ jobs:
           - 386
         include:
           - os: darwin
+            arch: amd64
             runner: macos-latest
+          - os: darwin
+            arch: arm64
+            runner: macos-14
           - os: freebsd
             runner: ubuntu-latest
           - os: linux
