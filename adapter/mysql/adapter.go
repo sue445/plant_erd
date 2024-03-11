@@ -3,7 +3,6 @@ package mysql
 import (
 	"fmt"
 	"sort"
-	"strconv"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
@@ -34,10 +33,8 @@ func rowString(row map[string]interface{}, columnName string) string {
 	return string(row[columnName].([]byte))
 }
 
-func rowInt(row map[string]interface{}, columnName string) int {
-	str := rowString(row, columnName)
-	num, _ := strconv.Atoi(str)
-	return num
+func rowInt(row map[string]interface{}, columnName string) int64 {
+	return row[columnName].(int64)
 }
 
 // GetAllTableNames returns all table names in database
