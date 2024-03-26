@@ -6,7 +6,7 @@ toolchain go1.22.0
 
 require (
 	github.com/deckarep/golang-set v1.8.0
-	github.com/go-sql-driver/mysql v1.8.0
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-oci8 v0.1.1
