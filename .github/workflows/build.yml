@@ -99,15 +99,12 @@ jobs:
           path: bin/
 
       - name: Slack Notification (not success)
-        uses: lazy-actions/slatify@master
+        uses: act10ns/slack@v2
         if: "! success()"
         continue-on-error: true
         with:
-          job_name: '*build*'
-          type: ${{ job.status }}
-          icon_emoji: ":octocat:"
-          url: ${{ secrets.SLACK_WEBHOOK }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
 
   gox-oracle:
     name: gox-oracle
@@ -205,15 +202,12 @@ jobs:
           path: bin/
 
       - name: Slack Notification (not success)
-        uses: lazy-actions/slatify@master
+        uses: act10ns/slack@v2
         if: "! success()"
         continue-on-error: true
         with:
-          job_name: '*build*'
-          type: ${{ job.status }}
-          icon_emoji: ":octocat:"
-          url: ${{ secrets.SLACK_WEBHOOK }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
 
   release:
     name: Release
@@ -274,12 +268,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
 
       - name: Slack Notification
-        uses: lazy-actions/slatify@master
+        uses: act10ns/slack@v2
         if: always()
         continue-on-error: true
         with:
-          job_name: '*release*'
-          type: ${{ job.status }}
-          icon_emoji: ":octocat:"
-          url: ${{ secrets.SLACK_WEBHOOK }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
