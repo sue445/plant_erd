@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"fmt"
+	"github.com/cockroachdb/errors"
 	"github.com/deckarep/golang-set"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // for sql
@@ -23,7 +24,7 @@ func NewAdapter(config *Config) (*Adapter, Close, error) {
 	db, err := sqlx.Connect("postgres", config.FormatDSN())
 
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.WithStack(err)
 	}
 
 	return &Adapter{db: db, dbName: config.DBName}, db.Close, nil
@@ -35,7 +36,7 @@ func (a *Adapter) GetAllTableNames() ([]string, error) {
 	err := a.db.Select(&rows, "SELECT schemaname, relname FROM pg_stat_user_tables ORDER BY schemaname, relname")
 
 	if err != nil {
-		return []string{}, err
+		return []string{}, errors.WithStack(err)
 	}
 
 	var tables []string
@@ -58,7 +59,7 @@ func (a *Adapter) GetTable(tableWithSchemaName string) (*db.Table, error) {
 
 	primaryKeyColumns, err := a.getPrimaryKeyColumns(tableName, schemaName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var rows []informationSchemaColumns
@@ -72,7 +73,7 @@ func (a *Adapter) GetTable(tableWithSchemaName string) (*db.Table, error) {
 	`, a.dbName, tableName, schemaName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	for _, row := range rows {
@@ -87,13 +88,13 @@ func (a *Adapter) GetTable(tableWithSchemaName string) (*db.Table, error) {
 
 	foreignKeys, err := a.getForeignKeys(tableName, schemaName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	table.ForeignKeys = foreignKeys
 
 	indexes, err := a.getIndexes(tableName, schemaName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	table.Indexes = indexes
 
@@ -117,7 +118,7 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string, schemaName string) (map
 	`, a.dbName, tableName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	columns := mapset.NewSet()
@@ -147,7 +148,7 @@ func (a *Adapter) getForeignKeys(tableName string, schemaName string) ([]*db.For
 	`, tableName, schemaName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var foreignKeys []*db.ForeignKey
@@ -186,14 +187,14 @@ func (a *Adapter) getIndexes(tableName string, schemaName string) ([]*db.Index, 
 	`, tableName, schemaName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var indexes []*db.Index
 	for _, row := range rows {
 		columns, err := a.getIndexColumns(row.Oid, row.Indkeys())
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		index := &db.Index{
@@ -213,7 +214,7 @@ func (a *Adapter) getIndexColumns(oid int, indkeys []int) ([]string, error) {
 
 	query, args, err := sqlx.In(sql, oid, indkeys)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	query = a.db.Rebind(query)
@@ -222,7 +223,7 @@ func (a *Adapter) getIndexColumns(oid int, indkeys []int) ([]string, error) {
 	err = a.db.Select(&rows, query, args...)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	columnNames := map[int]string{}

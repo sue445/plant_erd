@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"github.com/cockroachdb/errors"
 	"sort"
 	"strings"
 
@@ -23,7 +24,7 @@ func NewAdapter(config *mysql.Config) (*Adapter, Close, error) {
 	db, err := sqlx.Connect("mysql", config.FormatDSN())
 
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.WithStack(err)
 	}
 
 	return &Adapter{db: db}, db.Close, nil
@@ -43,7 +44,7 @@ func (a *Adapter) GetAllTableNames() ([]string, error) {
 	err := a.db.Select(&rows, "SELECT table_name AS table_name FROM information_schema.tables WHERE table_schema=database() AND table_type = 'BASE TABLE' ORDER BY table_name")
 
 	if err != nil {
-		return []string{}, err
+		return []string{}, errors.WithStack(err)
 	}
 
 	var tables []string
@@ -63,7 +64,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	rows, err := a.db.Queryx(fmt.Sprintf("SHOW COLUMNS FROM %s", tableName))
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	for rows.Next() {
@@ -71,7 +72,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 		err := rows.MapScan(row)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		column := &db.Column{
@@ -86,14 +87,14 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 
 	foreignKeys, err := a.getForeignKeys(tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	table.ForeignKeys = foreignKeys
 
 	indexes, err := a.getIndexes(tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	table.Indexes = indexes
@@ -118,7 +119,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 
 	err := a.db.Select(&rows, sql, tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var foreignKeys []*db.ForeignKey
@@ -155,7 +156,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 	rows, err := a.db.Queryx(fmt.Sprintf("SHOW INDEX FROM %s WHERE Key_name != 'PRIMARY'", tableName))
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var indexes []*db.Index
@@ -166,7 +167,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 		err := rows.MapScan(row)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		keyName := rowString(row, "Key_name")

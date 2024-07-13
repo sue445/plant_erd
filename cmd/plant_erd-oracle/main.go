@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/cockroachdb/errors"
 	"github.com/sue445/plant_erd/adapter/oracle"
 	"github.com/sue445/plant_erd/cmd"
 	"github.com/sue445/plant_erd/lib"
@@ -71,14 +72,14 @@ func main() {
 		adapter, close, err := oracle.NewAdapter(oracleConfig)
 
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
 		defer close()
 
 		schema, err := lib.LoadSchema(adapter)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
 		return generator.Run(schema)

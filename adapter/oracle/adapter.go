@@ -1,6 +1,7 @@
 package oracle
 
 import (
+	"github.com/cockroachdb/errors"
 	mapset "github.com/deckarep/golang-set"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-oci8" // for sql
@@ -20,7 +21,7 @@ func NewAdapter(config *Config) (*Adapter, Close, error) {
 	db, err := sqlx.Connect("oci8", config.FormatDSN())
 
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.WithStack(err)
 	}
 
 	return &Adapter{db: db}, db.Close, nil
@@ -42,7 +43,7 @@ func (a *Adapter) GetAllTableNames() ([]string, error) {
 	`)
 
 	if err != nil {
-		return []string{}, err
+		return []string{}, errors.WithStack(err)
 	}
 
 	var tables []string
@@ -61,7 +62,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 
 	primaryKeyColumns, err := a.getPrimaryKeyColumns(tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	sql := `
@@ -72,7 +73,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	`
 	stmt, err := a.db.Preparex(a.db.Rebind(sql))
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var rows []allTabColumns
@@ -80,7 +81,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	defer stmt.Close()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	for _, row := range rows {
@@ -95,13 +96,13 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 
 	foreignKeys, err := a.getForeignKeys(tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	table.ForeignKeys = foreignKeys
 
 	indexes, err := a.getIndexes(tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	table.Indexes = indexes
 
@@ -123,7 +124,7 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 
 	stmt, err := a.db.Preparex(a.db.Rebind(sql))
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var rows []primaryKeys
@@ -131,7 +132,7 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 	defer stmt.Close()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	columns := mapset.NewSet()
@@ -165,7 +166,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 
 	stmt, err := a.db.Preparex(a.db.Rebind(sql))
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var rows []foreignKey
@@ -173,7 +174,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 	defer stmt.Close()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var foreignKeys []*db.ForeignKey
@@ -208,7 +209,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 
 	stmt, err := a.db.Preparex(a.db.Rebind(sql))
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var rows []allIndexes
@@ -216,13 +217,13 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 	defer stmt.Close()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	var indexes []*db.Index
 	for _, row := range rows {
 		columns, err := a.getIndexColumns(row.IndexName)
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		index := &db.Index{
@@ -242,7 +243,7 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 
 	stmt, err := a.db.Preparex(a.db.Rebind(sql))
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var rows []allIndColumns
@@ -250,7 +251,7 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 	defer stmt.Close()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var columns []string
