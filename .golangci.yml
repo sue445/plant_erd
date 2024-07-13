@@ -1,0 +1,12 @@
+linters-settings:
+  gofmt:
+  revive:
+  testifylint:
+  wrapcheck:
+
+linters:
+  enable:
+    - gofmt
+    - revive
+    - testifylint
+    - wrapcheck
