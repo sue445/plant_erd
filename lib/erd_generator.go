@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/cockroachdb/errors"
 	"github.com/sue445/plant_erd/db"
-	"io/ioutil"
 	"os"
 	"regexp"
 )
@@ -97,7 +96,7 @@ func (g *ErdGenerator) output(content string) error {
 	}
 
 	// Output to file
-	err := ioutil.WriteFile(g.Filepath, []byte(content), 0644)
+	err := os.WriteFile(g.Filepath, []byte(content), 0644)
 	if err != nil {
 		return errors.WithStack(err)
 	}

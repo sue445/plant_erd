@@ -3,7 +3,6 @@ package lib
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -208,13 +207,7 @@ func TestErdGenerator_generateMermaidErd(t *testing.T) {
 }
 
 func TestErdGenerator_output_ToFile(t *testing.T) {
-	dir, err := ioutil.TempDir("", "example")
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer os.RemoveAll(dir)
+	dir := t.TempDir()
 
 	filePath := filepath.Join(dir, "erd.txt")
 	g := &ErdGenerator{
@@ -223,7 +216,7 @@ func TestErdGenerator_output_ToFile(t *testing.T) {
 
 	g.output("aaa")
 
-	data, err := ioutil.ReadFile(filePath)
+	data, err := os.ReadFile(filePath)
 
 	if assert.NoError(t, err) {
 		str := string(data)
