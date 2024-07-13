@@ -307,14 +307,10 @@ jobs:
         env:
           RUNNER_OS: ${{ runner.os }}
 
-      - name: Run lint
-        run: |
-          set -xe
-          go install golang.org/x/lint/golint@latest
-
-          make fmtci
-          make lint
-          make vet
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.58
 
       - name: Slack Notification (not success)
         uses: act10ns/slack@v2
