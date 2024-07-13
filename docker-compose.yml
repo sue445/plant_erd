@@ -60,7 +60,7 @@ services:
       POSTGRES_PASSWORD: postgres
 
   oracle:
-    image: deepdiver/docker-oracle-xe-11g
+    image: deepdiver/docker-oracle-xe-11g:2.0
 
     ports:
       - 1521:1521
