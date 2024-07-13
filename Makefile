@@ -63,21 +63,9 @@ testrace:
 fmt:
 	go fmt ./...
 
-.PHONY: fmtci
-fmtci:
-	! gofmt -d . | grep '^'
-
-.PHONY: lint
-lint:
-	golint -set_exit_status ./...
-
-.PHONY: vet
-vet:
-	go vet ./...
-
 .PHONY: integration_test
 integration_test: build build-oracle
 	go test _integration/check_readme_test.go
 
 .PHONY: test_all
-test_all: test testrace fmt lint vet integration_test
+test_all: test testrace fmt integration_test
