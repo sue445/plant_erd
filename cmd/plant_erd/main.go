@@ -53,7 +53,7 @@ func main() {
 					Destination: &sqlite3Database,
 				},
 			),
-			Action: func(c *cli.Context) error {
+			Action: func(_ *cli.Context) error {
 				adapter, close, err := sqlite3.NewAdapter(sqlite3Database)
 
 				if err != nil {
@@ -118,7 +118,7 @@ func main() {
 					Value:       "utf8_general_ci",
 				},
 			),
-			Action: func(c *cli.Context) error {
+			Action: func(_ *cli.Context) error {
 				mysqlConfig.Net = "tcp"
 				mysqlConfig.Addr = fmt.Sprintf("%s:%d", mysqlHost, mysqlPort)
 
@@ -185,7 +185,7 @@ func main() {
 					Value:       "disable",
 				},
 			),
-			Action: func(c *cli.Context) error {
+			Action: func(_ *cli.Context) error {
 				adapter, close, err := postgresql.NewAdapter(postgresqlConfig)
 
 				if err != nil {

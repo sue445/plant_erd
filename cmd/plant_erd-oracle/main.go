@@ -68,7 +68,7 @@ func main() {
 		},
 	)
 
-	app.Action = func(c *cli.Context) error {
+	app.Action = func(_ *cli.Context) error {
 		adapter, close, err := oracle.NewAdapter(oracleConfig)
 
 		if err != nil {

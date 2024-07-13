@@ -57,7 +57,7 @@ func (a *Adapter) GetTable(tableWithSchemaName string) (*db.Table, error) {
 		Name: tableWithSchemaName,
 	}
 
-	primaryKeyColumns, err := a.getPrimaryKeyColumns(tableName, schemaName)
+	primaryKeyColumns, err := a.getPrimaryKeyColumns(tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -101,7 +101,7 @@ func (a *Adapter) GetTable(tableWithSchemaName string) (*db.Table, error) {
 	return &table, nil
 }
 
-func (a *Adapter) getPrimaryKeyColumns(tableName string, schemaName string) (mapset.Set, error) {
+func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 	var rows []primaryKeys
 
 	err := a.db.Select(&rows, `
