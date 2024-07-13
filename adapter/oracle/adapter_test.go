@@ -32,7 +32,7 @@ func withDatabase(callback func(*Adapter)) {
 		panic(err)
 	}
 
-	defer close()
+	defer close() //nolint:errcheck
 
 	// adapter.db.MustExec("DROP TABLE followers")
 	// adapter.db.MustExec("DROP TABLE articles")

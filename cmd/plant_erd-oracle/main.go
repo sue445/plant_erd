@@ -75,14 +75,14 @@ func main() {
 			return errors.WithStack(err)
 		}
 
-		defer close()
+		defer close() //nolint:errcheck
 
 		schema, err := lib.LoadSchema(adapter)
 		if err != nil {
 			return errors.WithStack(err)
 		}
 
-		return generator.Run(schema)
+		return generator.Run(schema) //nolint:errcheck
 	}
 
 	sort.Sort(cli.CommandsByName(app.Commands))

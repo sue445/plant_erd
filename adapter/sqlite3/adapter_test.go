@@ -14,7 +14,7 @@ func withDatabase(callback func(*Adapter)) {
 		panic(err)
 	}
 
-	defer close()
+	defer close() //nolint:errcheck
 
 	adapter.DB.MustExec("PRAGMA foreign_keys = ON;")
 

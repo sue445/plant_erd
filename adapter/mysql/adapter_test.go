@@ -34,7 +34,7 @@ func withDatabase(callback func(*Adapter)) {
 		panic(err)
 	}
 
-	defer close()
+	defer close() //nolint:errcheck
 
 	adapter.db.MustExec("DROP TABLE IF EXISTS followers;")
 	adapter.db.MustExec("DROP TABLE IF EXISTS articles;")

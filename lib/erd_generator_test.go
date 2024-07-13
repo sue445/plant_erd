@@ -2,6 +2,7 @@ package lib
 
 import (
 	"bytes"
+	"github.com/stretchr/testify/require"
 	"io"
 	"os"
 	"path/filepath"
@@ -19,7 +20,7 @@ func withDatabase(callback func(*sqlite3.Adapter)) {
 		panic(err)
 	}
 
-	defer close()
+	defer close() //nolint:errcheck
 
 	adapter.DB.MustExec("PRAGMA foreign_keys = ON;")
 
@@ -214,7 +215,8 @@ func TestErdGenerator_output_ToFile(t *testing.T) {
 		Filepath: filePath,
 	}
 
-	g.output("aaa")
+	err := g.output("aaa")
+	require.NoError(t, err)
 
 	data, err := os.ReadFile(filePath)
 
@@ -237,10 +239,16 @@ func captureStdout(f func()) string {
 	f()
 
 	os.Stdout = stdout
-	w.Close()
+	err = w.Close()
+	if err != nil {
+		panic(err)
+	}
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, err = io.Copy(&buf, r)
+	if err != nil {
+		panic(err)
+	}
 
 	return buf.String()
 }
@@ -512,7 +520,10 @@ func ExampleErdGenerator_Run_two_tables_with_PlantUML() {
 		}
 
 		generator := ErdGenerator{Format: "plant_uml"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// entity articles {
@@ -543,7 +554,10 @@ func ExampleErdGenerator_Run_many_tables_with_PlantUML() {
 		}
 
 		generator := ErdGenerator{Format: "plant_uml"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// entity articles {
@@ -634,7 +648,10 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 		}
 
 		generator := ErdGenerator{Format: "plant_uml", Table: "articles", Distance: 1}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// entity articles {
@@ -709,7 +726,10 @@ func ExampleErdGenerator_Run_two_tables_with_Mermaid() {
 		}
 
 		generator := ErdGenerator{Format: "mermaid"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// erDiagram
@@ -738,7 +758,10 @@ func ExampleErdGenerator_Run_many_tables_with_Mermaid() {
 		}
 
 		generator := ErdGenerator{Format: "mermaid"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// erDiagram
@@ -810,7 +833,10 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 		}
 
 		generator := ErdGenerator{Format: "mermaid", Table: "articles", Distance: 1}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// erDiagram
