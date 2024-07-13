@@ -111,7 +111,7 @@ func TestErdGenerator_generatePlantUmlErd(t *testing.T) {
 				Distance: tt.fields.Distance,
 			}
 			got := g.generatePlantUmlErd(tt.args.schema)
-			assert.Greater(t, len(got), 0)
+			assert.NotEmpty(t, got)
 		})
 	}
 }
@@ -201,7 +201,7 @@ func TestErdGenerator_generateMermaidErd(t *testing.T) {
 				Distance: tt.fields.Distance,
 			}
 			got := g.generateMermaidErd(tt.args.schema)
-			assert.Greater(t, len(got), 0)
+			assert.NotEmpty(t, got)
 		})
 	}
 }
@@ -326,7 +326,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			got, err := g.generate(tt.args.schema)
 			if assert.NoError(t, err) {
 				if len(tt.wantContainTables) == 0 {
-					assert.Equal(t, got, "")
+					assert.Equal(t, "", got)
 				} else {
 					for _, tableName := range tt.wantContainTables {
 						assert.Contains(t, got, tableName)
