@@ -8,13 +8,13 @@ import (
 )
 
 func withDatabase(callback func(*Adapter)) {
-	adapter, close, err := NewAdapter("file::memory:?cache=shared")
+	adapter, closeDatabase, err := NewAdapter("file::memory:?cache=shared")
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer close()
+	defer closeDatabase() //nolint:errcheck
 
 	adapter.DB.MustExec("PRAGMA foreign_keys = ON;")
 

@@ -2,8 +2,8 @@ package lib
 
 import (
 	"fmt"
+	"github.com/cockroachdb/errors"
 	"github.com/sue445/plant_erd/db"
-	"io/ioutil"
 	"os"
 	"regexp"
 )
@@ -30,12 +30,12 @@ func (g *ErdGenerator) Run(schema *db.Schema) error {
 	err := g.checkParamTable(schema)
 
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	erd, err := g.generate(schema)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	return g.output(erd)
@@ -96,7 +96,11 @@ func (g *ErdGenerator) output(content string) error {
 	}
 
 	// Output to file
-	return ioutil.WriteFile(g.Filepath, []byte(content), 0644)
+	err := os.WriteFile(g.Filepath, []byte(content), 0644)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
 }
 
 func (g *ErdGenerator) filterSchema(schema *db.Schema, skipTable []string) *db.Schema {

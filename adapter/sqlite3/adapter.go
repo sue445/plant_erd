@@ -2,6 +2,7 @@ package sqlite3
 
 import (
 	"fmt"
+	"github.com/cockroachdb/errors"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // for sql
 	"github.com/sue445/plant_erd/db"
@@ -20,7 +21,7 @@ func NewAdapter(name string) (*Adapter, Close, error) {
 	db, err := sqlx.Connect("sqlite3", name)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.WithStack(err)
 	}
 
 	return &Adapter{DB: db}, db.Close, nil
@@ -36,7 +37,7 @@ func (a *Adapter) GetAllTableNames() ([]string, error) {
 	err := a.DB.Select(&rows, "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
 
 	if err != nil {
-		return []string{}, err
+		return []string{}, errors.WithStack(err)
 	}
 
 	var tables []string
@@ -56,7 +57,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA table_info(%s)", tableName))
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	for rows.Next() {
@@ -64,7 +65,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 		err := rows.MapScan(row)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		column := &db.Column{
@@ -79,14 +80,14 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 
 	foreignKeys, err := a.getForeignKeys(tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	table.ForeignKeys = foreignKeys
 
 	indexes, err := a.getIndexes(tableName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	table.Indexes = indexes
@@ -98,7 +99,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA foreign_key_list(%s)", tableName))
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var foreignKeys []*db.ForeignKey
@@ -107,7 +108,7 @@ func (a *Adapter) getForeignKeys(tableName string) ([]*db.ForeignKey, error) {
 		err := rows.MapScan(row)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		toColumn := ""
@@ -135,7 +136,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA index_list(%s)", tableName))
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var indexes []*db.Index
@@ -144,7 +145,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 		err := rows.MapScan(row)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		index := &db.Index{
@@ -155,7 +156,7 @@ func (a *Adapter) getIndexes(tableName string) ([]*db.Index, error) {
 		columns, err := a.getIndexColumns(index.Name)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		index.Columns = columns
@@ -170,7 +171,7 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 	rows, err := a.DB.Queryx(fmt.Sprintf("PRAGMA index_info(%s)", indexName))
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	var columns []string
@@ -179,7 +180,7 @@ func (a *Adapter) getIndexColumns(indexName string) ([]string, error) {
 		err := rows.MapScan(row)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		columns = append(columns, row["name"].(string))

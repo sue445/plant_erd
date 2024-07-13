@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/cockroachdb/errors"
 	"github.com/sue445/plant_erd/adapter/oracle"
 	"github.com/sue445/plant_erd/cmd"
 	"github.com/sue445/plant_erd/lib"
@@ -67,21 +68,21 @@ func main() {
 		},
 	)
 
-	app.Action = func(c *cli.Context) error {
-		adapter, close, err := oracle.NewAdapter(oracleConfig)
+	app.Action = func(_ *cli.Context) error {
+		adapter, closeDatabase, err := oracle.NewAdapter(oracleConfig)
 
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
-		defer close()
+		defer closeDatabase() //nolint:errcheck
 
 		schema, err := lib.LoadSchema(adapter)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
-		return generator.Run(schema)
+		return generator.Run(schema) //nolint:errcheck
 	}
 
 	sort.Sort(cli.CommandsByName(app.Commands))

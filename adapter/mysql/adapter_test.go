@@ -28,13 +28,13 @@ func withDatabase(callback func(*Adapter)) {
 	config.User = os.Getenv("MYSQL_USER")
 	config.Passwd = os.Getenv("MYSQL_PASSWORD")
 	config.DBName = os.Getenv("MYSQL_DATABASE")
-	adapter, close, err := NewAdapter(config)
+	adapter, closeDatabase, err := NewAdapter(config)
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer close()
+	defer closeDatabase() //nolint:errcheck
 
 	adapter.db.MustExec("DROP TABLE IF EXISTS followers;")
 	adapter.db.MustExec("DROP TABLE IF EXISTS articles;")

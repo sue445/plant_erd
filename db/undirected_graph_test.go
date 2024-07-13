@@ -9,8 +9,8 @@ func TestUndirectedGraph_PutSymmetric(t *testing.T) {
 	g := NewUndirectedGraph()
 	g.PutSymmetric("a", "b", true)
 
-	assert.Equal(t, true, g.matrix["a"]["b"])
-	assert.Equal(t, true, g.matrix["b"]["a"])
+	assert.True(t, g.matrix["a"]["b"])
+	assert.True(t, g.matrix["b"]["a"])
 }
 
 func TestUndirectedGraph_GetRowColumns(t *testing.T) {

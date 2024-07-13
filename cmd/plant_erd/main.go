@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/cockroachdb/errors"
 	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/sue445/plant_erd/adapter/mysql"
 	"github.com/sue445/plant_erd/adapter/postgresql"
@@ -52,21 +53,21 @@ func main() {
 					Destination: &sqlite3Database,
 				},
 			),
-			Action: func(c *cli.Context) error {
-				adapter, close, err := sqlite3.NewAdapter(sqlite3Database)
+			Action: func(_ *cli.Context) error {
+				adapter, closeDatabase, err := sqlite3.NewAdapter(sqlite3Database)
 
 				if err != nil {
-					return err
+					return errors.WithStack(err)
 				}
 
-				defer close()
+				defer closeDatabase() //nolint:errcheck
 
 				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
-					return err
+					return errors.WithStack(err)
 				}
 
-				return generator.Run(schema)
+				return generator.Run(schema) //nolint:errcheck
 			},
 		},
 		{
@@ -117,24 +118,24 @@ func main() {
 					Value:       "utf8_general_ci",
 				},
 			),
-			Action: func(c *cli.Context) error {
+			Action: func(_ *cli.Context) error {
 				mysqlConfig.Net = "tcp"
 				mysqlConfig.Addr = fmt.Sprintf("%s:%d", mysqlHost, mysqlPort)
 
-				adapter, close, err := mysql.NewAdapter(mysqlConfig)
+				adapter, closeDatabase, err := mysql.NewAdapter(mysqlConfig)
 
 				if err != nil {
-					return err
+					return errors.WithStack(err)
 				}
 
-				defer close()
+				defer closeDatabase() //nolint:errcheck
 
 				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
-					return err
+					return errors.WithStack(err)
 				}
 
-				return generator.Run(schema)
+				return generator.Run(schema) //nolint:errcheck
 			},
 		},
 		{
@@ -184,21 +185,21 @@ func main() {
 					Value:       "disable",
 				},
 			),
-			Action: func(c *cli.Context) error {
-				adapter, close, err := postgresql.NewAdapter(postgresqlConfig)
+			Action: func(_ *cli.Context) error {
+				adapter, closeDatabase, err := postgresql.NewAdapter(postgresqlConfig)
 
 				if err != nil {
-					return err
+					return errors.WithStack(err)
 				}
 
-				defer close()
+				defer closeDatabase() //nolint:errcheck
 
 				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
-					return err
+					return errors.WithStack(err)
 				}
 
-				return generator.Run(schema)
+				return generator.Run(schema) //nolint:errcheck
 			},
 		},
 	}

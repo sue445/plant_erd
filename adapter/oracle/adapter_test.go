@@ -26,13 +26,13 @@ func withDatabase(callback func(*Adapter)) {
 	config.Username = os.Getenv("ORACLE_USER")
 	config.Password = os.Getenv("ORACLE_PASSWORD")
 	config.ServiceName = os.Getenv("ORACLE_SERVICE")
-	adapter, close, err := NewAdapter(config)
+	adapter, closeDatabase, err := NewAdapter(config)
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer close()
+	defer closeDatabase() //nolint:errcheck
 
 	// adapter.db.MustExec("DROP TABLE followers")
 	// adapter.db.MustExec("DROP TABLE articles")

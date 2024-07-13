@@ -2,8 +2,8 @@ package lib
 
 import (
 	"bytes"
+	"github.com/stretchr/testify/require"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -14,13 +14,13 @@ import (
 )
 
 func withDatabase(callback func(*sqlite3.Adapter)) {
-	adapter, close, err := sqlite3.NewAdapter("file::memory:?cache=shared")
+	adapter, closeDatabase, err := sqlite3.NewAdapter("file::memory:?cache=shared")
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer close()
+	defer closeDatabase() //nolint:errcheck
 
 	adapter.DB.MustExec("PRAGMA foreign_keys = ON;")
 
@@ -112,7 +112,7 @@ func TestErdGenerator_generatePlantUmlErd(t *testing.T) {
 				Distance: tt.fields.Distance,
 			}
 			got := g.generatePlantUmlErd(tt.args.schema)
-			assert.Greater(t, len(got), 0)
+			assert.NotEmpty(t, got)
 		})
 	}
 }
@@ -202,28 +202,23 @@ func TestErdGenerator_generateMermaidErd(t *testing.T) {
 				Distance: tt.fields.Distance,
 			}
 			got := g.generateMermaidErd(tt.args.schema)
-			assert.Greater(t, len(got), 0)
+			assert.NotEmpty(t, got)
 		})
 	}
 }
 
 func TestErdGenerator_output_ToFile(t *testing.T) {
-	dir, err := ioutil.TempDir("", "example")
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer os.RemoveAll(dir)
+	dir := t.TempDir()
 
 	filePath := filepath.Join(dir, "erd.txt")
 	g := &ErdGenerator{
 		Filepath: filePath,
 	}
 
-	g.output("aaa")
+	err := g.output("aaa")
+	require.NoError(t, err)
 
-	data, err := ioutil.ReadFile(filePath)
+	data, err := os.ReadFile(filePath)
 
 	if assert.NoError(t, err) {
 		str := string(data)
@@ -244,10 +239,16 @@ func captureStdout(f func()) string {
 	f()
 
 	os.Stdout = stdout
-	w.Close()
+	err = w.Close()
+	if err != nil {
+		panic(err)
+	}
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, err = io.Copy(&buf, r)
+	if err != nil {
+		panic(err)
+	}
 
 	return buf.String()
 }
@@ -333,7 +334,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			got, err := g.generate(tt.args.schema)
 			if assert.NoError(t, err) {
 				if len(tt.wantContainTables) == 0 {
-					assert.Equal(t, got, "")
+					assert.Equal(t, "", got)
 				} else {
 					for _, tableName := range tt.wantContainTables {
 						assert.Contains(t, got, tableName)
@@ -519,7 +520,10 @@ func ExampleErdGenerator_Run_two_tables_with_PlantUML() {
 		}
 
 		generator := ErdGenerator{Format: "plant_uml"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// entity articles {
@@ -550,7 +554,10 @@ func ExampleErdGenerator_Run_many_tables_with_PlantUML() {
 		}
 
 		generator := ErdGenerator{Format: "plant_uml"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// entity articles {
@@ -641,7 +648,10 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 		}
 
 		generator := ErdGenerator{Format: "plant_uml", Table: "articles", Distance: 1}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// entity articles {
@@ -716,7 +726,10 @@ func ExampleErdGenerator_Run_two_tables_with_Mermaid() {
 		}
 
 		generator := ErdGenerator{Format: "mermaid"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// erDiagram
@@ -745,7 +758,10 @@ func ExampleErdGenerator_Run_many_tables_with_Mermaid() {
 		}
 
 		generator := ErdGenerator{Format: "mermaid"}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// erDiagram
@@ -817,7 +833,10 @@ func ExampleErdGenerator_Run_many_tables_within_a_distance_of_1_from_the_article
 		}
 
 		generator := ErdGenerator{Format: "mermaid", Table: "articles", Distance: 1}
-		generator.Run(schema)
+		err = generator.Run(schema)
+		if err != nil {
+			panic(err)
+		}
 
 		// Output:
 		// erDiagram
