@@ -26,13 +26,13 @@ func withDatabase(callback func(*Adapter)) {
 	config.User = os.Getenv("POSTGRES_USER")
 	config.Password = os.Getenv("POSTGRES_PASSWORD")
 	config.DBName = os.Getenv("POSTGRES_DATABASE")
-	adapter, close, err := NewAdapter(config)
+	adapter, closeDatabase, err := NewAdapter(config)
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer close() //nolint:errcheck
+	defer closeDatabase() //nolint:errcheck
 
 	adapter.db.MustExec("DROP TABLE IF EXISTS followers;")
 	adapter.db.MustExec("DROP TABLE IF EXISTS articles;")

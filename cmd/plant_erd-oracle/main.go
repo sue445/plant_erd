@@ -69,13 +69,13 @@ func main() {
 	)
 
 	app.Action = func(_ *cli.Context) error {
-		adapter, close, err := oracle.NewAdapter(oracleConfig)
+		adapter, closeDatabase, err := oracle.NewAdapter(oracleConfig)
 
 		if err != nil {
 			return errors.WithStack(err)
 		}
 
-		defer close() //nolint:errcheck
+		defer closeDatabase() //nolint:errcheck
 
 		schema, err := lib.LoadSchema(adapter)
 		if err != nil {

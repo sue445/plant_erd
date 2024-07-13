@@ -54,13 +54,13 @@ func main() {
 				},
 			),
 			Action: func(_ *cli.Context) error {
-				adapter, close, err := sqlite3.NewAdapter(sqlite3Database)
+				adapter, closeDatabase, err := sqlite3.NewAdapter(sqlite3Database)
 
 				if err != nil {
 					return errors.WithStack(err)
 				}
 
-				defer close() //nolint:errcheck
+				defer closeDatabase() //nolint:errcheck
 
 				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
@@ -122,13 +122,13 @@ func main() {
 				mysqlConfig.Net = "tcp"
 				mysqlConfig.Addr = fmt.Sprintf("%s:%d", mysqlHost, mysqlPort)
 
-				adapter, close, err := mysql.NewAdapter(mysqlConfig)
+				adapter, closeDatabase, err := mysql.NewAdapter(mysqlConfig)
 
 				if err != nil {
 					return errors.WithStack(err)
 				}
 
-				defer close() //nolint:errcheck
+				defer closeDatabase() //nolint:errcheck
 
 				schema, err := lib.LoadSchema(adapter)
 				if err != nil {
@@ -186,13 +186,13 @@ func main() {
 				},
 			),
 			Action: func(_ *cli.Context) error {
-				adapter, close, err := postgresql.NewAdapter(postgresqlConfig)
+				adapter, closeDatabase, err := postgresql.NewAdapter(postgresqlConfig)
 
 				if err != nil {
 					return errors.WithStack(err)
 				}
 
-				defer close() //nolint:errcheck
+				defer closeDatabase() //nolint:errcheck
 
 				schema, err := lib.LoadSchema(adapter)
 				if err != nil {

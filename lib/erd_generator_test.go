@@ -14,13 +14,13 @@ import (
 )
 
 func withDatabase(callback func(*sqlite3.Adapter)) {
-	adapter, close, err := sqlite3.NewAdapter("file::memory:?cache=shared")
+	adapter, closeDatabase, err := sqlite3.NewAdapter("file::memory:?cache=shared")
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer close() //nolint:errcheck
+	defer closeDatabase() //nolint:errcheck
 
 	adapter.DB.MustExec("PRAGMA foreign_keys = ON;")
 
