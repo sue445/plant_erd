@@ -1,5 +1,14 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.5...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.6...master)
+
+## [v0.4.6](https://github.com/sue445/plant_erd/releases/tag/v0.4.6)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.5...v0.4.6)
+
+* Upgrade to Go 1.22 :rocket:
+  * https://github.com/sue445/plant_erd/pull/244
+* Add golangci-lint
+  * https://github.com/sue445/plant_erd/pull/251
+* Update dependencies
 
 ## v0.4.5
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.4...v0.4.5)
