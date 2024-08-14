@@ -310,7 +310,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: v1.58
+          version: v1.60
 
       - name: Slack Notification (not success)
         uses: act10ns/slack@v2
