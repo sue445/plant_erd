@@ -1,5 +1,11 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.6...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.7...master)
+
+## [v0.4.7](https://github.com/sue445/plant_erd/releases/tag/v0.4.7)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.6...v0.4.7)
+
+* Upgrade to Go 1.23 :rocket:
+  * https://github.com/sue445/plant_erd/pull/253
 
 ## [v0.4.6](https://github.com/sue445/plant_erd/releases/tag/v0.4.6)
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.5...v0.4.6)
