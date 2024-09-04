@@ -3,19 +3,19 @@ module github.com/sue445/plant_erd
 go 1.23
 
 require (
+	github.com/cockroachdb/errors v1.11.3
 	github.com/deckarep/golang-set v1.8.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-oci8 v0.1.1
-	github.com/mattn/go-sqlite3 v1.14.22
+	github.com/mattn/go-sqlite3 v1.14.23
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli v1.22.15
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/cockroachdb/errors v1.11.3 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20230118201751-21c54148d20b // indirect
 	github.com/cockroachdb/redact v1.1.5 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
