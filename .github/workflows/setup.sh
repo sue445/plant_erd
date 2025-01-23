@@ -28,7 +28,7 @@ function retry {
 case "${RUNNER_OS}" in
 "Linux")
   sudo apt-get update
-  sudo apt-get install -y gcc-multilib g++-multilib
+  sudo apt-get install -y gcc-multilib g++-multilib libaio1t64
 
   case "${TARGET_ARCH}" in
   "amd64")
