@@ -14,6 +14,7 @@ env:
   TEST_ARGS: -coverprofile coverage.out -covermode atomic
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
   LD_LIBRARY_PATH: /opt/oracle/instantclient
+  GOLANGCI_LINT_VERSION: v1.60
 
 jobs:
   mysql:
@@ -309,7 +310,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: v1.60
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
 
       - name: Slack Notification (not success)
         uses: act10ns/slack@v2
