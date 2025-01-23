@@ -9,8 +9,6 @@ LDFLAGS := "-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\
 
 .DEFAULT_GOAL := bin/$(NAME)
 
-export GO111MODULE ?= on
-
 bin/%: cmd/%/main.go
 	go build -ldflags=$(LDFLAGS) -o bin/$(NAME) -o $@ $<
 
