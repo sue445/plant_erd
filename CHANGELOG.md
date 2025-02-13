@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.7...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.8...master)
+
+## [v0.4.8](https://github.com/sue445/plant_erd/releases/tag/v0.4.8)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.7...v0.4.8)
+
+* Upgrade to Go 1.24 :rocket:
+  * https://github.com/sue445/plant_erd/pull/262
+* Update dependencies
 
 ## [v0.4.7](https://github.com/sue445/plant_erd/releases/tag/v0.4.7)
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.6...v0.4.7)
