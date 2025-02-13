@@ -274,6 +274,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: coverage.out
           format: golang
+          fail-on-error: false
 
       - name: Slack Notification (not success)
         uses: act10ns/slack@v2
