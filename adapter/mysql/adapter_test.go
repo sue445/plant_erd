@@ -3,7 +3,6 @@ package mysql
 import (
 	"fmt"
 	"os"
-	"regexp"
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
@@ -253,7 +252,7 @@ func TestAdapter_GetTable(t *testing.T) {
 
 							// FIXME: Type is `int(11)` when MySQL 5.6 and 5.7, but Type is `int` when MySQL 8
 							if wantColumn.Type == "int" {
-								assert.Regexp(t, regexp.MustCompile(fmt.Sprintf("^%s(\\(\\d+\\))?$", wantColumn.Type)), gotColumn.Type)
+								assert.Regexp(t, fmt.Sprintf("^%s(\\(\\d+\\))?$", wantColumn.Type), gotColumn.Type)
 							} else {
 								assert.Equal(t, wantColumn.Type, gotColumn.Type)
 							}
