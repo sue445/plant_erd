@@ -1,12 +1,9 @@
 linters-settings:
-  gofmt:
   revive:
     rules:
       - name: exported
         arguments:
           - disableStutteringCheck
-  testifylint:
-  wrapcheck:
 
 linters:
   enable:
