@@ -15,8 +15,8 @@ env:
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
   LD_LIBRARY_PATH: /opt/oracle/instantclient
 
-  # c.f. https://github.com/golangci/golangci-lint/blob/master/CHANGELOG.md
-  GOLANGCI_LINT_VERSION: v1.64
+  # c.f. https://github.com/golangci/golangci-lint/blob/main/CHANGELOG.md
+  GOLANGCI_LINT_VERSION: v2.0
 
 jobs:
   mysql:
