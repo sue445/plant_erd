@@ -1,18 +1,31 @@
-linters-settings:
-  revive:
-    rules:
-      - name: exported
-        arguments:
-          - disableStutteringCheck
-
+version: "2"
 linters:
   enable:
-    - gofmt
     - revive
     - testifylint
     - wrapcheck
-
-issues:
-  include:
-    - EXC0012 # EXC0012 revive: Annoying issue about not having a comment. The rare codebase has such comments
-    - EXC0014 # EXC0014 revive: Annoying issue about not having a comment. The rare codebase has such comments
+  settings:
+    revive:
+      rules:
+        - name: exported
+          arguments:
+            - disableStutteringCheck
+  exclusions:
+    generated: lax
+    presets:
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
