@@ -241,7 +241,7 @@ func TestAdapter_GetTable(t *testing.T) {
 					assert.Equal(t, tt.want.ForeignKeys, got.ForeignKeys)
 					assert.Equal(t, tt.want.Indexes, got.Indexes)
 
-					if assert.Equal(t, len(tt.want.Columns), len(got.Columns)) {
+					if assert.Len(t, got.Columns, len(tt.want.Columns)) {
 						for i := 0; i < len(got.Columns); i++ {
 							wantColumn := tt.want.Columns[i]
 							gotColumn := got.Columns[i]

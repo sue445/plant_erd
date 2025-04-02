@@ -334,7 +334,7 @@ func TestErdGenerator_generate_withSkipTable(t *testing.T) {
 			got, err := g.generate(tt.args.schema)
 			if assert.NoError(t, err) {
 				if len(tt.wantContainTables) == 0 {
-					assert.Equal(t, "", got)
+					assert.Empty(t, got)
 				} else {
 					for _, tableName := range tt.wantContainTables {
 						assert.Contains(t, got, tableName)
