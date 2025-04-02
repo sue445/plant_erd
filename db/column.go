@@ -31,10 +31,10 @@ func (c *Column) ToMermaid() string {
 	mermaidType := c.Type
 
 	// mermaid cannot display Type Column "()" and "unsigned"
-	mermaidType = strings.Replace(mermaidType, "(", "_", -1)
-	mermaidType = strings.Replace(mermaidType, ")", "", -1)
+	mermaidType = strings.ReplaceAll(mermaidType, "(", "_")
+	mermaidType = strings.ReplaceAll(mermaidType, ")", "")
 
-	mermaidType = strings.Replace(mermaidType, " ", "_", -1)
+	mermaidType = strings.ReplaceAll(mermaidType, " ", "_")
 
 	return fmt.Sprintf("%s %s", mermaidType, c.Name)
 }
