@@ -16,7 +16,7 @@ env:
   LD_LIBRARY_PATH: /opt/oracle/instantclient
 
   # c.f. https://github.com/golangci/golangci-lint/blob/main/CHANGELOG.md
-  GOLANGCI_LINT_VERSION: v2.0
+  GOLANGCI_LINT_VERSION: v2.1
 
 jobs:
   mysql:
