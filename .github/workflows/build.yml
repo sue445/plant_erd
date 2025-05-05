@@ -5,11 +5,26 @@ on:
       - "*"
     tags:
       - "v*"
+
   pull_request:
     types:
       - opened
       - synchronize
       - reopened
+    paths:
+      # common
+      - ".github/workflows/setup.sh"
+      - "_build/**"
+      - "adapter/**"
+      - "cmd/**"
+      - "db/**"
+      - "lib/**"
+      - "go.mod"
+      - "go.sum"
+      - "Makefile"
+
+      # only build.yml
+      - ".github/workflows/build.yml"
 
 env:
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/

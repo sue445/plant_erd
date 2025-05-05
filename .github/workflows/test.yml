@@ -4,11 +4,29 @@ on:
   push:
     branches:
       - master
+
   pull_request:
     types:
       - opened
       - synchronize
       - reopened
+    paths:
+      # common
+      - ".github/workflows/setup.sh"
+      - "_build/**"
+      - "adapter/**"
+      - "cmd/**"
+      - "db/**"
+      - "lib/**"
+      - "go.mod"
+      - "go.sum"
+      - "Makefile"
+
+      # only test.yml
+      - ".github/workflows/test.yml"
+      - ".golangci.yml"
+      - "_integration/**"
+      - "README.md"
 
 env:
   TEST_ARGS: -coverprofile coverage.out -covermode atomic
