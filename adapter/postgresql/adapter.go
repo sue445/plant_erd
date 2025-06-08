@@ -101,7 +101,7 @@ func (a *Adapter) GetTable(tableWithSchemaName string) (*db.Table, error) {
 	return &table, nil
 }
 
-func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
+func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set[string], error) {
 	var rows []primaryKeys
 
 	err := a.db.Select(&rows, `
@@ -121,7 +121,7 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 		return nil, errors.WithStack(err)
 	}
 
-	columns := mapset.NewSet()
+	columns := mapset.NewSet[string]()
 	for _, row := range rows {
 		columns.Add(row.ColumnName)
 	}

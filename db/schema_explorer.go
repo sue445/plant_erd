@@ -29,13 +29,13 @@ func (e *SchemaExplorer) Explore(tableName string, distance int) []string {
 		distance = 0
 	}
 
-	foundTableNames := mapset.NewSet()
+	foundTableNames := mapset.NewSet[string]()
 
 	e.explore(tableName, distance, foundTableNames, 0)
 
 	var tableNames []string
-	foundTableNames.Each(func(i interface{}) bool {
-		tableNames = append(tableNames, i.(string))
+	foundTableNames.Each(func(name string) bool {
+		tableNames = append(tableNames, name)
 		return false
 	})
 
@@ -43,7 +43,7 @@ func (e *SchemaExplorer) Explore(tableName string, distance int) []string {
 	return tableNames
 }
 
-func (e *SchemaExplorer) explore(tableName string, distance int, foundTableNames mapset.Set, pos int) {
+func (e *SchemaExplorer) explore(tableName string, distance int, foundTableNames mapset.Set[string], pos int) {
 	if pos > distance || foundTableNames.Contains(tableName) {
 		return
 	}
