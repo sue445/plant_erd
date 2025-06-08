@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"github.com/deckarep/golang-set"
+	"github.com/deckarep/golang-set/v2"
 	"strings"
 )
 
@@ -19,7 +19,7 @@ func NewSchema(tables []*Table) *Schema {
 // ToErd returns ERD formatted schema
 func (s *Schema) ToErd(showIndex bool) string {
 	var lines []string
-	tableNames := mapset.NewSet()
+	tableNames := mapset.NewSet[string]()
 
 	for _, table := range s.Tables {
 		lines = append(lines, table.ToErd(showIndex))
@@ -41,7 +41,7 @@ func (s *Schema) ToErd(showIndex bool) string {
 // ToMermaid returns Mermaid formatted table
 func (s *Schema) ToMermaid(showComment bool) string {
 	var lines []string
-	tableNames := mapset.NewSet()
+	tableNames := mapset.NewSet[string]()
 
 	lines = append(lines, "erDiagram")
 

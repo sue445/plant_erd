@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/deckarep/golang-set"
+	"github.com/deckarep/golang-set/v2"
 	"sort"
 )
 
@@ -29,21 +29,17 @@ func (e *SchemaExplorer) Explore(tableName string, distance int) []string {
 		distance = 0
 	}
 
-	foundTableNames := mapset.NewSet()
+	foundTableNames := mapset.NewSet[string]()
 
 	e.explore(tableName, distance, foundTableNames, 0)
 
-	var tableNames []string
-	foundTableNames.Each(func(i interface{}) bool {
-		tableNames = append(tableNames, i.(string))
-		return false
-	})
+	tableNames := foundTableNames.ToSlice()
 
 	sort.Strings(tableNames)
 	return tableNames
 }
 
-func (e *SchemaExplorer) explore(tableName string, distance int, foundTableNames mapset.Set, pos int) {
+func (e *SchemaExplorer) explore(tableName string, distance int, foundTableNames mapset.Set[string], pos int) {
 	if pos > distance || foundTableNames.Contains(tableName) {
 		return
 	}

@@ -2,7 +2,7 @@ package oracle
 
 import (
 	"github.com/cockroachdb/errors"
-	mapset "github.com/deckarep/golang-set"
+	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-oci8" // for sql
 	"github.com/sue445/plant_erd/db"
@@ -109,7 +109,7 @@ func (a *Adapter) GetTable(tableName string) (*db.Table, error) {
 	return &table, nil
 }
 
-func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
+func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set[string], error) {
 	// c.f. https://github.com/rsim/oracle-enhanced/blob/v6.0.0/lib/active_record/connection_adapters/oracle_enhanced_adapter.rb#L612
 	sql := `
 		SELECT cc.column_name
@@ -135,7 +135,7 @@ func (a *Adapter) getPrimaryKeyColumns(tableName string) (mapset.Set, error) {
 		return nil, errors.WithStack(err)
 	}
 
-	columns := mapset.NewSet()
+	columns := mapset.NewSet[string]()
 	for _, row := range rows {
 		columns.Add(row.ColumnName)
 	}
