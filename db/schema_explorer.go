@@ -33,11 +33,7 @@ func (e *SchemaExplorer) Explore(tableName string, distance int) []string {
 
 	e.explore(tableName, distance, foundTableNames, 0)
 
-	var tableNames []string
-	foundTableNames.Each(func(name string) bool {
-		tableNames = append(tableNames, name)
-		return false
-	})
+	tableNames := foundTableNames.ToSlice()
 
 	sort.Strings(tableNames)
 	return tableNames
