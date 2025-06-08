@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"github.com/deckarep/golang-set"
+	"github.com/deckarep/golang-set/v2"
 	"strings"
 )
 

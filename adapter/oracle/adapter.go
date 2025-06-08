@@ -2,7 +2,7 @@ package oracle
 
 import (
 	"github.com/cockroachdb/errors"
-	mapset "github.com/deckarep/golang-set"
+	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-oci8" // for sql
 	"github.com/sue445/plant_erd/db"

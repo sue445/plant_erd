@@ -3,7 +3,7 @@ package postgresql
 import (
 	"fmt"
 	"github.com/cockroachdb/errors"
-	"github.com/deckarep/golang-set"
+	"github.com/deckarep/golang-set/v2"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // for sql
 	"github.com/sue445/plant_erd/db"
