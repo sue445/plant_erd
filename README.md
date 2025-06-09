@@ -118,17 +118,18 @@ NAME:
    plant_erd sqlite3 - Generate ERD from sqlite3
 
 USAGE:
-   plant_erd sqlite3 [command options] [arguments...]
+   plant_erd sqlite3 [command [command options]]
 
 OPTIONS:
-   -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    --database DATABASE               SQLite3 DATABASE file
-   -f FILE, --file FILE              FILE for output (default: stdout)
-   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
-   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
-   -s value, --skip-table value      Skip generating table by using regex patterns
-   --show-comment                    Show column comment. This option is used only --format=mermaid
-   -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
+   --distance DISTANCE, -d DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
+   --file FILE, -f FILE              FILE for output (default: stdout)
+   --format string                   Output format (plant_uml, mermaid. default:plant_uml)
+   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --skip-table string, -s string    Skip generating table by using regex patterns
+   --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
+   --help, -h                        show help
 ```
 
 ### MySQL
@@ -138,22 +139,23 @@ NAME:
    plant_erd mysql - Generate ERD from mysql
 
 USAGE:
-   plant_erd mysql [command options] [arguments...]
+   plant_erd mysql [command [command options]]
 
 OPTIONS:
    --collation COLLATION             MySQL COLLATION (default: "utf8_general_ci")
-   -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    --database DATABASE               MySQL DATABASE name
-   -f FILE, --file FILE              FILE for output (default: stdout)
-   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
+   --distance DISTANCE, -d DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
+   --file FILE, -f FILE              FILE for output (default: stdout)
+   --format string                   Output format (plant_uml, mermaid. default:plant_uml)
    --host HOST                       MySQL HOST (default: "localhost")
-   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --password PASSWORD               MySQL PASSWORD [$MYSQL_PASSWORD]
    --port PORT                       MySQL PORT (default: 3306)
-   -s value, --skip-table value      Skip generating table by using regex patterns
-   --show-comment                    Show column comment. This option is used only --format=mermaid
-   -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
+   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --skip-table string, -s string    Skip generating table by using regex patterns
+   --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       MySQL USER (default: "root")
+   --help, -h                        show help
 ```
 
 ### PostgreSQL
@@ -163,22 +165,23 @@ NAME:
    plant_erd postgresql - Generate ERD from PostgreSQL
 
 USAGE:
-   plant_erd postgresql [command options] [arguments...]
+   plant_erd postgresql [command [command options]]
 
 OPTIONS:
-   -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    --database DATABASE               PostgreSQL DATABASE name
-   -f FILE, --file FILE              FILE for output (default: stdout)
-   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
+   --distance DISTANCE, -d DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
+   --file FILE, -f FILE              FILE for output (default: stdout)
+   --format string                   Output format (plant_uml, mermaid. default:plant_uml)
    --host HOST                       PostgreSQL HOST (default: "localhost")
-   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --password PASSWORD               PostgreSQL PASSWORD [$POSTGRES_PASSWORD]
    --port PORT                       PostgreSQL PORT (default: 5432)
-   -s value, --skip-table value      Skip generating table by using regex patterns
-   --show-comment                    Show column comment. This option is used only --format=mermaid
+   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --skip-table string, -s string    Skip generating table by using regex patterns
    --sslmode SSLMODE                 PostgreSQL SSLMODE. c.f. https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS (default: "disable")
-   -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
+   --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       PostgreSQL USER
+   --help, -h                        show help
 ```
 
 ### Oracle
@@ -188,22 +191,19 @@ NAME:
    plant_erd-oracle - ERD exporter with PlantUML and Mermaid format (for oracle)
 
 USAGE:
-   plant_erd-oracle [global options] command [command options] [arguments...]
+   plant_erd-oracle [global options]
 
 VERSION:
    vX.X.X (build. xxxxxxx)
 
-COMMANDS:
-   help, h  Shows a list of commands or help for one command
-
 GLOBAL OPTIONS:
-   -f FILE, --file FILE              FILE for output (default: stdout)
-   -t TABLE, --table TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
-   -d DISTANCE, --distance DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
-   -i, --skip-index                  Whether don't print index to ERD. This option is used only --format=plant_uml
-   -s value, --skip-table value      Skip generating table by using regex patterns
-   --format value                    Output format (plant_uml, mermaid. default:plant_uml)
-   --show-comment                    Show column comment. This option is used only --format=mermaid
+   --file FILE, -f FILE              FILE for output (default: stdout)
+   --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
+   --distance DISTANCE, -d DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --skip-table string, -s string    Skip generating table by using regex patterns
+   --format string                   Output format (plant_uml, mermaid. default:plant_uml)
+   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
    --user USER                       Oracle USER
    --password PASSWORD               Oracle PASSWORD [$ORACLE_PASSWORD]
    --host HOST                       Oracle HOST (default: "localhost")
