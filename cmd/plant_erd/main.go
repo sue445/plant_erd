@@ -9,7 +9,7 @@ import (
 	"github.com/sue445/plant_erd/adapter/sqlite3"
 	"github.com/sue445/plant_erd/cmd"
 	"github.com/sue445/plant_erd/lib"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	"log"
 	"os"
 	"sort"
