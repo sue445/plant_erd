@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -32,6 +33,10 @@ func TestReadme(t *testing.T) {
 
 			if assert.NoError(t, err) {
 				subCommandHelp := strings.TrimSpace(string(out))
+
+				t.Logf("$ ../bin/plant_erd %s --help\n", tt.subCommand)
+				fmt.Println(subCommandHelp)
+
 				assert.Contains(t, readme, subCommandHelp)
 			}
 		})
@@ -45,6 +50,9 @@ func TestReadme_Oracle(t *testing.T) {
 	if assert.NoError(t, err) {
 		commandHelp := strings.TrimSpace(string(out))
 
+		t.Log("$ ../bin/plant_erd-oracle --help")
+		fmt.Println(commandHelp)
+
 		re := regexp.MustCompile(`v[^ ]+ \(build\. [0-9a-z]+\)`)
 		commandHelp = re.ReplaceAllString(commandHelp, "vX.X.X (build. xxxxxxx)")
 		assert.Contains(t, readme, commandHelp)
@@ -52,7 +60,7 @@ func TestReadme_Oracle(t *testing.T) {
 }
 
 func readFile(file string) string {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		log.Fatal(err)
 	}
