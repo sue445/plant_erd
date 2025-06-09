@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/sue445/plant_erd/lib"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // CreateCliCommonFlags returns common flags for cli
