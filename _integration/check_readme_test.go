@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -52,7 +52,7 @@ func TestReadme_Oracle(t *testing.T) {
 }
 
 func readFile(file string) string {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		log.Fatal(err)
 	}
