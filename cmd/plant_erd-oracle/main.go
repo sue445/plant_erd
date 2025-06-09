@@ -33,34 +33,34 @@ func main() {
 	oracleConfig := oracle.NewConfig()
 	app.Flags = append(
 		commonFlags,
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:        "user",
 			Usage:       "Oracle `USER`",
 			Required:    true,
 			Destination: &oracleConfig.Username,
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:        "password",
 			Usage:       "Oracle `PASSWORD`",
 			Required:    false,
 			Destination: &oracleConfig.Password,
-			EnvVar:      "ORACLE_PASSWORD",
+			EnvVars:     []string{"ORACLE_PASSWORD"},
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:        "host",
 			Usage:       "Oracle `HOST`",
 			Required:    false,
 			Destination: &oracleConfig.Host,
 			Value:       "localhost",
 		},
-		cli.IntFlag{
+		&cli.IntFlag{
 			Name:        "port",
 			Usage:       "Oracle `PORT`",
 			Required:    false,
 			Destination: &oracleConfig.Port,
 			Value:       1521,
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:        "service",
 			Usage:       "Oracle `SERVICE` name",
 			Required:    true,

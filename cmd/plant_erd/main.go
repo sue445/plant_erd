@@ -39,14 +39,14 @@ func main() {
 	mysqlPort := 0
 	postgresqlConfig := postgresql.NewConfig()
 
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:    "sqlite3",
 			Aliases: []string{"s"},
 			Usage:   "Generate ERD from sqlite3",
 			Flags: append(
 				commonFlags,
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "database",
 					Usage:       "SQLite3 `DATABASE` file",
 					Required:    true,
@@ -76,41 +76,41 @@ func main() {
 			Usage:   "Generate ERD from mysql",
 			Flags: append(
 				commonFlags,
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "host",
 					Usage:       "MySQL `HOST`",
 					Required:    false,
 					Destination: &mysqlHost,
 					Value:       "localhost",
 				},
-				cli.IntFlag{
+				&cli.IntFlag{
 					Name:        "port",
 					Usage:       "MySQL `PORT`",
 					Required:    false,
 					Destination: &mysqlPort,
 					Value:       3306,
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "user",
 					Usage:       "MySQL `USER`",
 					Required:    false,
 					Destination: &mysqlConfig.User,
 					Value:       "root",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "password",
 					Usage:       "MySQL `PASSWORD`",
 					Required:    false,
 					Destination: &mysqlConfig.Passwd,
-					EnvVar:      "MYSQL_PASSWORD",
+					EnvVars:     []string{"MYSQL_PASSWORD"},
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "database",
 					Usage:       "MySQL `DATABASE` name",
 					Required:    true,
 					Destination: &mysqlConfig.DBName,
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "collation",
 					Usage:       "MySQL `COLLATION`",
 					Required:    false,
@@ -144,40 +144,40 @@ func main() {
 			Usage:   "Generate ERD from PostgreSQL",
 			Flags: append(
 				commonFlags,
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "host",
 					Usage:       "PostgreSQL `HOST`",
 					Required:    false,
 					Destination: &postgresqlConfig.Host,
 					Value:       "localhost",
 				},
-				cli.IntFlag{
+				&cli.IntFlag{
 					Name:        "port",
 					Usage:       "PostgreSQL `PORT`",
 					Required:    false,
 					Destination: &postgresqlConfig.Port,
 					Value:       5432,
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "user",
 					Usage:       "PostgreSQL `USER`",
 					Required:    false,
 					Destination: &postgresqlConfig.User,
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "password",
 					Usage:       "PostgreSQL `PASSWORD`",
 					Required:    false,
 					Destination: &postgresqlConfig.Password,
-					EnvVar:      "POSTGRES_PASSWORD",
+					EnvVars:     []string{"POSTGRES_PASSWORD"},
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "database",
 					Usage:       "PostgreSQL `DATABASE` name",
 					Required:    true,
 					Destination: &postgresqlConfig.DBName,
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:        "sslmode",
 					Usage:       "PostgreSQL `SSLMODE`. c.f. https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS",
 					Required:    false,
