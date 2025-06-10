@@ -138,7 +138,7 @@ cp oci8.pc "$(brew --prefix)/lib/pkgconfig"
 
 #### Example (Windows)
 1. Go to https://www.oracle.com/database/technologies/instant-client/winx64-64-downloads.html
-2. Download `instantclient-basic-windows.x64-19.5.0.0.0dbru.zip` or ` instantclient-basiclite-windows.x64-19.5.0.0.0dbru.zip`
+2. Download `instantclient-basic-windows.x64-19.5.0.0.0dbru.zip` or `instantclient-basiclite-windows.x64-19.5.0.0.0dbru.zip`
 3. Extract zip
 4. Move `plant_erd-oracle` to same directory as `oci.dll`
 
