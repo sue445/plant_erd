@@ -133,7 +133,7 @@ Cflags: -I${includedir}
 ```
 
 ```bash
-cp oci8.pc "$(brew --prefix)/lib/pkgconfig"
+cp oci8.pc "$(brew --prefix)/lib/pkgconfig/"
 ```
 
 #### Example (Windows)
