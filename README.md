@@ -104,6 +104,38 @@ apt-get install -y libaio1
 #### Example (Mac)
 See https://github.com/kubo/ruby-oci8/blob/master/docs/install-on-osx.md and install `instantclient-basic` or `instantclient-basiclite`
 
+Also, you can install with https://github.com/InstantClientTap/homebrew-instantclient
+
+e.g.
+
+```bash
+brew install InstantClientTap/instantclient/instantclient-basiclite
+
+OCI8_PREFIX="$(brew --prefix)/lib/"
+echo $OCI8_PREFIX
+
+vi oci8.pc
+```
+
+`oci8.pc` is following. (Replace `__REPLACE_WITH_OCI8_PREFIX__` with `$OCI8_PREFIX` )
+
+```
+prefix=__REPLACE_WITH_OCI8_PREFIX__
+libdir=${prefix}
+includedir=${prefix}/sdk/include/
+
+Name: oci8
+Description: Oracle Instant Client
+Version: 19.8
+Libs: -L${libdir} -lclntsh
+Libs.private:
+Cflags: -I${includedir}
+```
+
+```bash
+cp oci8.pc "$(brew --prefix)/lib/pkgconfig"
+```
+
 #### Example (Windows)
 1. Go to https://www.oracle.com/database/technologies/instant-client/winx64-64-downloads.html
 2. Download `instantclient-basic-windows.x64-19.5.0.0.0dbru.zip` or ` instantclient-basiclite-windows.x64-19.5.0.0.0dbru.zip`
