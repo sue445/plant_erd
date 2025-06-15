@@ -5,7 +5,7 @@ go 1.24
 require (
 	github.com/cockroachdb/errors v1.12.0
 	github.com/deckarep/golang-set/v2 v2.8.0
-	github.com/go-sql-driver/mysql v1.9.2
+	github.com/go-sql-driver/mysql v1.9.3
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-oci8 v0.1.1
