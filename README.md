@@ -150,7 +150,7 @@ NAME:
    plant_erd sqlite3 - Generate ERD from sqlite3
 
 USAGE:
-   plant_erd sqlite3 [command [command options]]
+   plant_erd sqlite3 [options]
 
 OPTIONS:
    --database DATABASE               SQLite3 DATABASE file
@@ -171,7 +171,7 @@ NAME:
    plant_erd mysql - Generate ERD from mysql
 
 USAGE:
-   plant_erd mysql [command [command options]]
+   plant_erd mysql [options]
 
 OPTIONS:
    --collation COLLATION             MySQL COLLATION (default: "utf8_general_ci")
@@ -197,7 +197,7 @@ NAME:
    plant_erd postgresql - Generate ERD from PostgreSQL
 
 USAGE:
-   plant_erd postgresql [command [command options]]
+   plant_erd postgresql [options]
 
 OPTIONS:
    --database DATABASE               PostgreSQL DATABASE name
