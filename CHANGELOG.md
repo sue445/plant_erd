@@ -1,7 +1,7 @@
 ## Unreleased
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.9...master)
 
-## [v0.4.8](https://github.com/sue445/plant_erd/releases/tag/v0.4.9)
+## [v0.4.9](https://github.com/sue445/plant_erd/releases/tag/v0.4.9)
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.8...v0.4.9)
 
 * Upgrade to Go 1.25 :rocket:
