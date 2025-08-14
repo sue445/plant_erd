@@ -1,6 +1,6 @@
 module github.com/sue445/plant_erd
 
-go 1.24
+go 1.25
 
 require (
 	github.com/cockroachdb/errors v1.12.0
