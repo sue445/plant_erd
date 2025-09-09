@@ -9,6 +9,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     assignees:
       - sue445
     groups:
@@ -23,6 +25,8 @@ updates:
       interval: daily
       time: "05:00"
       timezone: Asia/Tokyo
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 99
     assignees:
       - sue445
