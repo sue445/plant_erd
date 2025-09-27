@@ -376,6 +376,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup
+        run: |
+          set -xe
+          .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
       - uses: golang/govulncheck-action@v1
         with:
           go-version-file: "go.mod"
