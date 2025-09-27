@@ -372,6 +372,31 @@ jobs:
           status: ${{ job.status }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
 
+  govulncheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup
+        run: |
+          set -xe
+          .github/workflows/setup.sh
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
+      - uses: golang/govulncheck-action@v1
+        with:
+          go-version-file: "go.mod"
+
+      - name: Slack Notification (not success)
+        uses: act10ns/slack@v2
+        if: "! success()"
+        continue-on-error: true
+        with:
+          status: ${{ job.status }}
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+
   notify:
     needs:
       - mysql
@@ -380,6 +405,7 @@ jobs:
       - coverage
       - lint
       - integration_test
+      - govulncheck
 
     runs-on: ubuntu-latest
 
