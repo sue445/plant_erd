@@ -157,8 +157,8 @@ OPTIONS:
    --distance DISTANCE, -d DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
    --file FILE, -f FILE              FILE for output (default: stdout)
    --format string                   Output format (plant_uml, mermaid. default:plant_uml)
-   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
-   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --show-comment                    Show column comment. This option is used only --format=mermaid
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --skip-table string, -s string    Skip generating table by using regex patterns
    --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --help, -h                        show help
@@ -182,8 +182,8 @@ OPTIONS:
    --host HOST                       MySQL HOST (default: "localhost")
    --password PASSWORD               MySQL PASSWORD [$MYSQL_PASSWORD]
    --port PORT                       MySQL PORT (default: 3306)
-   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
-   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --show-comment                    Show column comment. This option is used only --format=mermaid
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --skip-table string, -s string    Skip generating table by using regex patterns
    --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --user USER                       MySQL USER (default: "root")
@@ -207,8 +207,8 @@ OPTIONS:
    --host HOST                       PostgreSQL HOST (default: "localhost")
    --password PASSWORD               PostgreSQL PASSWORD [$POSTGRES_PASSWORD]
    --port PORT                       PostgreSQL PORT (default: 5432)
-   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
-   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --show-comment                    Show column comment. This option is used only --format=mermaid
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --skip-table string, -s string    Skip generating table by using regex patterns
    --sslmode SSLMODE                 PostgreSQL SSLMODE. c.f. https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS (default: "disable")
    --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
@@ -232,10 +232,10 @@ GLOBAL OPTIONS:
    --file FILE, -f FILE              FILE for output (default: stdout)
    --table TABLE, -t TABLE           Output only tables within a certain distance adjacent to each other with foreign keys from a specific TABLE
    --distance DISTANCE, -d DISTANCE  Output only tables within a certain DISTANCE adjacent to each other with foreign keys from a specific table (default: 0)
-   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml (default: false)
+   --skip-index, -i                  Whether don't print index to ERD. This option is used only --format=plant_uml
    --skip-table string, -s string    Skip generating table by using regex patterns
    --format string                   Output format (plant_uml, mermaid. default:plant_uml)
-   --show-comment                    Show column comment. This option is used only --format=mermaid (default: false)
+   --show-comment                    Show column comment. This option is used only --format=mermaid
    --user USER                       Oracle USER
    --password PASSWORD               Oracle PASSWORD [$ORACLE_PASSWORD]
    --host HOST                       Oracle HOST (default: "localhost")
