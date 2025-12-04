@@ -5,16 +5,20 @@
 version: 2
 
 updates:
+  ###########################################################
+  # NOTE: following sections are auto generated. DO NOT EDIT!
+  ###########################################################
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
       time: "05:00"
       timezone: Asia/Tokyo
-    cooldown:
-      default-days: 7
     assignees:
       - sue445
+    cooldown:
+      default-days: 7
+  ###########################################################
     groups:
       artifact-actions:
         patterns:
