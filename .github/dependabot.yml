@@ -25,14 +25,18 @@ updates:
           - "actions/upload-artifact"
           - "actions/download-artifact"
 
+  ###########################################################
+  # NOTE: following sections are auto generated. DO NOT EDIT!
+  ###########################################################
   - package-ecosystem: gomod
-    directory: "/"
+    directory: /
     schedule:
       interval: daily
       time: "05:00"
       timezone: Asia/Tokyo
-    cooldown:
-      default-days: 7
-    open-pull-requests-limit: 99
     assignees:
       - sue445
+    cooldown:
+      default-days: 7
+  ###########################################################
+
