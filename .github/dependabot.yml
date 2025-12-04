@@ -19,6 +19,12 @@ updates:
     cooldown:
       default-days: 7
   ###########################################################
+    groups:
+      artifact-actions:
+        patterns:
+          - "actions/upload-artifact"
+          - "actions/download-artifact"
+
   - package-ecosystem: gomod
     directory: "/"
     schedule:
