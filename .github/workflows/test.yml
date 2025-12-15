@@ -33,9 +33,6 @@ env:
   PKG_CONFIG_PATH: /usr/local/lib/pkgconfig/
   LD_LIBRARY_PATH: /opt/oracle/instantclient
 
-  # c.f. https://github.com/golangci/golangci-lint/blob/main/CHANGELOG.md
-  GOLANGCI_LINT_VERSION: v2.4
-
 jobs:
   mysql:
     name: MySQL
@@ -328,7 +325,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20 # v9.2.0
         with:
-          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          version-file: .golangci-lint-version
 
       - name: Slack Notification (not success)
         uses: act10ns/slack@cfcc30955fe9377f4f55e1079e5419ee1014269f # v2
