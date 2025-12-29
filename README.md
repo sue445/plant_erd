@@ -4,7 +4,7 @@ ERD exporter with [PlantUML](https://plantuml.com/) and [mermaid](https://mermai
 [![test](https://github.com/sue445/plant_erd/actions/workflows/test.yml/badge.svg)](https://github.com/sue445/plant_erd/actions/workflows/test.yml)
 [![build](https://github.com/sue445/plant_erd/actions/workflows/build.yml/badge.svg)](https://github.com/sue445/plant_erd/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/sue445/plant_erd/badge.svg?branch=master)](https://coveralls.io/github/sue445/plant_erd?branch=master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/0a9432880ae3f992cc65/maintainability)](https://codeclimate.com/github/sue445/plant_erd/maintainability)
+[![Maintainability](https://qlty.sh/gh/sue445/projects/plant_erd/maintainability.svg)](https://qlty.sh/gh/sue445/projects/plant_erd)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sue445/plant_erd)](https://goreportcard.com/report/github.com/sue445/plant_erd)
 
 ## Example (PlantUML)
