@@ -9,7 +9,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-oci8 v0.1.1
-	github.com/mattn/go-sqlite3 v1.14.32
+	github.com/mattn/go-sqlite3 v1.14.33
 	github.com/stretchr/testify v1.11.1
 	github.com/urfave/cli/v3 v3.6.1
 )
