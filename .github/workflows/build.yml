@@ -270,7 +270,7 @@ jobs:
             GHR_OPTIONS="${GHR_OPTIONS} -prerelease"
           fi
 
-          ghr -u ${USERNAME} -r ${REPO} -n ${TAGNAME} -b "Release ${TAGNAME}" -generatenotes ${GHR_OPTIONS} ${TAGNAME} bin/
+          ghr -u ${USERNAME} -r ${REPO} -n ${TAGNAME} -b "Release ${TAGNAME}" -generatenotes ${GHR_OPTIONS} -c ${GITHUB_SHA} ${TAGNAME} bin/
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
