@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.10...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.11...master)
+
+## [v0.4.11](https://github.com/sue445/plant_erd/releases/tag/v0.4.11)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.10...v0.4.11)
+
+* [CVE-2026-26958] Bump filippo.io/edwards25519 from 1.1.0 to 1.1.1
+  * https://github.com/sue445/plant_erd/pull/320
+* Update dependencies
 
 ## [v0.4.10](https://github.com/sue445/plant_erd/releases/tag/v0.4.10)
 [full changelog](http://github.com/sue445/plant_erd/compare/v0.4.9...v0.4.10)
