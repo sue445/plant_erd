@@ -5,7 +5,6 @@ ERD exporter with [PlantUML](https://plantuml.com/) and [mermaid](https://mermai
 [![build](https://github.com/sue445/plant_erd/actions/workflows/build.yml/badge.svg)](https://github.com/sue445/plant_erd/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/sue445/plant_erd/badge.svg?branch=master)](https://coveralls.io/github/sue445/plant_erd?branch=master)
 [![Maintainability](https://qlty.sh/gh/sue445/projects/plant_erd/maintainability.svg)](https://qlty.sh/gh/sue445/projects/plant_erd)
-[![Go Report Card](https://goreportcard.com/badge/github.com/sue445/plant_erd)](https://goreportcard.com/report/github.com/sue445/plant_erd)
 
 ## Example (PlantUML)
 ```bash
