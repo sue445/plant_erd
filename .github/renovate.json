@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices"
+  ],
+  "minimumReleaseAge": "7 days",
+  "timezone": "Asia/Tokyo",
+  "schedule": [
+    "* 5 * * *"
+  ],
+  "enabledManagers": ["gomod"],
+  "assignees": [
+    "sue445"
+  ],
+  "labels": [
+    "dependencies",
+    "go"
+  ],
+  "postUpdateOptions": [
+    "gomodUpdateImportPaths",
+    "gomodTidy"
+  ],
+  "packageRules": [
+    {
+      "description": "Disable all package updates except for golang-set",
+      "enabled": false,
+      "matchPackageNames": [
+        "!/^github.com/deckarep/golang-set(/.*)?$/"
+      ]
+    }
+  ]
+}
