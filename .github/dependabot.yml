@@ -39,3 +39,7 @@ updates:
     cooldown:
       default-days: 7
   ###########################################################
+
+    ignore:
+      # Update with renovate
+      - dependency-name: "github.com/deckarep/golang-set*"
