@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/deckarep/golang-set/v2"
+	"github.com/deckarep/golang-set/v3"
 	"sort"
 )
 
