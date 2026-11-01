@@ -55,7 +55,7 @@ jobs:
             runner: macos-latest
           - os: darwin
             arch: arm64
-            runner: macos-14
+            runner: macos-latest
           - os: freebsd
             runner: ubuntu-latest
           - os: linux
