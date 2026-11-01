@@ -60,10 +60,10 @@ jobs:
 
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
         id: go
@@ -88,7 +88,7 @@ jobs:
           MYSQL_DATABASE: plant_erd_test
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -127,10 +127,10 @@ jobs:
 
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
         id: go
@@ -155,7 +155,7 @@ jobs:
           POSTGRES_DATABASE: plant_erd_test
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -177,10 +177,10 @@ jobs:
 
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
         id: go
@@ -207,7 +207,7 @@ jobs:
           NLS_LANG: AMERICAN_AMERICA.UTF8
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -246,10 +246,10 @@ jobs:
 
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
         id: go
@@ -286,7 +286,7 @@ jobs:
           NLS_LANG: AMERICAN_AMERICA.UTF8
 
       - name: Coveralls
-        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
+        uses: coverallsapp/github-action@v2.3.8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: coverage.out
@@ -294,7 +294,7 @@ jobs:
           fail-on-error: false
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -307,10 +307,10 @@ jobs:
 
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
         id: go
@@ -323,12 +323,12 @@ jobs:
           RUNNER_OS: ${{ runner.os }}
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+        uses: golangci/golangci-lint-action@v9.3.0
         with:
           version-file: .golangci-lint-version
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -341,10 +341,10 @@ jobs:
 
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
         id: go
@@ -362,7 +362,7 @@ jobs:
           make integration_test
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -373,7 +373,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
 
       - name: Setup
         run: |
@@ -382,13 +382,13 @@ jobs:
         env:
           RUNNER_OS: ${{ runner.os }}
 
-      - uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1.1.0
+      - uses: golang/govulncheck-action@v1.1.0
         with:
           go-version-file: "go.mod"
           repo-checkout: "false"
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -411,6 +411,6 @@ jobs:
 
     steps:
       - name: check dependent jobs
-        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35 # v1.3.0
+        uses: re-actors/alls-green@v1.3.0
         with:
           jobs: ${{ toJSON(needs) }}
