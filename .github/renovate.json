@@ -22,6 +22,10 @@
   ],
   "packageRules": [
     {
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
       "description": "Disable all package updates except for golang-set",
       "enabled": false,
       "matchPackageNames": [
