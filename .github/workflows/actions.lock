@@ -19,6 +19,7 @@ workflows:
         - 'golang/govulncheck-action@v1.1.0'
         - 'golangci/golangci-lint-action@v9.3.0'
         - 're-actors/alls-green@v1.3.0'
+    '.github/workflows/verify-actions-lockfile.yml': []
 dependencies:
     'act10ns/slack@v2.2.0':
         ref: 'v2.2.0'
