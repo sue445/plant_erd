@@ -1,6 +1,7 @@
 version: "2"
 linters:
   enable:
+    - gosec
     - revive
     - testifylint
     - wrapcheck
