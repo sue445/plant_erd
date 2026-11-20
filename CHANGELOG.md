@@ -1,8 +1,15 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.12...master)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.13...master)
+
+## [v0.4.13](https://github.com/sue445/plant_erd/releases/tag/v0.4.13)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.12...v0.4.13)
+
+* Introduce gose
+  * https://github.com/sue445/plant_erd/pull/384
+* Update dependencies
 
 ## [v0.4.12](https://github.com/sue445/plant_erd/releases/tag/v0.4.12)
-[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.10...v0.4.11)
+[full changelog](http://github.com/sue445/plant_erd/compare/v0.4.11...v0.4.12)
 
 * Upgrade to Go 1.27 :rocket:
   * https://github.com/sue445/plant_erd/pull/363
