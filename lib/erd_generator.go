@@ -96,7 +96,7 @@ func (g *ErdGenerator) output(content string) error {
 	}
 
 	// Output to file
-	err := os.WriteFile(g.Filepath, []byte(content), 0644)
+	err := os.WriteFile(g.Filepath, []byte(content), 0600)
 	if err != nil {
 		return errors.WithStack(err)
 	}
